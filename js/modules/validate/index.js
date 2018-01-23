@@ -19,20 +19,20 @@ module.exports = validate;
 function validate(name,value, options = {}) {
 
 	var response = {
-		status: true,
+		isError: false,
 		errortype: '',
 		message: ''
 	};
 
-	if(response.status == true && options.required) {
+	if(response.isError == false && options.required) {
 		if(value == '') {
-			response.status = false;
+			response.isError = true;
 			response.errortype = 'required';
 			response.message = ucwords(name) + " cannot be empty";
 		}
 	}
 
-	if(response.status == true && options.regex) {
+	if(response.isError == false && options.regex) {
 
 		if(typeof options.regexExp !== "undefined" && options.regexExp !== '') {
 			regex = new RegExp(options.regexExp);
@@ -42,31 +42,31 @@ function validate(name,value, options = {}) {
 
 		if(!regex.test(value)) {
 
-			response.status = false;
+			response.isError = true;
 			response.errortype = 'regex';
 			response.message = ucwords(name) + " is not valid";
 		}
 	} 
 
-	if(response.status == true && options.integer) {
+	if(response.isError == false && options.integer) {
 		if(!Number.isInteger(value)) {
-			response.status = false;
+			response.isError = true;
 			response.errortype = 'integer';
 			response.message = ucwords(name) + "is not an Integer";
 		}
 	} 
 
-	if(response.status == true && options.min && Number.isInteger(options.min) && options.min >= 0) {
+	if(response.isError == false && options.min && Number.isInteger(options.min) && options.min >= 0) {
 		if(value.length < options.min) {
-			response.status = false;
+			response.isError = true;
 			response.errortype = 'min';
 			response.message = "Minimum length of " + ucwords(name) + " must be " + options.min;
 		}
 	} 
 
-	if(response.status == true && options.max && Number.isInteger(options.max) && options.max <= 10000) {
+	if(response.isError == false && options.max && Number.isInteger(options.max) && options.max <= 10000) {
 		if(value.length > options.max) {
-			response.status = false;
+			response.isError = true;
 			response.errortype = 'max';
 			response.message = "Maximum length " + ucwords(name) + " must be " + options.max;
 		}
