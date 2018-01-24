@@ -44,7 +44,7 @@ function validate(name,value, options = {}) {
 
 			response.isError = true;
 			response.errortype = 'regex';
-			response.message = ucwords(name) + " is not valid";
+			response.message = (typeof options.regexMsg !== "undefined") ? options.regexMsg : ucwords(name) + " is not valid";
 		}
 	} 
 
@@ -84,5 +84,7 @@ function getRegex(name) {
 		return regexEmail;
 	} else if(name == "mobile") {
 		return regexMobile;
+	} else {
+		return new RegExp('[\s\S]*');
 	}
 }
