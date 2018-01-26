@@ -3,16 +3,145 @@ import {
   StyleSheet,
   Text,
   View,
-  StatusBar ,
-  TouchableOpacity
+  TextInput,
+  TouchableOpacity,
+  AsyncStorage,
+  NetInfo,
+  ScrollView,
+  ToastAndroid
 } from 'react-native';
 
-import Logo from '../../components/logo';
-import Form from '../../components/form';
+import queryString from 'query-string';
+import { Spinner } from 'native-base';
+import validate from '../../modules/validate';
+import { ipaddress } from '../../Globals';
 
-import {Actions} from 'react-native-router-flux';
+import Logo from '../../components/logo';
+import TextInputError from '../../components/textinputerror';
+
+import { Actions } from 'react-native-router-flux';
 
 export default class Login extends Component<{}> {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      userName: '',
+      userNameError: {
+        'isError': false,
+        'errortype': '',
+        'message':  ''
+      },
+      password: '',
+      passwordError: {
+        'isError': false,
+        'errortype': '',
+        'message':  ''
+      },
+      isLoading: false
+    };
+    this.handleFirstConnectivityChange = this.handleFirstConnectivityChange.bind(this);
+    this.validateForm = this.validateForm.bind(this);
+  }
+
+  handleFirstConnectivityChange(isConnected) {
+    if(isConnected) {
+      ToastAndroid.show('Connection Established', ToastAndroid.SHORT);
+    } else {
+      ToastAndroid.show('No Internet Connection!', ToastAndroid.SHORT);
+    }
+  }
+
+  validateForm() 
+{
+    //Check username
+    const userNameError = validate("username",this.state.userName,{required:true});
+   
+    this.setState({
+      userNameError: Object.assign(this.state.userNameError, userNameError)
+    })
+
+    //Check Password
+    const passwordError = validate("password",this.state.password,{required:true});
+    
+    this.setState({
+      passwordError: Object.assign(this.state.passwordError, passwordError)
+    })
+
+    if(this.state.userNameError.isError || this.state.passwordError.isError) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  login = () => {
+    const {userName, password} = this.state;
+    const isFormValid = this.validateForm();
+    
+    if(isFormValid) {
+      
+      NetInfo.isConnected.fetch().then((isConnected) => {
+
+        this.setState({
+          isLoading: true
+        });
+
+        if(isConnected) {
+
+          fetch('http://' + ipaddress() + ':3000/login' , {
+              method : 'post',
+              headers : {
+                'Accept' : 'application/json',
+                'Content-type' : 'application/x-www-form-urlencoded'
+              },
+              'body' : queryString.stringify({
+                username : userName.toLowerCase(),
+                password : password
+              })
+          })
+          .then((response) => response.json())
+          .then((res) => {
+            
+            this.setState({
+              isLoading: false
+            });
+
+            if(res.status == true) {
+              
+              try {
+                AsyncStorage.setItem('user_id' , res.data);
+                alert("Successfully Logged In");
+              } catch(error) {
+
+                alert("Some error Occured. Try Again");
+              } 
+            } else if(res.status == false) {
+
+              if(res.errortype == 'no-user-error') {
+                alert("Username/Email is not registered");
+              } else if(res.errortype == 'password-error') {
+                alert("Invalid Credentials");
+              } else { 
+                alert('Some error Occured. Try Again');
+              }
+            }       
+          })
+          .catch((error) => {
+              alert(error);
+          });
+
+        } else {
+          ToastAndroid.show('No Internet Connection!', ToastAndroid.SHORT);
+        }
+      });
+
+      NetInfo.isConnected.addEventListener(
+        'connectionChange',
+        this.handleFirstConnectivityChange
+      );
+    }
+  }
 
   signup() {
     Actions.signup()
@@ -20,14 +149,51 @@ export default class Login extends Component<{}> {
 
   render() {
     return(
-      <View style={styles.container}>
-        <Logo/>
-        <Form type="Login"/>
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.formContainer}>
+          <Logo/>
+          <TextInput style={this.state.userNameError.isError ? styles.inputBoxError : styles.inputBox} 
+              underlineColorAndroid='rgba(0,0,0,0)' 
+              placeholder="Username/Email"
+              placeholderTextColor = {this.state.userNameError.isError ? styles.placeholderErrorTextColor : '#ffffff'}
+              selectionColor="#fff"
+              keyboardType="email-address"
+              value={this.state.userName}
+              onChangeText={userName => this.setState({userName})}
+              onBlur={() => {
+                  userNameError = validate("username/Email",this.state.userName,{required:true})
+                  this.setState({
+                    userNameError: Object.assign(this.state.userNameError, userNameError)
+                  })
+                }}
+              />
+          <TextInputError styles={errorStyle} isError={this.state.userNameError.isError} message={this.state.userNameError.message} />
+          <TextInput style={this.state.passwordError.isError ? styles.inputBoxError : styles.inputBox} 
+              underlineColorAndroid='rgba(0,0,0,0)' 
+              placeholder="Password"
+              secureTextEntry={true}
+              placeholderTextColor = {this.state.passwordError.isError ? styles.placeholderErrorTextColor : '#ffffff'}
+              ref={(input) => this.password = input}
+              value={this.state.password}
+              onChangeText={password => this.setState({password})}
+              onBlur={() => {
+                  passwordError = validate("password",this.state.password,{required:true})
+                  this.setState({
+                    passwordError: Object.assign(this.state.passwordError, passwordError)
+                  })
+                }}
+              />
+          <TextInputError styles={errorStyle} isError={this.state.passwordError.isError} message={this.state.passwordError.message} /> 
+          <TouchableOpacity style={styles.button} onPress={this.login}>
+             <Text style={styles.buttonText}>Sign In</Text>
+           </TouchableOpacity>
+           { this.state.isLoading == true ? <Spinner color='#d7d4f0' /> : null}
+        </View>
         <View style={styles.signupTextCont}>
           <Text style={styles.signupText}>Don't have an account yet?</Text>
           <TouchableOpacity onPress={this.signup}><Text style={styles.signupButton}> Signup</Text></TouchableOpacity>
         </View>
-      </View> 
+      </ScrollView>
       )
   }
 }
@@ -35,9 +201,8 @@ export default class Login extends Component<{}> {
 const styles = StyleSheet.create({
   container : {
     backgroundColor:'#455a64',
-    flex: 1,
-    alignItems:'center',
-    justifyContent :'center'
+    flexGrow: 1,
+    paddingTop: 30
   },
   signupTextCont : {
     flexGrow: 1,
@@ -54,5 +219,59 @@ const styles = StyleSheet.create({
     color:'#ffffff',
     fontSize:16,
     fontWeight:'500'
+  },
+  formContainer : {
+    flexGrow: 1,
+    justifyContent:'center',
+    alignItems: 'center'
+  },
+
+  inputBox: {
+    width:300,
+    backgroundColor:'rgba(255, 255,255,0.2)',
+    borderRadius: 25,
+    paddingHorizontal:16,
+    fontSize:16,
+    color:'#ffffff',
+    marginVertical: 10
+  },
+  button: {
+    width:300,
+    backgroundColor:'#1c313a',
+     borderRadius: 25,
+      marginVertical: 10,
+      paddingVertical: 13
+  },
+  buttonText: {
+    fontSize:16,
+    fontWeight:'500',
+    color:'#ffffff',
+    textAlign:'center'
+  },
+  inputBoxError: {
+    width:300,
+    borderRadius: 25,
+    paddingHorizontal:16,
+    fontSize:16,
+    marginVertical: 10,
+    borderStyle: 'solid',
+    color: '#a94442',
+    backgroundColor: '#fee',
+    borderWidth: 1,
+    borderColor: '#d83c3c'
+  },
+  placeholderErrorTextColor: {
+    color: '#a94442'
+  }
+});
+
+const errorStyle = StyleSheet.create({
+  container : {
+    justifyContent:'flex-start',
+    alignItems: 'flex-start',    
+    paddingHorizontal:16,
+  },
+  errorText : {
+    color: '#d83c3c'
   }
 });

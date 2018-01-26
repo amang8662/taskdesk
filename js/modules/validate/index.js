@@ -1,6 +1,6 @@
 'use strict';
 
-var regexEmail = new RegExp('^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\.([a-zA-Z]{2,5})$', 'i');
+var regexEmail = new RegExp('^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$', 'i');
 
 var regexMobile = new RegExp('^[789]\d{9}$');
 

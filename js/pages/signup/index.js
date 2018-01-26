@@ -5,7 +5,6 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  AsyncStorage,
   NetInfo,
   ScrollView,
   ToastAndroid
@@ -114,72 +113,68 @@ export default class Signup extends Component<{}> {
     
     if(isFormValid) {
 
-      this.setState({
-        isLoading: true
-      });
-
       NetInfo.isConnected.fetch().then((isConnected) => {
 
-          if(isConnected) {
+        this.setState({
+          isLoading: true
+        });
 
-            fetch('http://' + ipaddress() + ':3000/register' , {
-                method : 'post',
-                headers : {
-                  'Accept' : 'application/json',
-                  'Content-type' : 'application/x-www-form-urlencoded'
-                },
-                'body' : queryString.stringify({
-                  name : name,
-                  username : userName,
-                  email : email,
-                  password : password
-                })
-            })
-            .then((response) => response.json())
-            .then((res) => {
-              
-              this.setState({
-                isLoading: false
-              });
+        if(isConnected) {
 
-              if(res.status == true) {
-                alert(res.message);
-              } else if(res.status == false) {
-                if(res.errortype == 'validation') {
-                  alert("Please enter valid details");
-                } else if(res.errortype == 'unique-error') {
-
-                  if(res.fields.username && res.fields.email) {
-                    alert("Username and Email are already taken.");
-                  } else if(res.fields.username){
-                    alert("Username is already taken.");
-                  } else {
-                    alert("Email is already taken.");
-                  }
-                } else if(res.errortype == 'db-error') {
-                  
-                  alert('Sorry Some Error Occured');
-                }
-              }       
-            })
-            .catch((error) => {
-                alert(error);
+          fetch('http://' + ipaddress() + ':3000/register' , {
+              method : 'post',
+              headers : {
+                'Accept' : 'application/json',
+                'Content-type' : 'application/x-www-form-urlencoded'
+              },
+              'body' : queryString.stringify({
+                name : name,
+                username : userName.toLowerCase(),
+                email : email.toLowerCase(),
+                password : password
+              })
+          })
+          .then((response) => response.json())
+          .then((res) => {
+            
+            this.setState({
+              isLoading: false
             });
 
-          } else {
-            ToastAndroid.show('No Internet Connection!', ToastAndroid.SHORT);
-            // alert('No Internet Connection!');
-          }
+            if(res.status == true) {
+              alert(res.message);
+            } else if(res.status == false) {
+              if(res.errortype == 'validation') {
+                alert("Please enter valid details");
+              } else if(res.errortype == 'unique-error') {
+
+                if(res.fields.username && res.fields.email) {
+                  alert("Username and Email are already taken.");
+                } else if(res.fields.username){
+                  alert("Username is already taken.");
+                } else {
+                  alert("Email is already taken.");
+                }
+              } else if(res.errortype == 'db-error') {
+                
+                alert('Sorry Some Error Occured');
+              }
+            }       
+          })
+          .catch((error) => {
+              alert(error);
+          });
+
+        } else {
+          ToastAndroid.show('No Internet Connection!', ToastAndroid.SHORT);
+          // alert('No Internet Connection!');
+        }
       });
 
       NetInfo.isConnected.addEventListener(
         'connectionChange',
         this.handleFirstConnectivityChange
       );
-
-      // this.setState({
-      //   isLoading: false
-      // });
     }
   }
 

@@ -1,7 +1,8 @@
 import express, { Router } from 'express';
-// Import register action from movies controller
-import register  from './controllers/register';
 import validator from 'express-validator';
+// Import actions from controllers
+import { registerUser }  from './controllers/register';
+import { login }  from './controllers/login';
 
 // Initialize the router
 const router = Router();
@@ -12,7 +13,8 @@ router.use(bodyParser.json()); // support json encoded bodies
 router.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 router.use(validator());
 
-// Handle /movies.json route with register action from movies controller
-router.post('/register', register.registerUser);
+// routes
+router.post('/register', registerUser);
+router.post('/login', login);
 
 export default router;
