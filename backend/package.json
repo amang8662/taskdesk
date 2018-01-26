@@ -8,6 +8,7 @@
     "start": "nodemon -- node_modules/babel-cli/bin/babel-node.js server.js"
   },
   "dependencies": {
+    "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "moment": "^2.20.1",

@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
 import User from '../models/user';
+import bcrypt from 'bcrypt';
+
+const saltRounds = 10;
 
 exports.registerUser = function(req, res) {
 
@@ -31,7 +34,7 @@ exports.registerUser = function(req, res) {
       name: req.body.name,
       username: req.body.username,
       email: req.body.email,
-      password: req.body.password,
+      password: bcrypt.hashSync(req.body.password, saltRounds),
     };
 
     var user = new User(userdata);

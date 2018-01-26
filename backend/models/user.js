@@ -3,7 +3,10 @@ var uniqueValidator = require('mongoose-unique-validator');
 
 // Define user schema
 var userSchema = new Schema({
-  name: String,
+  name: {
+    type: String,
+    required: true,
+  },
   username: {
     type: String,
     unique: true,
