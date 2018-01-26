@@ -14,7 +14,7 @@ import {
 import queryString from 'query-string';
 import { Spinner } from 'native-base';
 import validate from '../../modules/validate';
-import { ipaddress } from '../../Global';
+import { ipaddress } from '../../Globals';
 
 import Logo from '../../components/logo';
 import TextInputError from '../../components/textinputerror';
