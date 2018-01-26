@@ -14,7 +14,7 @@ import {
 import queryString from 'query-string';
 import { Spinner } from 'native-base';
 import validate from '../../modules/validate';
-import globaldata from '../../Global';
+import { ipaddress } from '../../Global';
 
 import Logo from '../../components/logo';
 import TextInputError from '../../components/textinputerror';
@@ -110,7 +110,6 @@ export default class Signup extends Component<{}> {
 
   register = () => {
     const {name, userName, email, password} = this.state;
-    console.log(globaldata.ipaddress());
     const isFormValid = this.validateForm();
     
     if(isFormValid) {
@@ -123,7 +122,7 @@ export default class Signup extends Component<{}> {
 
           if(isConnected) {
 
-            fetch('http://' + globaldata.ipaddress() + ':3000/register' , {
+            fetch('http://' + ipaddress() + ':3000/register' , {
                 method : 'post',
                 headers : {
                   'Accept' : 'application/json',
