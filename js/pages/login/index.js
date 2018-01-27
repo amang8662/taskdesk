@@ -110,8 +110,9 @@ export default class Login extends Component<{}> {
             if(res.status == true) {
               
               try {
-                AsyncStorage.setItem('user_id' , res.data);
-                alert("Successfully Logged In");
+
+                AsyncStorage.setItem('userid' , res.data);
+                Actions.reset('authenticated',{userid: res.data});
               } catch(error) {
 
                 alert("Some error Occured. Try Again");
