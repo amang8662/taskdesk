@@ -14,6 +14,7 @@ import {
 import queryString from 'query-string';
 import { Spinner } from 'native-base';
 import validate from '../../modules/validate';
+import timeout from '../../modules/timeout';
 import { ipaddress } from '../../Globals';
 
 import Logo from '../../components/logo';
@@ -52,8 +53,8 @@ export default class Login extends Component<{}> {
     }
   }
 
-  validateForm() 
-{
+  validateForm() {
+
     //Check username
     const userNameError = validate("username",this.state.userName,{required:true});
    
@@ -89,47 +90,56 @@ export default class Login extends Component<{}> {
 
         if(isConnected) {
 
-          fetch('http://' + ipaddress() + ':3000/login' , {
-              method : 'post',
-              headers : {
-                'Accept' : 'application/json',
-                'Content-type' : 'application/x-www-form-urlencoded'
-              },
-              'body' : queryString.stringify({
-                username : userName.toLowerCase(),
-                password : password
-              })
-          })
-          .then((response) => response.json())
-          .then((res) => {
-            
-            this.setState({
-              isLoading: false
-            });
-
-            if(res.status == true) {
+          timeout(10000, 
+            fetch('http://' + ipaddress() + ':3000/login' , {
+                method : 'post',
+                headers : {
+                  'Accept' : 'application/json',
+                  'Content-type' : 'application/x-www-form-urlencoded'
+                },
+                'body' : queryString.stringify({
+                  username : userName.toLowerCase(),
+                  password : password
+                })
+            })
+            .then((response) => response.json())
+            .then((res) => {
               
-              try {
+              this.setState({
+                isLoading: false
+              });
 
-                AsyncStorage.setItem('userid' , res.data);
-                Actions.reset('authenticated',{userid: res.data});
-              } catch(error) {
+              if(res.status == true) {
+                
+                try {
 
-                alert("Some error Occured. Try Again");
-              } 
-            } else if(res.status == false) {
+                  AsyncStorage.setItem('userid' , res.data);
+                  Actions.reset('authenticated',{userid: res.data});
+                } catch(error) {
 
-              if(res.errortype == 'no-user-error') {
-                alert("Username/Email is not registered");
-              } else if(res.errortype == 'password-error') {
-                alert("Invalid Credentials");
-              } else { 
-                alert('Some error Occured. Try Again');
-              }
-            }       
-          })
-          .catch((error) => {
-              alert(error);
+                  alert("Some error Occured. Try Again");
+                } 
+              } else if(res.status == false) {
+
+                if(res.errortype == 'no-user-error') {
+                  alert("Username/Email is not registered");
+                } else if(res.errortype == 'password-error') {
+                  alert("Invalid Credentials");
+                } else { 
+                  alert('Some error Occured. Try Again');
+                }
+              }       
+            })
+            .catch((error) => {
+                alert(error);
+            })
+          ).catch((error) => {
+
+              this.setState({
+                isLoading: false
+              });
+
+              alert("Server not responding. Try again");
           });
 
         } else {

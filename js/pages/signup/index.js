@@ -13,6 +13,7 @@ import {
 import queryString from 'query-string';
 import { Spinner } from 'native-base';
 import validate from '../../modules/validate';
+import timeout from '../../modules/timeout';
 import { ipaddress } from '../../Globals';
 
 import Logo from '../../components/logo';
@@ -70,8 +71,8 @@ export default class Signup extends Component<{}> {
     // );
   }
 
-  validateForm() 
-{
+  validateForm() {
+
     //Check name
     const nameError = validate("name",this.state.name,{required:true,min:3,max:40});
     
@@ -121,48 +122,57 @@ export default class Signup extends Component<{}> {
 
         if(isConnected) {
 
-          fetch('http://' + ipaddress() + ':3000/register' , {
-              method : 'post',
-              headers : {
-                'Accept' : 'application/json',
-                'Content-type' : 'application/x-www-form-urlencoded'
-              },
-              'body' : queryString.stringify({
-                name : name,
-                username : userName.toLowerCase(),
-                email : email.toLowerCase(),
-                password : password
-              })
-          })
-          .then((response) => response.json())
-          .then((res) => {
-            
-            this.setState({
-              isLoading: false
-            });
+          timeout(10000, 
+            fetch('http://' + ipaddress() + ':3000/register' , {
+                method : 'post',
+                headers : {
+                  'Accept' : 'application/json',
+                  'Content-type' : 'application/x-www-form-urlencoded'
+                },
+                'body' : queryString.stringify({
+                  name : name,
+                  username : userName.toLowerCase(),
+                  email : email.toLowerCase(),
+                  password : password
+                })
+            })
+            .then((response) => response.json())
+            .then((res) => {
+              
+              this.setState({
+                isLoading: false
+              });
 
-            if(res.status == true) {
-              alert(res.message);
-            } else if(res.status == false) {
-              if(res.errortype == 'validation') {
-                alert("Please enter valid details");
-              } else if(res.errortype == 'unique-error') {
+              if(res.status == true) {
+                alert(res.message);
+              } else if(res.status == false) {
+                if(res.errortype == 'validation') {
+                  alert("Please enter valid details");
+                } else if(res.errortype == 'unique-error') {
 
-                if(res.fields.username && res.fields.email) {
-                  alert("Username and Email are already taken.");
-                } else if(res.fields.username){
-                  alert("Username is already taken.");
-                } else {
-                  alert("Email is already taken.");
+                  if(res.fields.username && res.fields.email) {
+                    alert("Username and Email are already taken.");
+                  } else if(res.fields.username){
+                    alert("Username is already taken.");
+                  } else {
+                    alert("Email is already taken.");
+                  }
+                } else if(res.errortype == 'db-error') {
+                  
+                  alert('Sorry Some Error Occured');
                 }
-              } else if(res.errortype == 'db-error') {
-                
-                alert('Sorry Some Error Occured');
-              }
-            }       
-          })
-          .catch((error) => {
-              alert(error);
+              }       
+            })
+            .catch((error) => {
+                alert(error);
+            })
+          ).catch((error) => {
+
+              this.setState({
+                isLoading: false
+              });
+
+              alert("Server not responding. Try again");
           });
 
         } else {
