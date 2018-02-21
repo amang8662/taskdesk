@@ -8,7 +8,7 @@ import {
 
 import { Actions } from 'react-native-router-flux';
 
-export default class Home extends Component<{}> {
+export default class GeneratedTasks extends Component<{}> {
 
   constructor(props) {
     super(props);
@@ -17,20 +17,20 @@ export default class Home extends Component<{}> {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Home</Text>
+        <Text>GeneratedTasks</Text>
         <TouchableOpacity style={{
             width:200,
             backgroundColor:'#1c313a',
             borderRadius: 25,
             marginVertical: 10,
             paddingVertical: 13
-          }} onPress={() => Actions.taskinfo()}>
+          }} onPress={() => Actions.edittask()}>
           <Text style={{
               fontSize:16,
               fontWeight:'500',
               color:'#ffffff',
               textAlign:'center'
-            }}>Task Info</Text>
+            }}>Edit Task</Text>
         </TouchableOpacity>
       </View>
     );

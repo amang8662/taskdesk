@@ -4,10 +4,15 @@ import {
   View,
   Text,
   AsyncStorage,
-  TouchableOpacity
+  TouchableOpacity,
+  Platform,
+  Dimensions
 } from 'react-native';
 
 import { Actions } from 'react-native-router-flux';
+
+const deviceHeight = Dimensions.get("window").height;
+const deviceWidth = Dimensions.get("window").width;
 
 export default class SideMenu extends Component<{}> {
 
@@ -26,20 +31,28 @@ export default class SideMenu extends Component<{}> {
     }
   }
 
-  dashboard() {
-    Actions.dashboard()
-  }
-
   render(){
 
     return (
       <View style={styles.container}>
-        
-        <TouchableOpacity style={styles.listContainer} onPress={this.dashboard}>
+      
+        <TouchableOpacity style={styles.listItem} onPress={() => Actions.dashboard()}>
           <Text style={styles.text}>DashBoard</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity style={styles.listItem} onPress={() => Actions.yourtasks()}>
+          <Text style={styles.text}>Your Tasks</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.listItem} onPress={() => Actions.task()}>
+          <Text style={styles.text}>Generated Tasks</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.listItem} onPress={() => Actions.aboutus()}>
+          <Text style={styles.text}>About Us</Text>
+        </TouchableOpacity>
           
-        <TouchableOpacity style={styles.listContainer} onPress={this.logout}>
+        <TouchableOpacity style={styles.listItem} onPress={this.logout}>
           <Text style={styles.text}>Logout</Text>
         </TouchableOpacity>
       </View>
@@ -50,10 +63,9 @@ export default class SideMenu extends Component<{}> {
 const styles = StyleSheet.create({
   container : {
     backgroundColor:'#fff',
-    borderBottomColor: '#eee',
     flex: 1
   },
-  listContainer: {
+  listItem: {
     height:50,
     backgroundColor:'#1c313a',
     borderStyle: 'solid',
@@ -68,5 +80,23 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     textAlignVertical: 'center',
     color: '#fff' 
+  },
+  drawerCover: {
+    alignSelf: "stretch",
+    // resizeMode: 'cover',
+    height: deviceHeight / 3.5,
+    width: null,
+    position: "relative",
+    marginBottom: 10
+  },
+  drawerImage: {
+    position: "absolute",
+    // left: (Platform.OS === 'android') ? 30 : 40,
+    left: Platform.OS === "android" ? deviceWidth / 10 : deviceWidth / 9,
+    // top: (Platform.OS === 'android') ? 45 : 55,
+    top: Platform.OS === "android" ? deviceHeight / 13 : deviceHeight / 12,
+    width: 210,
+    height: 75,
+    resizeMode: "cover"
   }
 });
