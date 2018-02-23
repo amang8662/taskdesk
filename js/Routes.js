@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Router, Stack, Scene} from 'react-native-router-flux';
-import { Icon } from 'native-base';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import SideMenu from './components/sidemenu';
 //Scenes
@@ -17,9 +17,9 @@ import EditTask from './pages/edittask';
 import AboutUs from './pages/aboutus';
 import GeneratedTasks from './pages/generatedtasks';
 
-const iconDashBoard = ({tintColor}) => (<Icon name="dashboard" style={{color: tintColor}}/>)
-const iconPerson = ({tintColor}) => (<Icon name="person"  style={{color: tintColor}}/>)
-const iconAddCircle = ({tintColor}) => (<Icon name="add-circle"  style={{color: tintColor}}/>)
+const iconDashBoard = ({ tintColor }) => { return <Icon name="dashboard" size={25} color={tintColor} />}
+const iconPerson = ({ tintColor }) => { return <Icon name="user" size={25} color={tintColor} />}
+const iconAddCircle = ({ tintColor }) => { return <Icon name="plus" size={25} color={tintColor} />}
 
 export default class Routes extends Component<{}> {
 	render() {
@@ -34,14 +34,14 @@ export default class Routes extends Component<{}> {
 				    <Scene key="authenticated" hideNavBar type="reset">
     			    	<Scene key="drawer" drawer contentComponent={SideMenu} drawerPosition="left" drawerWidth={240}  initial hideDrawerButton={true}>
     			    		<Scene key="tabs" tabs tabBarPosition="bottom" showIcon={true}>
-	    			    		<Stack key="dashboard" TabBarIcon={iconDashBoard} title="DashBoard" initial>
+	    			    		<Stack key="dashboard" tabBarIcon={iconDashBoard} title="DashBoard" initial>
 	    		    				<Scene key="home" component={Home} title="Home" initial hideNavBar/>
 	    		    				<Scene key="taskinfo" component={TaskInfo} title="TaskInfo"/>
 	    			    		</Stack>
 	    			    		
-	    			    		<Scene key="addtask" component={AddTask} TabBarIcon={iconAddCircle} title="Add Task"/>
+	    			    		<Scene key="addtask" component={AddTask} tabBarIcon={iconAddCircle} title="Add Task"/>
 	    		    			
-	    		    			<Stack key="profile" title="Profile" TabBarIcon={iconPerson}>
+	    		    			<Stack key="profile" title="Profile" tabBarIcon={iconPerson}>
 	    		    				<Scene key="profilehome" component={ProfileHome} initial hideNavBar/>
 	    		    				<Scene key="editprofile" component={EditProfile} title="Edit Profile"/>
 	    		    			</Stack>

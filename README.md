@@ -17,3 +17,11 @@ For development on frontend:
 		2. cmd - npm run build (to create Globals.js file in directory ~taskdesk/js)
 		3. add your system ip address to Globals.js
 		4. cmd - react-native run-android (to start running development)
+
+Note: If any feature is not working, then
+
+	Option 1. Delete folders/directory - taskdesk/android/build
+							 - taskdesk/android/app/build
+
+  If problem still persist,
+  	Option 2. Connect your device to USB cable and run cmd - react-native run-android (Use Option 	1 in this also) 
