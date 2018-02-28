@@ -15,8 +15,6 @@ exports.registerUser = function(req, res) {
   // check the validation object for errors
   var errors = req.validationErrors();
 
-  console.log(errors);
-
   var resdata = {};
 
   if (errors) {

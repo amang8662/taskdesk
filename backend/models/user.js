@@ -21,6 +21,34 @@ var userSchema = new Schema({
     type: String,
     required: true,
   },
+  title: {
+    type: String,
+  },
+  about: {
+    type: String,
+  },
+  profilepic: {
+    type: String,
+    default: "default/user.png",
+  },
+  user_level: {
+    type: Number,
+    default: 1,
+  },
+  user_grade: {
+    type: String,
+    default: "E",
+  },
+  score: {
+    type: Number,
+    default: 0,
+  },
+  skills: [
+    { 
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'skill'
+    }
+  ],
 });
 userSchema.plugin(uniqueValidator);
 
