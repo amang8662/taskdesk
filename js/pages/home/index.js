@@ -17,21 +17,15 @@ export default class Home extends Component<{}> {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Home</Text>
-        <TouchableOpacity style={{
-            width:200,
-            backgroundColor:'#1c313a',
-            borderRadius: 25,
-            marginVertical: 10,
-            paddingVertical: 13
-          }} onPress={() => Actions.taskinfo()}>
-          <Text style={{
-              fontSize:16,
-              fontWeight:'500',
-              color:'#ffffff',
-              textAlign:'center'
-            }}>Task Info</Text>
-        </TouchableOpacity>
+        <Text style={{fontSize: 30,color: '#fff'}} >Choose to Be A :  </Text>
+        <View style={styles.col}>
+          <TouchableOpacity style={ styles.button} onPress={() => Actions.taskinfo()}>
+            <Text style={styles.textBtn}>Task Generator</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={ styles.button} onPress={() => Actions.taskinfo()}>
+            <Text style={styles.textBtn}>Task Taker</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -39,10 +33,27 @@ export default class Home extends Component<{}> {
 
 const styles = StyleSheet.create({
   container : {
-    backgroundColor:'#455a64',
-    flex: 1,
-    paddingTop: 30,
-    justifyContent:'center',
+    backgroundColor:'rgba(0, 0, 0, 0.9)',
+    flex: 1 ,
+    paddingTop: 50,
     alignItems: 'center'
+  },
+  col : {
+    flex: 1/2,
+    alignItems: 'center',
+    justifyContent: 'space-around' ,
+  },
+  textBtn: {
+    fontSize: 28,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    color: '#fff' ,
+    padding: 12
+  },
+  button : {
+    width:250,
+    backgroundColor:'#f44336',
+    borderRadius: 0,
+    padding: 11
   }
 });
