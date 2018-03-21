@@ -62,21 +62,21 @@ export default class SideMenu extends Component<{}> {
 
 const styles = StyleSheet.create({
   container : {
-    backgroundColor:'#fff',
-    flex: 1
+    backgroundColor:'#212121',
+    flex: 1,
+    paddingTop: 5
   },
   listItem: {
     height:50,
-    backgroundColor:'#1c313a',
+    backgroundColor:'#f44336',
     borderStyle: 'solid',
     borderBottomWidth: 1,
     borderBottomColor: '#000',
     padding: 10,
-    paddingTop: 15,
-    marginTop: 5
+    marginTop: 0
   },
   text: {
-    fontSize: 18,
+    fontSize: 22,
     textAlign: 'left',
     textAlignVertical: 'center',
     color: '#fff' 
