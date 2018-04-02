@@ -239,11 +239,11 @@ const styles = StyleSheet.create({
 
   inputBox: {
     width:300,
-    backgroundColor:'#000',
     borderBottomColor: '#eee',
     borderWidth: 2,
     paddingHorizontal:16,
     fontSize:16,
+    backgroundColor: '#222',
     color:'#ffffff',
     marginVertical: 10
   },
@@ -252,10 +252,10 @@ const styles = StyleSheet.create({
     backgroundColor:'#369',
     borderRadius: 0,
     marginVertical: 10,
-    paddingVertical: 13
+    paddingVertical: 15
   },
   buttonText: {
-    fontSize:16,
+    fontSize:18,
     fontWeight:'500',
     color:'#ffffff',
     textAlign:'center'
@@ -264,15 +264,15 @@ const styles = StyleSheet.create({
      width:300,
     borderWidth: 3,
     paddingHorizontal:16,
-    fontSize:18,
+    color: '#ffffff',
+    fontSize:20,
     marginVertical: 10,
     borderStyle: 'solid',
-    color: '#eee',
-    backgroundColor: '#000',
+    backgroundColor: '#222',
     borderBottomColor : '#d83c3c'
   },
   placeholderErrorTextColor: {
-    color: '#a94442'
+    color: '#ffffff'
   }
 });
 
@@ -283,7 +283,7 @@ const errorStyle = StyleSheet.create({
     paddingHorizontal:16,
   },
   errorText : {
-    color: '#d83c3c',
+    color: '#bbb',
     fontSize: 14
   }
 });

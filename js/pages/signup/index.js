@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
 
   inputBox: {
     width:300,
-    backgroundColor:'#000',
+    backgroundColor:'#222',
     borderBottomColor: '#eee',
     borderWidth: 2,
     paddingHorizontal:16,
@@ -337,7 +337,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderStyle: 'solid',
     color: '#eee',
-    backgroundColor: '#000',
+    backgroundColor: '#222',
     borderBottomColor : '#d83c3c'
   },
   placeholderErrorTextColor: {
