@@ -199,7 +199,7 @@ export default class Signup extends Component<{}> {
     var emailError = {};
     var passwordError = {};
     return(
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         <Logo/>
         <View style={styles.formContainer}>
           <TextInput style={this.state.nameError.isError ? styles.inputBoxError : styles.inputBox} 
@@ -209,6 +209,9 @@ export default class Signup extends Component<{}> {
               selectionColor="#fff"
               value={this.state.name}
               onChangeText={name => this.setState({name})}
+              returnKeyType={'next'}
+              blurOnSubmit={false}
+              onSubmitEditing={() => {this.username.focus()}}
               onBlur={() => {
                   nameError = validate("name",this.state.name,{required:true,min:3,max:40});
                   this.setState({
@@ -224,6 +227,10 @@ export default class Signup extends Component<{}> {
               selectionColor="#fff"
               value={this.state.userName}
               onChangeText={userName => this.setState({userName})}
+              ref={(input) => this.username = input}
+              returnKeyType={'next'}
+              blurOnSubmit={false}
+              onSubmitEditing={() => {this.email.focus()}}
               onBlur={() => {
                   userNameError = validate("username",this.state.userName,{required:true,regex:true,regexExp:'^[a-zA-Z0-9\-]+$',regexMsg:'Username must contain only letters, numbers or -',min:4,max:25})
                   this.setState({
@@ -240,6 +247,10 @@ export default class Signup extends Component<{}> {
               keyboardType="email-address"
               value={this.state.email}
               onChangeText={email => this.setState({email})}
+              ref={(input) => this.email = input}
+              returnKeyType={'next'}
+              blurOnSubmit={false}
+              onSubmitEditing={() => {this.password.focus()}}
               onBlur={() => {
                   emailError = validate("email",this.state.email,{required:true,regex:true})
                   this.setState({
@@ -256,6 +267,8 @@ export default class Signup extends Component<{}> {
               ref={(input) => this.password = input}
               value={this.state.password}
               onChangeText={password => this.setState({password})}
+              ref={(input) => this.password = input}
+              returnKeyType={'done'}
               onBlur={() => {
                   passwordError = validate("password",this.state.password,{required:true,min:8,max:30})
                   this.setState({
@@ -264,10 +277,10 @@ export default class Signup extends Component<{}> {
                 }}
               />
           <TextInputError styles={errorStyle} isError={this.state.passwordError.isError} message={this.state.passwordError.message} />  
-           <TouchableOpacity style={styles.button} onPress={this.register}>
-             <Text style={styles.buttonText}>Sign Up</Text>
-           </TouchableOpacity>
-           { this.state.isLoading == true ? <Spinner color='#d7d4f0' /> : null}    
+          <TouchableOpacity style={styles.button} onPress={this.register}>
+            <Text style={styles.buttonText}>Sign Up</Text>
+          </TouchableOpacity>
+          { this.state.isLoading == true ? <Spinner color='#d7d4f0' /> : null}    
         </View>
         <View style={styles.signupTextCont}>
           <Text style={styles.signupText}>Already have an account?</Text>

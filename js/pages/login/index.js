@@ -56,7 +56,7 @@ export default class Login extends Component<{}> {
   validateForm() {
 
     //Check username
-    const userNameError = validate("username",this.state.userName,{required:true});
+    const userNameError = validate("username/Email",this.state.userName,{required:true});
    
     this.setState({
       userNameError: Object.assign(this.state.userNameError, userNameError)
@@ -160,17 +160,20 @@ export default class Login extends Component<{}> {
 
   render() {
     return(
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         <View style={styles.formContainer}>
           <Logo/>
           <TextInput style={this.state.userNameError.isError ? styles.inputBoxError : styles.inputBox} 
               underlineColorAndroid='rgba(0,0,0,0)' 
               placeholder="Username/Email"
-              placeholderTextColor = {this.state.userNameError.isError ? styles.placeholderErrorTextColor : '#ffffff'}
+              placeholderTextColor = {this.state.userNameError.isError ? styles.placeholderErrorTextColor : '#fff'}
               selectionColor="#fff"
               keyboardType="email-address"
               value={this.state.userName}
               onChangeText={userName => this.setState({userName})}
+              returnKeyType={'next'}
+              blurOnSubmit={false}
+              onSubmitEditing={() => {this.password.focus()}}
               onBlur={() => {
                   userNameError = validate("username/Email",this.state.userName,{required:true})
                   this.setState({
@@ -183,10 +186,11 @@ export default class Login extends Component<{}> {
               underlineColorAndroid='rgba(0,0,0,0)' 
               placeholder="Password"
               secureTextEntry={true}
-              placeholderTextColor = {this.state.passwordError.isError ? styles.placeholderErrorTextColor : '#ffffff'}
-              ref={(input) => this.password = input}
+              placeholderTextColor = {this.state.passwordError.isError ? styles.placeholderErrorTextColor : '#fff'}
               value={this.state.password}
               onChangeText={password => this.setState({password})}
+              ref={(input) => this.password = input}
+              returnKeyType={'done'}
               onBlur={() => {
                   passwordError = validate("password",this.state.password,{required:true})
                   this.setState({
@@ -196,9 +200,9 @@ export default class Login extends Component<{}> {
               />
           <TextInputError styles={errorStyle} isError={this.state.passwordError.isError} message={this.state.passwordError.message} /> 
           <TouchableHighlight style={styles.button} onPress={this.login}>
-             <Text style={styles.buttonText}>Sign In</Text>
-           </TouchableHighlight>
-           { this.state.isLoading == true ? <Spinner color='#d7d4f0' /> : null}
+            <Text style={styles.buttonText}>Sign In</Text>
+          </TouchableHighlight>
+          { this.state.isLoading == true ? <Spinner color='#d7d4f0' /> : null}
         </View>
         <View style={styles.signupTextCont}>
           <Text style={styles.signupText}>Don't have an account yet?</Text>
