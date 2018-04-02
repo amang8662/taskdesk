@@ -3,12 +3,14 @@ import {
   StyleSheet,
   Text,
   View,
-  TextInput,
   TouchableOpacity,
   NetInfo,
   ScrollView,
   ToastAndroid
 } from 'react-native';
+
+
+import InputText from '../../components/inputtext';
 
 import queryString from 'query-string';
 import { Spinner } from 'native-base';
@@ -202,11 +204,9 @@ export default class Signup extends Component<{}> {
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         <Logo/>
         <View style={styles.formContainer}>
-          <TextInput style={this.state.nameError.isError ? styles.inputBoxError : styles.inputBox} 
-              underlineColorAndroid='rgba(0,0,0,0)' 
+          <InputText
+              isError={this.state.nameError.isError} 
               placeholder="Full Name"
-              placeholderTextColor = '#aeaeae'
-              selectionColor="#fff"
               value={this.state.name}
               onChangeText={name => this.setState({name})}
               returnKeyType={'next'}
@@ -220,11 +220,9 @@ export default class Signup extends Component<{}> {
                 }}
               />
           <TextInputError styles={errorStyle} isError={this.state.nameError.isError} message={this.state.nameError.message} />
-          <TextInput style={this.state.userNameError.isError ? styles.inputBoxError : styles.inputBox} 
-              underlineColorAndroid='rgba(0,0,0,0)' 
+          <InputText
+              isError={this.state.userNameError.isError} 
               placeholder="Username"
-              placeholderTextColor = '#aeaeae'
-              selectionColor="#fff"
               value={this.state.userName}
               onChangeText={userName => this.setState({userName})}
               ref={(input) => this.username = input}
@@ -239,11 +237,9 @@ export default class Signup extends Component<{}> {
                 }}
               />
           <TextInputError styles={errorStyle} isError={this.state.userNameError.isError} message={this.state.userNameError.message} />
-          <TextInput style={this.state.emailError.isError ? styles.inputBoxError : styles.inputBox} 
-              underlineColorAndroid='rgba(0,0,0,0)' 
+          <InputText
+              isError={this.state.emailError.isError} 
               placeholder="Email"
-              placeholderTextColor = '#aeaeae'
-              selectionColor="#fff"
               keyboardType="email-address"
               value={this.state.email}
               onChangeText={email => this.setState({email})}
@@ -259,11 +255,10 @@ export default class Signup extends Component<{}> {
                 }}
               />
           <TextInputError styles={errorStyle} isError={this.state.emailError.isError} message={this.state.emailError.message} />
-          <TextInput style={this.state.passwordError.isError ? styles.inputBoxError : styles.inputBox} 
-              underlineColorAndroid='rgba(0,0,0,0)' 
+          <InputText
+              isError={this.state.passwordError.isError} 
               placeholder="Password"
               secureTextEntry={true}
-              placeholderTextColor = '#aeaeae'
               ref={(input) => this.password = input}
               value={this.state.password}
               onChangeText={password => this.setState({password})}

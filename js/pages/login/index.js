@@ -3,13 +3,15 @@ import {
   StyleSheet,
   Text,
   View,
-  TextInput,
   TouchableHighlight,
   AsyncStorage,
   NetInfo,
   ScrollView,
   ToastAndroid
 } from 'react-native';
+
+
+import InputText from '../../components/inputtext';
 
 import queryString from 'query-string';
 import { Spinner } from 'native-base';
@@ -163,11 +165,9 @@ export default class Login extends Component<{}> {
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         <View style={styles.formContainer}>
           <Logo/>
-          <TextInput style={this.state.userNameError.isError ? styles.inputBoxError : styles.inputBox} 
-              underlineColorAndroid='rgba(0,0,0,0)' 
+          <InputText
+              isError={this.state.userNameError.isError}
               placeholder="Username/Email"
-              placeholderTextColor = '#aeaeae'
-              selectionColor="#fff"
               keyboardType="email-address"
               value={this.state.userName}
               onChangeText={userName => this.setState({userName})}
@@ -182,11 +182,10 @@ export default class Login extends Component<{}> {
                 }}
               />
           <TextInputError styles={errorStyle} isError={this.state.userNameError.isError} message={this.state.userNameError.message} />
-          <TextInput style={this.state.passwordError.isError ? styles.inputBoxError : styles.inputBox} 
-              underlineColorAndroid='rgba(0,0,0,0)' 
+          <InputText
+              isError={this.state.passwordError.isError} 
               placeholder="Password"
               secureTextEntry={true}
-              placeholderTextColor = '#aeaeae'
               value={this.state.password}
               onChangeText={password => this.setState({password})}
               ref={(input) => this.password = input}
