@@ -4,7 +4,7 @@ import {
   Text,
   View,
   TextInput,
-  TouchableOpacity,
+  TouchableHighlight,
   AsyncStorage,
   NetInfo,
   ScrollView,
@@ -195,14 +195,14 @@ export default class Login extends Component<{}> {
                 }}
               />
           <TextInputError styles={errorStyle} isError={this.state.passwordError.isError} message={this.state.passwordError.message} /> 
-          <TouchableOpacity style={styles.button} onPress={this.login}>
+          <TouchableHighlight style={styles.button} onPress={this.login}>
              <Text style={styles.buttonText}>Sign In</Text>
-           </TouchableOpacity>
+           </TouchableHighlight>
            { this.state.isLoading == true ? <Spinner color='#d7d4f0' /> : null}
         </View>
         <View style={styles.signupTextCont}>
           <Text style={styles.signupText}>Don't have an account yet?</Text>
-          <TouchableOpacity onPress={this.signup}><Text style={styles.signupButton}> Signup</Text></TouchableOpacity>
+          <TouchableHighlight onPress={this.signup}><Text style={styles.signupButton}> Signup</Text></TouchableHighlight>
         </View>
       </ScrollView>
       )
@@ -211,7 +211,7 @@ export default class Login extends Component<{}> {
 
 const styles = StyleSheet.create({
   container : {
-    backgroundColor:'#455a64',
+    backgroundColor:'#000',
     flexGrow: 1,
     paddingTop: 30
   },
@@ -239,8 +239,9 @@ const styles = StyleSheet.create({
 
   inputBox: {
     width:300,
-    backgroundColor:'rgba(255, 255,255,0.2)',
-    borderRadius: 25,
+    backgroundColor:'#000',
+    borderBottomColor: '#eee',
+    borderWidth: 2,
     paddingHorizontal:16,
     fontSize:16,
     color:'#ffffff',
@@ -248,10 +249,10 @@ const styles = StyleSheet.create({
   },
   button: {
     width:300,
-    backgroundColor:'#1c313a',
-     borderRadius: 25,
-      marginVertical: 10,
-      paddingVertical: 13
+    backgroundColor:'#369',
+    borderRadius: 0,
+    marginVertical: 10,
+    paddingVertical: 13
   },
   buttonText: {
     fontSize:16,
@@ -260,16 +261,15 @@ const styles = StyleSheet.create({
     textAlign:'center'
   },
   inputBoxError: {
-    width:300,
-    borderRadius: 25,
+     width:300,
+    borderWidth: 3,
     paddingHorizontal:16,
-    fontSize:16,
+    fontSize:18,
     marginVertical: 10,
     borderStyle: 'solid',
-    color: '#a94442',
-    backgroundColor: '#fee',
-    borderWidth: 1,
-    borderColor: '#d83c3c'
+    color: '#eee',
+    backgroundColor: '#000',
+    borderBottomColor : '#d83c3c'
   },
   placeholderErrorTextColor: {
     color: '#a94442'
@@ -283,6 +283,7 @@ const errorStyle = StyleSheet.create({
     paddingHorizontal:16,
   },
   errorText : {
-    color: '#d83c3c'
+    color: '#d83c3c',
+    fontSize: 14
   }
 });
