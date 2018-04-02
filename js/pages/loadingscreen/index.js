@@ -83,7 +83,7 @@ export default class LoadingScreen extends Component<{}> {
 
 const styles = StyleSheet.create({
   container : {
-    backgroundColor:'#455a64',
+    backgroundColor:'rgba(0, 0, 0, 0.9)',
     flex: 1,
     paddingTop: 30,
     justifyContent:'flex-end',
