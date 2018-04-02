@@ -166,7 +166,7 @@ export default class Login extends Component<{}> {
           <TextInput style={this.state.userNameError.isError ? styles.inputBoxError : styles.inputBox} 
               underlineColorAndroid='rgba(0,0,0,0)' 
               placeholder="Username/Email"
-              placeholderTextColor = {this.state.userNameError.isError ? styles.placeholderErrorTextColor : '#fff'}
+              placeholderTextColor = '#aeaeae'
               selectionColor="#fff"
               keyboardType="email-address"
               value={this.state.userName}
@@ -186,7 +186,7 @@ export default class Login extends Component<{}> {
               underlineColorAndroid='rgba(0,0,0,0)' 
               placeholder="Password"
               secureTextEntry={true}
-              placeholderTextColor = {this.state.passwordError.isError ? styles.placeholderErrorTextColor : '#fff'}
+              placeholderTextColor = '#aeaeae'
               value={this.state.password}
               onChangeText={password => this.setState({password})}
               ref={(input) => this.password = input}
@@ -265,18 +265,15 @@ const styles = StyleSheet.create({
     textAlign:'center'
   },
   inputBoxError: {
-     width:300,
+    width:300,
     borderWidth: 3,
     paddingHorizontal:16,
     color: '#ffffff',
-    fontSize:20,
+    fontSize:16,
     marginVertical: 10,
     borderStyle: 'solid',
     backgroundColor: '#222',
     borderBottomColor : '#d83c3c'
-  },
-  placeholderErrorTextColor: {
-    color: '#ffffff'
   }
 });
 

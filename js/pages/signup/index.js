@@ -205,7 +205,7 @@ export default class Signup extends Component<{}> {
           <TextInput style={this.state.nameError.isError ? styles.inputBoxError : styles.inputBox} 
               underlineColorAndroid='rgba(0,0,0,0)' 
               placeholder="Full Name"
-              placeholderTextColor = {this.state.nameError.isError ? styles.placeholderErrorTextColor : '#ffffff'}
+              placeholderTextColor = '#aeaeae'
               selectionColor="#fff"
               value={this.state.name}
               onChangeText={name => this.setState({name})}
@@ -223,7 +223,7 @@ export default class Signup extends Component<{}> {
           <TextInput style={this.state.userNameError.isError ? styles.inputBoxError : styles.inputBox} 
               underlineColorAndroid='rgba(0,0,0,0)' 
               placeholder="Username"
-              placeholderTextColor = {this.state.userNameError.isError ? styles.placeholderErrorTextColor : '#ffffff'}
+              placeholderTextColor = '#aeaeae'
               selectionColor="#fff"
               value={this.state.userName}
               onChangeText={userName => this.setState({userName})}
@@ -242,7 +242,7 @@ export default class Signup extends Component<{}> {
           <TextInput style={this.state.emailError.isError ? styles.inputBoxError : styles.inputBox} 
               underlineColorAndroid='rgba(0,0,0,0)' 
               placeholder="Email"
-              placeholderTextColor = {this.state.emailError.isError ? styles.placeholderErrorTextColor : '#ffffff'}
+              placeholderTextColor = '#aeaeae'
               selectionColor="#fff"
               keyboardType="email-address"
               value={this.state.email}
@@ -263,7 +263,7 @@ export default class Signup extends Component<{}> {
               underlineColorAndroid='rgba(0,0,0,0)' 
               placeholder="Password"
               secureTextEntry={true}
-              placeholderTextColor = {this.state.passwordError.isError ? styles.placeholderErrorTextColor : '#ffffff'}
+              placeholderTextColor = '#aeaeae'
               ref={(input) => this.password = input}
               value={this.state.password}
               onChangeText={password => this.setState({password})}
@@ -343,18 +343,15 @@ const styles = StyleSheet.create({
     textAlign:'center'
   },
   inputBoxError: {
-     width:300,
+    width:300,
     borderWidth: 3,
     paddingHorizontal:16,
-    fontSize:18,
+    fontSize:16,
     marginVertical: 10,
     borderStyle: 'solid',
     color: '#eee',
     backgroundColor: '#222',
     borderBottomColor : '#d83c3c'
-  },
-  placeholderErrorTextColor: {
-    color: '#a94442'
   }
 });
 
