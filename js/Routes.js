@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Router, Stack, Scene} from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import SideMenu from './components/sidemenu';
+import { SideMenu } from './components';
 //Scenes
 import LoadingScreen from './pages/loadingscreen';
 import Login from './pages/login';

@@ -10,7 +10,7 @@ import {
 
 import { Spinner } from 'native-base';
 
-import Logo from '../../components/logo';
+import { Logo } from '../../components';
 
 import { Actions } from 'react-native-router-flux';
 

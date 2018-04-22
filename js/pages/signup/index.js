@@ -10,16 +10,13 @@ import {
 } from 'react-native';
 
 
-import InputText from '../../components/inputtext';
+import { Logo, InputText, TextInputError } from '../../components';
 
 import queryString from 'query-string';
 import { Spinner } from 'native-base';
 import validate from '../../modules/validate';
 import timeout from '../../modules/timeout';
 import { ipaddress } from '../../Globals';
-
-import Logo from '../../components/logo';
-import TextInputError from '../../components/textinputerror';
 
 import { Actions } from 'react-native-router-flux';
 
