@@ -11,6 +11,7 @@ import {
   StatusBar 
 } from 'react-native';
 
+import Toast from './js/components/toast';
 
 import Routes from './js/Routes';
 
@@ -23,6 +24,11 @@ export default class App extends Component<{}> {
            barStyle="light-content"
          />
         <Routes/>
+        <Toast
+          ref={c => {
+            if (!Toast.toastInstance) Toast.toastInstance = c;
+          }}
+        />
       </View>
     );
   }

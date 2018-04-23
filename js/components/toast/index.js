@@ -3,12 +3,10 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableHighlight,
+  TouchableOpacity,
   Animated,
   Dimensions
 } from 'react-native';
-
-import Button from './Button';
 
 let windowWidth = Dimensions.get('window').width
 let windowHeight = Dimensions.get('window').height
@@ -17,67 +15,131 @@ export default class Toast extends Component {
 
   constructor(props) {
     super(props)
-    this.animatedValue = new Animated.Value(0)
     
     this.state = {
-      modalShown: false,
-      toastColor: 'green',
-      message: 'Success!'
+      showToast: false,
+      text: 'Invalid Argument',
+      buttonText: 'Okay'
     }
+    this.animatedValue = new Animated.Value(0)
   }
 
-  show(message, type) {
-    if(this.state.modalShown) 
-      return;
+  static toastInstance;
+  static show({ ...config }) {
+    
+    this.toastInstance.showToast({ config });
+  }
 
-    this.setToastType(message, type)
-    this.setState({ modalShown: true })
+  showToast({ config }) {
+    
+    this.setState({
+      showToast: true,
+      text: config.text,
+      textColor: config.textColor ? config.textColor : '#00ffff',
+      buttonText: this.getButtonText(config.buttonText),
+      buttonTextColor: config.buttonTextColor ? config.buttonTextColor : '#ffffff',
+      toastColor: this.getToastColor(config.type),
+      onClose: config.onClose
+    });
+
     Animated.timing(
       this.animatedValue,
       {
         toValue: 1,
         duration: 350
-      }).start()
-  }
-  
-  hide() {
-    setTimeout(() => {
-      this.setState({ modalShown: false })
-      Animated.timing(
-      this.animatedValue,
-      { 
-        toValue: 0,
-        duration: 350
-      }).start()
-    }, 2000)
+      }).start();
+
+    if (config.duration > 0) {
+
+      setTimeout(() => {
+        Animated.timing(
+          this.animatedValue, {
+          toValue: 0,
+          duration: 350
+        }).start();
+        setTimeout(() => {
+          this.setState({
+            showToast: false
+          });
+        }, 500);
+      }, config.duration);
+    } else {
+      setTimeout(() => {
+        Animated.timing(
+          this.animatedValue, {
+          toValue: 0,
+          duration: 350
+        }).start();
+        setTimeout(() => {
+          this.setState({
+            showToast: false
+          });
+        }, 500);
+      }, 1500);
+    }
   }
 
-  setToastType(message='Success!', type='success') {
+  hideToast() {
+
+    Animated.timing(
+    this.animatedValue,
+    {
+      toValue: 0,
+      duration: 350
+    }).start();
+
+    setTimeout(() => {
+      this.setState({
+        showToast: false
+      });
+    }, 500);
+  }
+
+  getButtonText(buttonText) {
+    if (buttonText) {
+      if (buttonText.trim().length === 0) {
+        return 'Okay';
+      } else return buttonText;
+    }
+    return 'Okay';
+  }
+
+  getToastColor(type='default') {
     let color
-    if (type == 'error') color = 'red'
-    if (type == 'primary') color = '#2487DB'
-    if (type == 'warning') color = '#ec971f'
-    if (type == 'success') color = 'green'
-    this.setState({ toastColor: color, message: message })
+    if (type == 'default') color = '#474747'
+    else if (type == 'error') color = 'red'
+    else if (type == 'primary') color = '#2487DB'
+    else if (type == 'warning') color = '#ec971f'
+    else if (type == 'success') color = 'green'
+
+    return color;
+  }
+
+  closeToast() {
+    const { onClose } = this.state;
+
+    if (onClose && typeof onClose === "function") {
+      onClose();
+    }
+
+    this.hideToast();
   }
 
   render() {
 
     let animation = this.animatedValue.interpolate({
        inputRange: [0, 1],
-       outputRange: [windowHeight + 30, windowHeight - 20]
+       outputRange: [50, 0]
      })
 
-    return (
-      <View>
-        <View style={styles.container}>
-            <Button type="primary" callToast={ () => this.show('Primary toast called!', 'primary') }  />
-            <Button type="bottom" callToast={ () => this.hide() }  />
-        </View>
+    if (this.state.showToast) {
+        
+      return (
 
         <Animated.View  style={{
             transform: [{ translateY: animation }],
             height: 50,
+            width: windowWidth,
             backgroundColor: this.state.toastColor,
             position: 'absolute',
             left:0,
@@ -85,25 +147,44 @@ export default class Toast extends Component {
             right:0,
             justifyContent: 'center'
           }}>
+          <View style={{flex: 1, flexDirection: 'row'}}>
+            <Text style={[styles.animatedText, {color: this.state.textColor}]}>
+              { this.state.text }
+            </Text>
 
-          <Text style={styles.animatedText}>
-            { this.state.message }
-          </Text>
+            <TouchableOpacity style={styles.button} onPress={() => this.closeToast()}>
+              <Text style={[styles.buttonText, {color: this.state.buttonTextColor}]}>
+                {this.state.buttonText}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </Animated.View>
-
-      </View>
-    );
+      );
+    } else return null;
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  
   animatedText: {
-    marginLeft: 10,
-    color: 'white',
-    fontSize:16,
-    fontWeight: 'bold'
+    marginLeft: 20,
+    fontSize:14,
+    fontWeight: 'bold',
+    flex: 5,
+    maxWidth: windowWidth* 0.75,
+    paddingTop: 15
+  },
+  button: {
+    flex: 1,
+    maxWidth: windowWidth* 0.25,
+    backgroundColor:'#0c9fc6',  
+    borderTopLeftRadius: 3,
+    borderBottomLeftRadius: 3,
+    paddingTop: 15,
+    paddingLeft: 20,
+  },
+  buttonText: {
+    fontSize: 14,
+    fontWeight: 'bold',
   }
 });
