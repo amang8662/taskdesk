@@ -23,7 +23,7 @@ exports.login = function(req, res) {
     res.json(resdata);
   } else {
 
-    User.findOne({$or:[ {'username': req.body.username}, {'email': req.body.email} ]})
+    User.findOne({$or:[ {'username': req.body.username}, {'email': req.body.username} ]})
     .exec(function (err, user) {
       if (err) {
         console.log(err);
