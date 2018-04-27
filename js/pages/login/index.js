@@ -13,7 +13,7 @@ import {
 
 import { Logo, InputText, TextInputError } from '../../components';
 import { validate, timeout } from '../../modules';
-
+import User from '../../static/User';
 import queryString from 'query-string';
 import { Spinner } from 'native-base';
 import { ipaddress } from '../../Globals';
@@ -111,8 +111,9 @@ export default class Login extends Component<{}> {
                 
                 try {
 
-                  AsyncStorage.setItem('userid' , res.data);
-                  Actions.reset('authenticated',{userid: res.data});
+                  AsyncStorage.setItem('user' , res.data);
+                  User.set(res.data);
+                  Actions.reset('authenticated');
                 } catch(error) {
 
                   alert("Some error Occured. Try Again");

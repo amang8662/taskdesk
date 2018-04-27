@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 
 import { Spinner } from 'native-base';
-
+import User from '../../static/User';
 import { Logo } from '../../components';
 
 import { Actions } from 'react-native-router-flux';
@@ -57,9 +57,11 @@ export default class LoadingScreen extends Component<{}> {
       message: 'Checking User..'
     });
     try {
-      let userid = await AsyncStorage.getItem('userid');
-      if(userid !== null) {
-        Actions.reset('authenticated',{userid: userid});
+      let user = await AsyncStorage.getItem('user');
+      if(user !== null) {
+        
+        User.set(user);
+        Actions.reset('authenticated');
       } else {
         Actions.reset('unauthenticated')
       }

@@ -46,7 +46,7 @@ exports.login = function(req, res) {
           if (result === true) {
             data = {
               status: true,
-              data: user._id
+              data: JSON.stringify(user)
             };
           } else {
             data = {
