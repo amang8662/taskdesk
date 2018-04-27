@@ -11,11 +11,10 @@ import {
 
 
 import { Logo, InputText, TextInputError } from '../../components';
+import { validate, timeout } from '../../modules';
 
 import queryString from 'query-string';
 import { Spinner } from 'native-base';
-import validate from '../../modules/validate';
-import timeout from '../../modules/timeout';
 import { ipaddress } from '../../Globals';
 
 import { Actions } from 'react-native-router-flux';
