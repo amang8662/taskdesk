@@ -35,7 +35,7 @@ var userSchema = new Schema({
     type: Number,
     default: 1,
   },
-  user_grade: {
+  rank: {
     type: String,
     default: "E",
   },
