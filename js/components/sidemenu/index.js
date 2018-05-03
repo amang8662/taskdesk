@@ -11,6 +11,8 @@ import {
 
 import { Actions } from 'react-native-router-flux';
 
+import User from '../../static/User';
+
 const deviceHeight = Dimensions.get("window").height;
 const deviceWidth = Dimensions.get("window").width;
 
@@ -51,7 +53,15 @@ export default class SideMenu extends Component<{}> {
         <TouchableOpacity style={styles.listItem} onPress={() => Actions.aboutus()}>
           <Text style={styles.text}>About Us</Text>
         </TouchableOpacity>
-          
+        
+        {User.get().user_type == 1 ? 
+          (<TouchableOpacity style={styles.listItem} onPress={() => Actions.addskill()}>
+            <Text style={styles.text}>Add Skill</Text>
+          </TouchableOpacity>)
+          : null
+        }
+        
+
         <TouchableOpacity style={styles.listItem} onPress={this.logout}>
           <Text style={styles.text}>Logout</Text>
         </TouchableOpacity>

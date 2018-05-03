@@ -31,13 +31,13 @@ var userSchema = new Schema({
     type: String,
     default: "default/user.png",
   },
-  user_level: {
+  level: {
     type: Number,
     default: 1,
   },
-  rank: {
-    type: String,
-    default: "E",
+  user_type: {
+    type: Number,
+    default: 0,
   },
   score: {
     type: Number,
