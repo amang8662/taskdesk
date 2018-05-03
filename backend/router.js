@@ -1,8 +1,8 @@
 import express, { Router } from 'express';
 import validator from 'express-validator';
 // Import actions from controllers
-import { registerUser }  from './controllers/register';
-import { login }  from './controllers/login';
+import RegisterController  from './controllers/RegisterController';
+import LoginController from './controllers/LoginController';
 
 // Initialize the router
 const router = Router();
@@ -14,7 +14,7 @@ router.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 router.use(validator());
 
 // routes
-router.post('/register', registerUser);
-router.post('/login', login);
+router.post('/register', RegisterController.register);
+router.post('/login', LoginController.login);
 
 export default router;
