@@ -23,7 +23,7 @@ export default class SideMenu extends Component<{}> {
   async logout() {
     
     try {
-      await AsyncStorage.removeItem('userid'); 
+      await AsyncStorage.removeItem('user'); 
       Actions.reset('unauthenticated');
     } catch(error) {
       console.error(error);
