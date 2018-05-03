@@ -3,6 +3,7 @@ import validator from 'express-validator';
 // Import actions from controllers
 import RegisterController  from './controllers/RegisterController';
 import LoginController from './controllers/LoginController';
+import TaskController  from './controllers/TaskController';
 import SkillController  from './controllers/SkillController';
 
 // Initialize the router
@@ -17,6 +18,7 @@ router.use(validator());
 // routes
 router.post('/register', RegisterController.register);
 router.post('/login', LoginController.login);
+router.post('/task/add', TaskController.add);
 router.post('/skill/add', SkillController.add);
 router.post('/skill/getbyname', SkillController.getByName);
 
