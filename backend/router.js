@@ -3,6 +3,7 @@ import validator from 'express-validator';
 // Import actions from controllers
 import RegisterController  from './controllers/RegisterController';
 import LoginController from './controllers/LoginController';
+import SkillController  from './controllers/SkillController';
 
 // Initialize the router
 const router = Router();
@@ -16,5 +17,6 @@ router.use(validator());
 // routes
 router.post('/register', RegisterController.register);
 router.post('/login', LoginController.login);
+router.post('/skill/add', SkillController.add);
 
 export default router;

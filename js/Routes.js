@@ -17,6 +17,9 @@ import EditTask from './pages/edittask';
 import AboutUs from './pages/aboutus';
 import GeneratedTasks from './pages/generatedtasks';
 
+//Admin Scene
+import AddSkill from './pages/addskill';
+
 const iconDashBoard = ({ tintColor }) => { return <Icon name="dashboard" size={25} color={tintColor} />}
 const iconPerson = ({ tintColor }) => { return <Icon name="user" size={25} color={tintColor} />}
 const iconAddCircle = ({ tintColor }) => { return <Icon name="plus" size={25} color={tintColor} />}
@@ -54,6 +57,7 @@ export default class Routes extends Component<{}> {
 
     			    		<Scene key="yourtasks" component={YourTasks} title="Your Tasks"/>
     			    		<Scene key="aboutus" component={AboutUs} title="About Us"/>
+    			    		<Scene key="addskill" component={AddSkill} title="Add Skill"/>
     			    	</Scene>
 					</Scene>
 				</Scene>

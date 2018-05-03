@@ -6,6 +6,7 @@ var skillSchema = new Schema({
   name: {
     type: String,
     required: true,
+    unique: true
   },
 });
 skillSchema.plugin(uniqueValidator);
