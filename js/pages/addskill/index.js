@@ -10,7 +10,7 @@ import {
   ToastAndroid
 } from 'react-native';
 
-import { InputText, TextInputError, InputTag } from '../../components';
+import { InputText, TextInputError } from '../../components';
 import { validate, timeout } from '../../modules';
 import { Spinner } from 'native-base';
 import { ipaddress } from '../../Globals';
