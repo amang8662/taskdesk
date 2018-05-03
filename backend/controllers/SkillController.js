@@ -26,7 +26,7 @@ SkillController.add = function(req, res) {
     var skilldata = {
       name: req.body.name
     };
-    console.log(skilldata);
+    
     var skill = new Skill(skilldata);
     skill.save(function (error) {
 
@@ -61,6 +61,58 @@ SkillController.add = function(req, res) {
 
       res.json(data);
         
+    });
+    
+  }
+};
+
+SkillController.getByName = function(req, res) {
+
+  req.checkBody('name', 'Skill Name is required').notEmpty();
+  
+  // check the validation object for errors
+  var errors = req.validationErrors();
+
+  var resdata = {};
+
+  if (errors) {
+
+    resdata =  { 
+      status: false,
+      errortype: 'validation',
+      data:  errors 
+    };
+
+    res.json(resdata);
+  } else {
+
+    Skill.find({name: { $regex: '.*' + req.body.name + '.*', $options: 'i' }})
+    .limit(5)
+    .exec(function (err, skills) {
+      console.log(skills);
+      if (err) {
+
+        console.log(err);
+        resdata = {
+          status: false,
+          errortype: 'db-error',
+          data: ''
+        };
+      } else if (!skills || skills.length == 0) {
+        resdata = {
+          status: false,
+          errortype: 'no-skills-error',
+          data: ''
+        };
+        
+      } else {
+        
+        resdata = {
+          status: true,
+          data: skills
+        };
+      }
+      res.json(resdata);
     });
     
   }

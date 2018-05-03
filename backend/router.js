@@ -18,5 +18,6 @@ router.use(validator());
 router.post('/register', RegisterController.register);
 router.post('/login', LoginController.login);
 router.post('/skill/add', SkillController.add);
+router.post('/skill/getbyname', SkillController.getByName);
 
 export default router;
