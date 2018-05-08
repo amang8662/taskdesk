@@ -27,6 +27,7 @@ export default class InputTag extends Component<{}> {
       tagList: []
     };
     this.onListPress = this.onListPress.bind(this);
+    this.tagDelete = this.tagDelete.bind(this);
   }
 
   onChangeText = text => {
@@ -97,6 +98,16 @@ export default class InputTag extends Component<{}> {
     );
   }
 
+  tagDelete(i) {
+    const { tags } = this.state;
+    this.setState({
+      tags: tags.filter((tag,index) => index !== i)
+    },
+      () =>
+        this.props.onChangeTags && this.props.onChangeTags(this.state.tags)
+    );
+  }
+
   render() {
 
     let inputStyle = this.props.inputStyle ? this.props.inputStyle : styles.inputStyle;
@@ -111,6 +122,8 @@ export default class InputTag extends Component<{}> {
                 label={tag.name}
                 tagContainerStyle={this.props.tagContainerStyle}
                 tagTextStyle={this.props.tagTextStyle}
+                onClose={() => this.tagDelete(i)}
+                showCloseButton={this.props.showTagCloseButton}
               />
             ))}
           </View>
@@ -143,7 +156,8 @@ export default class InputTag extends Component<{}> {
 InputTag.defaultProps = {
   initialTags: [],
   initialText: "",
-  readonly: false
+  readonly: false,
+  showTagCloseButton: false
 };
 InputTag.propTypes = {
   initialText: PropTypes.string,
@@ -154,7 +168,8 @@ InputTag.propTypes = {
   inputStyle: PropTypes.object,
   tagContainerStyle: PropTypes.object,
   tagTextStyle: PropTypes.object,
-  readonly: PropTypes.bool
+  readonly: PropTypes.bool,
+  showTagCloseButton: PropTypes.bool
 };
 
 const styles = StyleSheet.create({

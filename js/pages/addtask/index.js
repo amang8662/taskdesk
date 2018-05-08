@@ -223,13 +223,7 @@ export default class AddTask extends Component<{}> {
               onChangeTags={tags => this.setState({tags})}
               ref={(input) => this.tag = input}
               returnKeyType={'done'}
-              onBlur={() => {
-                  tagError = validate("tag",this.state.tags,{required:true,type: 'array'})
-                  this.setState({
-                    tagError: Object.assign(this.state.tagError, tagError)
-                  })
-                }}
-
+              showTagCloseButton={true}
               />
           <TextInputError styles={errorStyle} isError={this.state.tagError.isError} message={this.state.tagError.message} /> 
           <TouchableHighlight style={styles.button} onPress={this.addTask}>
