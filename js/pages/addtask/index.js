@@ -12,7 +12,7 @@ import {
 
 import { InputText, TextInputError, InputTag } from '../../components';
 import { validate, timeout } from '../../modules';
-import User from '../../static/User';
+import User from '../../helpers/User';
 import { Spinner } from 'native-base';
 import { ipaddress } from '../../Globals';
 

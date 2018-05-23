@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 
 import { Spinner } from 'native-base';
-import User from '../../static/User';
+import User from '../../helpers/User';
 import { Logo } from '../../components';
 
 import { Actions } from 'react-native-router-flux';

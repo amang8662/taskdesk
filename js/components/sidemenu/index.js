@@ -11,7 +11,7 @@ import {
 
 import { Actions } from 'react-native-router-flux';
 
-import User from '../../static/User';
+import User from '../../helpers/User';
 
 const deviceHeight = Dimensions.get("window").height;
 const deviceWidth = Dimensions.get("window").width;
