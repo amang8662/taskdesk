@@ -19,6 +19,9 @@ router.use(validator());
 router.post('/register', RegisterController.register);
 router.post('/login', LoginController.login);
 router.post('/task/add', TaskController.add);
+router.get('/task/:taskId', TaskController.findbyid);
+router.put('/task/:taskId', TaskController.update);
+
 router.post('/skill/add', SkillController.add);
 router.post('/skill/getbyname', SkillController.getByName);
 

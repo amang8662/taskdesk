@@ -89,7 +89,6 @@ SkillController.getByName = function(req, res) {
     Skill.find({name: { $regex: '.*' + req.body.name + '.*', $options: 'i' }})
     .limit(5)
     .exec(function (err, skills) {
-      console.log(skills);
       if (err) {
 
         console.log(err);
