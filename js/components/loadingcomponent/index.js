@@ -13,7 +13,7 @@ export default class LoadingComponent extends Component<{}> {
     
     return(
       <View style={styles.container}>
-        <Spinner color='#0000ff' />
+        <Spinner size={50} color='#00c0ef' />
         <Text style={styles.text}>Loading...</Text>
       </View>
     )    
@@ -25,12 +25,12 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    backgroundColor: '#dcdcdc'
+    backgroundColor: '#1c1f24'
   },
   text: {
     textAlign: 'center',
-    fontSize: 17,
+    fontSize: 19,
     fontWeight: 'bold',
-    color: '#303030'
+    color: '#A9A9A9'
   }
 });
