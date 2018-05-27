@@ -196,7 +196,7 @@ export default class AddTask extends Component<{}> {
                   })
                 }}
               />
-          <TextInputError styles={errorStyle} isError={this.state.titleError.isError} message={this.state.titleError.message} />
+          <TextInputError isError={this.state.titleError.isError} message={this.state.titleError.message} />
           <Text style={styles.text}>Description</Text>
           <InputText
               multiline={true}
@@ -215,7 +215,7 @@ export default class AddTask extends Component<{}> {
                   })
                 }}
               />
-          <TextInputError styles={errorStyle} isError={this.state.descriptionError.isError} message={this.state.descriptionError.message} /> 
+          <TextInputError isError={this.state.descriptionError.isError} message={this.state.descriptionError.message} /> 
           <Text style={styles.text}>Tags</Text>
           <InputTag
               isError={this.state.tagError.isError}
@@ -225,7 +225,7 @@ export default class AddTask extends Component<{}> {
               returnKeyType={'done'}
               showTagCloseButton={true}
               />
-          <TextInputError styles={errorStyle} isError={this.state.tagError.isError} message={this.state.tagError.message} /> 
+          <TextInputError isError={this.state.tagError.isError} message={this.state.tagError.message} /> 
           <TouchableHighlight style={styles.button} onPress={this.addTask}>
             <Text style={styles.buttonText}>Add</Text>
           </TouchableHighlight>
@@ -266,17 +266,5 @@ const styles = StyleSheet.create({
     fontWeight:'500',
     color:'#ffffff',
     textAlign:'center'
-  }
-});
-
-const errorStyle = StyleSheet.create({
-  container : {
-    justifyContent:'flex-start',
-    alignItems: 'flex-start',    
-    paddingHorizontal:16,
-  },
-  errorText : {
-    color: '#bbb',
-    fontSize: 14
   }
 });

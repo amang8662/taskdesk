@@ -13,6 +13,7 @@ import {
 
 import { validate, timeout } from '../../modules';
 import { ipaddress } from '../../Globals';
+import { InputText } from './../index';
 import Tag from "./Tag";
 import _ from "lodash";
 export default class InputTag extends Component<{}> {
@@ -110,9 +111,6 @@ export default class InputTag extends Component<{}> {
 
   render() {
 
-    let inputStyle = this.props.inputStyle ? this.props.inputStyle : styles.inputStyle;
-    let errorInputStyle = this.props.errorInputStyle ? this.props.errorInputStyle : styles.errorInputStyle;
-
     return (
         <View style={styles.container}>
           <View style={[styles.tagAreaContainer, this.props.tagAreaContainerStyle]}>
@@ -129,9 +127,9 @@ export default class InputTag extends Component<{}> {
           </View>
           {!this.props.readonly && (
             <View>
-              <TextInput
+              <InputText
                 value={this.state.text}
-                style={this.props.isError ? errorInputStyle : inputStyle}
+                isError={this.props.isError}
                 onChangeText={this.onChangeText}
                 placeholder="Add Tag"
                 underlineColorAndroid="rgba(0,0,0,0)"
@@ -185,27 +183,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         width: 300,
         backgroundColor: '#fff'
-    },
-    inputStyle: {
-        width:300,
-        backgroundColor:'#222',
-        borderBottomColor: '#eee',
-        borderWidth: 2,
-        paddingHorizontal:16,
-        fontSize:16,
-        color:'#ffffff',
-        marginVertical: 10
-    },
-    errorInputStyle: {
-        width:300,
-        backgroundColor: '#222',
-        borderBottomColor : '#d83c3c',
-        borderWidth: 3,
-        paddingHorizontal:16,
-        fontSize:16,
-        marginVertical: 10,
-        borderStyle: 'solid',
-        color: '#eee'        
     },
     tagListItem: {
       height:50,

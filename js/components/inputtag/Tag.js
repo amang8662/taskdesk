@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: "center",
-    backgroundColor: "#e0e0e0",
+    backgroundColor: "#00c0ef",
     borderRadius: 16,
     paddingLeft: 12,
     paddingRight: 12,
@@ -45,7 +45,8 @@ const styles = StyleSheet.create({
   tagLabel: {
     flex: 0.7,
     fontSize: 13,
-    color: "rgba(0, 0, 0, 0.87)"
+    color: '#fff',
+    fontWeight: 'bold'
   },
   tagClose: {
     flex: 0.3
