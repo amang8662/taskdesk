@@ -34,7 +34,7 @@ exports.add = function(req, res) {
       rewardscore: rewardscore,
       skills: JSON.parse(req.body.skills)
     };
-    console.log(taskdata);
+    
     var task = new Task(taskdata);
     task.save(function (error) {
 
@@ -74,6 +74,31 @@ exports.add = function(req, res) {
   }
 };
 
+exports.findbyuser = function(req, res) {
+  
+  Task.find({'task_creater': req.params.userId})
+  .populate('skills')
+  .exec(function (err, tasks) {
+    if (err) {
+      return res.status(500).send({
+          status: 500,
+          data: err.message || "Error retrieving tasks"
+      });
+
+    } else {
+      if(!tasks) {
+          return res.status(404).send({
+              status: 404,
+              data: "No Tasks found"
+          });            
+      }
+      res.status(200).send({
+        status: 200,
+        data: tasks
+      });
+    }
+  });
+};
 
 exports.findbyid = function(req, res) {
   
