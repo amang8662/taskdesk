@@ -43,14 +43,12 @@ export default class GeneratedTasks extends Component<{}> {
           })
           .then((response) => response.json())
           .then((res) => {
-            console.log(res);
             if(res.status == 200) {
             
               this.setState({
                 tasks: res.data,
                 showLoadingScreen: false
-              },
-              () => console.log(this.state.tasks));
+              });
 
             } else {
 
