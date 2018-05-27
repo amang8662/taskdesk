@@ -5,6 +5,7 @@ import SideMenu from './sidemenu';
 import TextInputError from './textinputerror';
 import Toast from './toast';
 import InputTag from './inputtag';
+import LoadingComponent from './loadingcomponent';
 
 export {
 	InputText,
@@ -13,5 +14,6 @@ export {
 	SideMenu,
 	TextInputError,
 	Toast,
-	InputTag
+	InputTag,
+	LoadingComponent
 };
