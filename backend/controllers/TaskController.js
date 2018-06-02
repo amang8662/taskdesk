@@ -74,6 +74,33 @@ exports.add = function(req, res) {
   }
 };
 
+exports.findallexceptuser = function(req, res) {
+  
+  Task.find({'task_creater': { "$ne": req.params.userId}})
+  .populate('task_creater')
+  .populate('skills')
+  .exec(function (err, tasks) {
+    if (err) {
+      return res.status(500).send({
+          status: 500,
+          data: err.message || "Error retrieving tasks"
+      });
+
+    } else {
+      if(!tasks || tasks.length <= 0) {
+          return res.status(404).send({
+              status: 404,
+              data: "No Tasks found"
+          });            
+      }
+      res.status(200).send({
+        status: 200,
+        data: tasks
+      });
+    }
+  });
+};
+
 exports.findbyuser = function(req, res) {
   
   Task.find({'task_creater': req.params.userId})
@@ -86,7 +113,7 @@ exports.findbyuser = function(req, res) {
       });
 
     } else {
-      if(!tasks) {
+      if(!tasks || tasks.length <= 0) {
           return res.status(404).send({
               status: 404,
               data: "No Tasks found"
@@ -107,6 +134,7 @@ exports.findbyid = function(req, res) {
   .exec(function (err, task) {
     if (err) {
       if(err.kind === 'ObjectId') {
+       
           return res.status(404).send({
               status: 404,
               data: "Task not found with id " + req.params.taskId

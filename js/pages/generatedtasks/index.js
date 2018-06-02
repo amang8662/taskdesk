@@ -23,7 +23,11 @@ export default class GeneratedTasks extends Component<{}> {
     super(props);
     this.state = {
       tasks: [],
-      showLoadingScreen: true
+      showLoadingScreen: true,
+      loadingComponent: {
+        internet: true,
+        hasData: true
+      }
     }
   }
 
@@ -51,8 +55,17 @@ export default class GeneratedTasks extends Component<{}> {
               });
 
             } else {
+              if(res.status == 404) {
 
-              alert(res.data);   
+                this.setState({ 
+                  loadingComponent: { ...this.state.loadingComponent, hasData: false} 
+                });
+              } else {
+                alert(res.data);
+                this.setState({
+                  showLoadingScreen: false
+                });
+              }
             }       
           })
           .catch((error) => {
@@ -64,7 +77,9 @@ export default class GeneratedTasks extends Component<{}> {
         });
 
       } else {
-        ToastAndroid.show('No Internet Connection!', ToastAndroid.SHORT);
+        this.setState({
+          loadingComponent: { ...this.state.loadingComponent, internet: false} 
+        });
       }
     });
   }
@@ -72,7 +87,7 @@ export default class GeneratedTasks extends Component<{}> {
   render() {
     if(this.state.showLoadingScreen == true)
       return (
-        <LoadingComponent />
+        <LoadingComponent internet={this.state.loadingComponent.internet} hasData={this.state.loadingComponent.hasData} />
       );
     else
       return (
