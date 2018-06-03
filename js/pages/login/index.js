@@ -16,7 +16,7 @@ import { validate, timeout } from '../../modules';
 import User from '../../helpers/User';
 import queryString from 'query-string';
 import { Spinner } from 'native-base';
-import { ipaddress } from '../../Globals';
+import { baseurl } from '../../Globals';
 
 import { Actions } from 'react-native-router-flux';
 
@@ -89,7 +89,7 @@ export default class Login extends Component<{}> {
         if(isConnected) {
 
           timeout(10000, 
-            fetch('http://' + ipaddress() + ':3000/login' , {
+            fetch(baseurl + '/login' , {
                 method : 'post',
                 headers : {
                   'Accept' : 'application/json',

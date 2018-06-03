@@ -15,7 +15,7 @@ For development on frontend:
 	List of Ordered Commands/Steps to install dependencies:
 		1. cmd - npm install (to install node modules)
 		2. cmd - npm run build (to create Globals.js file in directory ~taskdesk/js)
-		3. add your system ip address to Globals.js
+		3. add your base url to Globals.js
 		4. cmd - react-native run-android (to start running development)
 
 Note: If any feature is not working, then

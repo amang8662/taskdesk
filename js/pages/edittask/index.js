@@ -14,7 +14,7 @@ import { InputText, TextInputError, InputTag, LoadingComponent } from '../../com
 import { validate, timeout } from '../../modules';
 import User from '../../helpers/User';
 import { Spinner } from 'native-base';
-import { ipaddress } from '../../Globals';
+import { baseurl } from '../../Globals';
 import styles from '../style';
 
 
@@ -66,7 +66,7 @@ export default class EditTask extends Component<{}> {
   //     if(isConnected) {
 
   //       timeout(10000, 
-  //         fetch('http://' + ipaddress() + ':3000/task/' + this.state.taskId , {
+  //         fetch(baseurl + '/task/' + this.state.taskId , {
   //             method : 'get',
   //             headers : {
   //               'Accept' : 'application/json',
@@ -158,7 +158,7 @@ export default class EditTask extends Component<{}> {
           let userdata = User.get();
 
           timeout(10000, 
-            fetch('http://' + ipaddress() + ':3000/task/' + this.state.taskId , {
+            fetch(baseurl + '/task/' + this.state.taskId , {
                 method : 'put',
                 headers : {
                   'Accept' : 'application/json',

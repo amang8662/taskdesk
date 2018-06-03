@@ -13,7 +13,7 @@ import {
 import { InputText, TextInputError } from '../../components';
 import { validate, timeout } from '../../modules';
 import { Spinner } from 'native-base';
-import { ipaddress } from '../../Globals';
+import { baseurl } from '../../Globals';
 
 
 export default class AddSkill extends Component<{}> {
@@ -75,7 +75,7 @@ export default class AddSkill extends Component<{}> {
         if(isConnected) {
 
           timeout(10000, 
-            fetch('http://' + ipaddress() + ':3000/skill/add' , {
+            fetch(baseurl + '/skill/add' , {
                 method : 'post',
                 headers : {
                   'Accept' : 'application/json',

@@ -15,7 +15,7 @@ import { LoadingComponent } from '../../components';
 import Tag from "../../components/inputtag/Tag";
 import { validate, timeout } from '../../modules';
 import User from '../../helpers/User';
-import { ipaddress } from '../../Globals';
+import { baseurl } from '../../Globals';
 
 export default class Home extends Component<{}> {
 
@@ -38,7 +38,7 @@ export default class Home extends Component<{}> {
       if(isConnected) {
 
         timeout(10000, 
-          fetch('http://' + ipaddress() + ':3000/task/all/except/user/' + User.get()._id, {
+          fetch(baseurl + '/task/all/except/user/' + User.get()._id, {
               method : 'get',
               headers : {
                 'Accept' : 'application/json',

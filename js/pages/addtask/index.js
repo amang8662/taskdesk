@@ -14,7 +14,7 @@ import { InputText, TextInputError, InputTag } from '../../components';
 import { validate, timeout } from '../../modules';
 import User from '../../helpers/User';
 import { Spinner } from 'native-base';
-import { ipaddress } from '../../Globals';
+import { baseurl } from '../../Globals';
 import styles from '../style';
 
 
@@ -110,7 +110,7 @@ export default class AddTask extends Component<{}> {
           let userdata = User.get();
 
           timeout(10000, 
-            fetch('http://' + ipaddress() + ':3000/task/add' , {
+            fetch(baseurl + '/task/add' , {
                 method : 'post',
                 headers : {
                   'Accept' : 'application/json',
