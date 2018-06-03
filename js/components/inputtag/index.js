@@ -12,7 +12,7 @@ import {
 } from "react-native";
 
 import { validate, timeout } from '../../modules';
-import { ipaddress } from '../../Globals';
+import { baseurl } from '../../Globals';
 import { InputText } from './../index';
 import Tag from "./Tag";
 import _ from "lodash";
@@ -42,7 +42,7 @@ export default class InputTag extends Component<{}> {
         if(isConnected) {
 
           timeout(10000, 
-            fetch('http://' + ipaddress() + ':3000/skill/getbyname' , {
+            fetch(baseurl + '/skill/getbyname' , {
                 method : 'post',
                 headers : {
                   'Accept' : 'application/json',
