@@ -26,12 +26,36 @@ export default class Toast extends Component {
 
   static toastInstance;
   static show({ ...config }) {
-    
-    this.toastInstance.showToast({ config });
+    this.toastInstance.processToast({ config });
+  }
+
+  static hide() {
+    this.toastInstance.hideToast();
+  }
+
+  processToast({ config }) {
+    if(this.state.showToast == true) {
+      Animated.timing(
+        this.animatedValue,
+        {
+          toValue: 0,
+          duration: 100
+        }).start();
+
+      setTimeout(() => {
+        this.setState({
+          showToast: false
+        },
+          () => this.showToast({ config })
+      );
+      }, 200);
+    } else {
+      this.showToast({ config });
+    }
   }
 
   showToast({ config }) {
-    
+
     this.setState({
       showToast: true,
       text: config.text,
@@ -171,20 +195,21 @@ const styles = StyleSheet.create({
     fontSize:14,
     fontWeight: 'bold',
     flex: 5,
-    maxWidth: windowWidth* 0.75,
+    maxWidth: windowWidth* 0.70,
     paddingTop: 15
   },
   button: {
     flex: 1,
-    maxWidth: windowWidth* 0.25,
+    maxWidth: windowWidth* 0.30,
     backgroundColor:'#0c9fc6',  
     borderTopLeftRadius: 3,
     borderBottomLeftRadius: 3,
-    paddingTop: 15,
-    paddingLeft: 20,
+    paddingTop: 15
   },
   buttonText: {
     fontSize: 14,
     fontWeight: 'bold',
+    justifyContent: 'center',
+    textAlign: 'center'
   }
 });

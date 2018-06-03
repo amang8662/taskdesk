@@ -4,13 +4,12 @@ import {
   Text,
   View,
   AsyncStorage,
-  NetInfo,
-  ToastAndroid
+  NetInfo
 } from 'react-native';
 
 import { Spinner } from 'native-base';
 import User from '../../helpers/User';
-import { Logo } from '../../components';
+import { Logo, Toast } from '../../components';
 
 import { Actions } from 'react-native-router-flux';
 
@@ -26,29 +25,41 @@ export default class LoadingScreen extends Component<{}> {
 
   componentDidMount() {
 
-    NetInfo.isConnected.fetch().then((isConnected) => {
-
-        if(isConnected) {
-          this.loginWithAsync();
-        } else {
-          
-          ToastAndroid.show('No Internet Connection!', ToastAndroid.SHORT);
-        }
-    });
-
     NetInfo.isConnected.addEventListener(
       'connectionChange',
       this.handleFirstConnectivityChange
     );
+
+    NetInfo.isConnected.fetch().then((isConnected) => {
+
+        if(isConnected) {
+          Toast.hide();
+          this.loginWithAsync();
+        }
+    });
   }
 
   handleFirstConnectivityChange(isConnected) {
     if(isConnected) {
-      ToastAndroid.show('Connection Established', ToastAndroid.SHORT);
-      this.loginWithAsync();
+      
+      Toast.show({text: 'Connection Established',
+        buttonText: 'Go Online',
+        duration: 10000,
+        onClose: () => this.loginWithAsync()
+      });
     } else {
-      ToastAndroid.show('No Internet Connection!', ToastAndroid.SHORT);
+      Toast.show({text: 'No Internet Connection!',
+        textColor: '#ff0a0a',
+        duration: 5000});
     }
+  }
+
+  componentWillUnmount() {
+
+    NetInfo.isConnected.removeEventListener(
+      'connectionChange',
+      this.handleFirstConnectivityChange
+    );
   }
 
   async loginWithAsync() {
