@@ -35,7 +35,7 @@ export default class InputTag extends Component<{}> {
 
     this.setState({ text });
     
-    if (text.length > 2) {
+    if (text.length > 0) {
        
       NetInfo.isConnected.fetch().then((isConnected) => {
 
