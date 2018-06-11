@@ -16,7 +16,7 @@ var storage = multer.diskStorage({
   }
 });  
 
-exports.updateprofilepic = function(req, res) {
+exports.updateavatar = function(req, res) {
 
   var upload = multer({
     storage: storage,

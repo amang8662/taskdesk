@@ -19,7 +19,7 @@ router.use(validator());
 // routes
 router.post('/register', RegisterController.register);
 router.post('/login', LoginController.login);
-router.post('/user/update/profilepic/:userId', UserController.updateprofilepic);
+router.post('/user/update/avatar/:userId', UserController.updateavatar);
 
 router.post('/task/add', TaskController.add);
 router.get('/task/all/except/user/:userId', TaskController.findallexceptuser);
