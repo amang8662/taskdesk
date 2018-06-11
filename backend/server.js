@@ -17,6 +17,8 @@ const app = express();
 
 // Logger that outputs all requests into the console
 app.use(morgan('combined'));
+// Serve static files
+app.use(express.static('public'))
 // Use v1 as prefix for all API endpoints
 app.use('/', router);
 
