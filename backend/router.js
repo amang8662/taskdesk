@@ -5,6 +5,7 @@ import RegisterController  from './controllers/RegisterController';
 import LoginController from './controllers/LoginController';
 import TaskController  from './controllers/TaskController';
 import SkillController  from './controllers/SkillController';
+import UserController  from './controllers/UserController';
 
 // Initialize the router
 const router = Router();
@@ -18,6 +19,8 @@ router.use(validator());
 // routes
 router.post('/register', RegisterController.register);
 router.post('/login', LoginController.login);
+router.post('/user/update/avatar/:userId', UserController.updateavatar);
+
 router.post('/task/add', TaskController.add);
 router.get('/task/all/except/user/:userId', TaskController.findallexceptuser);
 router.get('/task/user/:userId', TaskController.findbyuser);
