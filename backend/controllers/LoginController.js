@@ -26,6 +26,7 @@ LoginController.login = function(req, res) {
   } else {
 
     User.findOne({$or:[ {'username': req.body.username}, {'email': req.body.username} ]})
+    .populate('skills')
     .exec(function (err, user) {
       if (err) {
         console.log(err);
