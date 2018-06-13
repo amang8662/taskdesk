@@ -72,7 +72,7 @@ exports.updateavatar = function(req, res) {
 
                 return res.status(200).send({
                   status: 200,
-                  data: result
+                  data: JSON.stringify(result)
                 });
               });
             });            
