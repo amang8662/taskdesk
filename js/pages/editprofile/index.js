@@ -28,8 +28,7 @@ export default class EditProfile extends Component<{}> {
     super(props);
 
     this.state = {
-      avatar: {},
-      user: User.get()
+      avatar: {}
     }
   }
 
@@ -131,12 +130,11 @@ export default class EditProfile extends Component<{}> {
   }
 
   render() {
-    console.log(this.state.avatar);
     return (
       <View style={styles.container}>
         <Image style={styles.image} 
           source={{ uri: this.state.avatar.uri ? this.state.avatar.uri :
-            baseurl + "/uploads/avatar/" + this.state.user.avatar
+            baseurl + "/uploads/avatar/" + User.get().avatar
           }}
         />
         <TouchableOpacity style={styles.button} onPress={this.selectAvatar.bind(this)}> 
