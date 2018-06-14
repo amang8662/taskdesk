@@ -82,3 +82,116 @@ exports.updateavatar = function(req, res) {
     }
   });
 };
+
+exports.findbyid = function(req, res) {
+  
+  User.findById(req.params.userId)
+  .populate('skills')
+  .exec(function (err, user) {
+    if (err) {
+      if(err.kind === 'ObjectId') {
+       
+          return res.status(404).send({
+              status: 404,
+              data: "User not found"
+          });                
+      }
+      return res.status(500).send({
+          status: 500,
+          data: "Error retrieving user"
+      });
+
+    } else {
+      if(!user) {
+          return res.status(404).send({
+              status: 404,
+              data: "User not found"
+          });            
+      }
+      res.status(200).send({
+        status: 200,
+        data: user
+      });
+    }
+  });
+};
+
+exports.update = function(req, res) {
+
+  req.checkBody('name', 'Name is required').notEmpty();
+  req.checkBody('username', 'Username is required').notEmpty();
+  req.checkBody('email', 'Email is required').notEmpty();
+  req.checkBody('email', 'Email does not appear to be valid').isEmail();
+  
+  // check the validation object for errors
+  var errors = req.validationErrors();
+
+  if (errors) {
+
+    return res.status(400).send({ 
+      status: 400,
+      errortype: 'validation',
+      data:  errors
+    });
+
+  } else {
+
+    var userdata = {
+      name: req.body.name,
+      username: req.body.username,
+      email: req.body.email
+    }
+
+    if(req.body.title) {
+      userdata.title = req.body.title;
+    }
+    if(req.body.about) {
+      userdata.about = req.body.about;
+    }
+    if(req.body.skills) {
+      userdata.skills = JSON.parse(req.body.skills);
+    }
+
+    User.findByIdAndUpdate(req.params.userId, userdata, {new: true})
+    .exec( function(err, user) {
+
+      if(err) {
+        if(err.kind === 'ObjectId') {
+            return res.status(404).send({
+              status: 404,
+              data: "User not found"
+            });                
+        } else if (err.name === 'ValidationError') {
+
+          var error_fields = err.errors;
+          for(var key in error_fields) {
+            error_fields[key] = true;
+          }
+          return res.status(500).send({
+              status: 500,
+              errortype: 'unique-error',
+              data: { 
+                fields: error_fields
+              }
+          });
+        } else {
+          return res.status(500).send({
+              status: 500,
+              data: "Error updating User"
+          });
+        }
+      } else {
+        if(!user) {
+            return res.status(404).send({
+                status: 404,
+                data: "User not found"
+            });            
+        }
+        res.status(200).send({
+          status: 200,
+          data: "User Updated Successfully"
+        });
+      }
+    });    
+  }
+};
