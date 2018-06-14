@@ -18,6 +18,7 @@ import {
   Text,
   Card,
   CardItem,
+  Thumbnail,
 } from 'native-base';
 
 import { Actions } from 'react-native-router-flux';
@@ -173,12 +174,13 @@ const styles = StyleSheet.create({
     borderWidth: 5,
     borderRadius: 100,
     alignContent: 'center',
-    elevation: 25
+    elevation: 30
   },
   profilePic:{
     flex:1,
     width: null,
     alignSelf: 'stretch',
+    borderRadius: 100,
   },
   name:{
     marginTop: 20,
@@ -198,6 +200,7 @@ const styles = StyleSheet.create({
   },
   h1 :{
     color: '#080808',
+    fontStyle: 'italic' ,
   },
   tags:{
     margin: 5,
