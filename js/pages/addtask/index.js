@@ -43,7 +43,8 @@ export default class AddTask extends Component<{}> {
         'errortype': '',
         'message':  ''
       },
-      isLoading: false
+      isLoading: false,
+      clearTags: false
     };
     this.handleFirstConnectivityChange = this.handleFirstConnectivityChange.bind(this);
     this.validateForm = this.validateForm.bind(this);
@@ -136,6 +137,13 @@ export default class AddTask extends Component<{}> {
               if(res.status == true) {
               
                 alert(res.message);
+
+                this.setState({
+                  title: '',
+                  description: '',
+                  tags: [],
+                  clearTags: true
+                });
               } else if(res.status == false) {
 
                 if(res.errortype == 'validation') {
@@ -226,6 +234,7 @@ export default class AddTask extends Component<{}> {
               ref={(input) => this.tag = input}
               returnKeyType={'done'}
               showTagCloseButton={true}
+              clearTags={this.state.clearTags}
               />
           <TextInputError isError={this.state.tagError.isError} message={this.state.tagError.message} /> 
           <TouchableHighlight style={styles.button} onPress={this.addTask}>

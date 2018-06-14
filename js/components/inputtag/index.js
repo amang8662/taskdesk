@@ -31,6 +31,23 @@ export default class InputTag extends Component<{}> {
     this.tagDelete = this.tagDelete.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.clearTags == true) {
+      this.setState({
+        tags: [],
+        text: '',
+        tagList: []
+      });
+    }
+
+    if (nextProps.clearTagList == true) {
+      this.setState({
+        text: '',
+        tagList: []
+      });
+    }
+  }
+
   onChangeText = text => {
 
     this.setState({ text });

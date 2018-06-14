@@ -45,7 +45,8 @@ export default class EditTask extends Component<{}> {
         'message':  ''
       },
       showLoadingScreen: false,
-      isLoading: false
+      isLoading: false,
+      clearTagList: false
     };
     this.handleFirstConnectivityChange = this.handleFirstConnectivityChange.bind(this);
     this.validateForm = this.validateForm.bind(this);
@@ -58,52 +59,6 @@ export default class EditTask extends Component<{}> {
       ToastAndroid.show('No Internet Connection!', ToastAndroid.SHORT);
     }
   }
-
-  // componentDidMount() {
-
-  //   NetInfo.isConnected.fetch().then((isConnected) => {
-
-  //     if(isConnected) {
-
-  //       timeout(10000, 
-  //         fetch(baseurl + '/task/' + this.state.taskId , {
-  //             method : 'get',
-  //             headers : {
-  //               'Accept' : 'application/json',
-  //               'Content-type' : 'application/json'
-  //             }
-  //         })
-  //         .then((response) => response.json())
-  //         .then((res) => {
-  //           console.log(res);
-  //           if(res.status == 200) {
-            
-  //             this.setState({
-  //               taskId: res.data._id,
-  //               title: res.data.title,
-  //               description: res.data.description,
-  //               tags: res.data.skills,
-  //               showLoadingScreen: false
-  //             });
-
-  //           } else {
-
-  //             alert(res.data);   
-  //           }       
-  //         })
-  //         .catch((error) => {
-  //             alert(error);
-  //         })
-  //       ).catch((error) => {
-
-  //           alert("Server not responding.");
-  //       });
-
-  //     } else {
-  //       ToastAndroid.show('No Internet Connection!', ToastAndroid.SHORT);
-  //     }
-  //   });
-  // }
 
   validateForm() {
 
@@ -174,7 +129,8 @@ export default class EditTask extends Component<{}> {
             .then((res) => {
               
               this.setState({
-                isLoading: false
+                isLoading: false,
+                clearTagList: true
               });
 
               if(res.status == 200) {
@@ -274,6 +230,7 @@ export default class EditTask extends Component<{}> {
                 ref={(input) => this.tag = input}
                 returnKeyType={'done'}
                 showTagCloseButton={true}
+                clearTagList={this.state.clearTagList}
                 />
             <TextInputError isError={this.state.tagError.isError} message={this.state.tagError.message} /> 
             <TouchableHighlight style={styles.button} onPress={this.updateTask}>
