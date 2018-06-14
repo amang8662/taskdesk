@@ -2,9 +2,7 @@ import mongoose from 'mongoose';
 import User from '../models/User';
 import bcrypt from 'bcrypt';
 
-var LoginController = {};
-
-LoginController.login = function(req, res) {
+exports.login = function(req, res) {
 
   req.checkBody('username', 'Username is required').notEmpty();
   req.checkBody('password', 'Password is required').notEmpty();
@@ -64,5 +62,3 @@ LoginController.login = function(req, res) {
     });
   }
 };
-
-module.exports = LoginController;
