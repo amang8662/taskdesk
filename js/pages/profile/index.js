@@ -18,9 +18,6 @@ import {
   Text,
   Card,
   CardItem,
-  Thumbnail,
-  Item,
-  Col
 } from 'native-base';
 
 import { Actions } from 'react-native-router-flux';
@@ -122,8 +119,8 @@ export default class Profile extends Component<{}> {
             </Content>
             <Content padder>
               <Card>
-                <CardItem style={styles.head}>
-                  <Text style={styles.h1}> Skills</Text>
+                <CardItem style={styles.hr}>
+                  <Title style={styles.h1}> Skills</Title>
                 </CardItem>
                 <CardItem>
                   <View style={{flexDirection: 'row',flexWrap: 'wrap'}}>
@@ -192,7 +189,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#ccc'
   }, 
-  head:{
+  hr:{
     width: '100%',
     marginTop: 10,
     marginBottom: 10,
@@ -201,9 +198,6 @@ const styles = StyleSheet.create({
   },
   h1 :{
     color: '#080808',
-    fontSize: 24,
-    fontWeight: 'bold',
-    fontStyle: 'italic',
   },
   tags:{
     margin: 5,
