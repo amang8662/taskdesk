@@ -49,7 +49,7 @@ var userSchema = new Schema({
       ref: 'Skill'
     }
   ],
-});
+}, {timestamps: true});
 userSchema.plugin(uniqueValidator);
 
 // Export Mongoose model

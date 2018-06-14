@@ -32,7 +32,7 @@ var taskSchema = new Schema({
       ref: 'Skill'
     }
   ],
-});
+}, {timestamps: true});
 taskSchema.plugin(uniqueValidator);
 
 // Export Mongoose model
