@@ -211,7 +211,7 @@ exports.update = function(req, res) {
         } else {
           return res.status(500).send({
               status: 500,
-              data: "Error updating Task with id " + req.params.noteId
+              data: "Error updating Task with id " + req.params.taskId
           });
         }
       } else {

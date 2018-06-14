@@ -1,9 +1,7 @@
 import mongoose from 'mongoose';
 import Skill from '../models/Skill';
 
-var SkillController = {};
-
-SkillController.add = function(req, res) {
+exports.add = function(req, res) {
   
   req.checkBody('name', 'Skill Name is required').notEmpty();
   
@@ -66,7 +64,7 @@ SkillController.add = function(req, res) {
   }
 };
 
-SkillController.getByName = function(req, res) {
+exports.getByName = function(req, res) {
 
   req.checkBody('name', 'Skill Name is required').notEmpty();
   
@@ -116,5 +114,3 @@ SkillController.getByName = function(req, res) {
     
   }
 };
-
-module.exports = SkillController;

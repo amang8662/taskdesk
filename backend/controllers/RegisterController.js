@@ -4,9 +4,7 @@ import bcrypt from 'bcrypt';
 
 const saltRounds = 10;
 
-var RegisterController = {};
-
-RegisterController.register = function(req, res) {
+exports.register = function(req, res) {
 
   req.checkBody('name', 'Name is required').notEmpty();
   req.checkBody('username', 'Username is required').notEmpty();
@@ -86,5 +84,3 @@ RegisterController.register = function(req, res) {
     
   }
 };
-
-module.exports = RegisterController;

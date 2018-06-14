@@ -19,6 +19,8 @@ router.use(validator());
 // routes
 router.post('/register', RegisterController.register);
 router.post('/login', LoginController.login);
+router.get('/user/:userId', UserController.findbyid);
+router.put('/user/:userId', UserController.update);
 router.post('/user/update/avatar/:userId', UserController.updateavatar);
 
 router.post('/task/add', TaskController.add);
