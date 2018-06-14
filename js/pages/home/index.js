@@ -113,7 +113,7 @@ export default class Home extends Component<{}> {
         <Container style={styles.container}>
         <Header style={{ backgroundColor: "#dc4239" }} androidStatusBarColor="#dc2015" iosBarStyle="light-content"        >
           <Left>
-            <Button transparent onPress={() => Actions.drawer({open: true})}>
+            <Button transparent onPress={() => Actions.drawerOpen()}>
               <Icon name="md-menu" style={{ color: "#FFF" }} />
             </Button>
           </Left>
