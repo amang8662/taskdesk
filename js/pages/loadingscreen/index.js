@@ -44,13 +44,12 @@ export default class LoadingScreen extends Component<{}> {
       
       Toast.show({text: 'Connection Established',
         buttonText: 'Go Online',
-        duration: 10000,
         onClose: () => this.loginWithAsync()
       });
     } else {
       Toast.show({text: 'No Internet Connection!',
-        textColor: '#ff0a0a',
-        duration: 5000});
+        textColor: '#cccccc',
+        duration: 10000});
     }
   }
 

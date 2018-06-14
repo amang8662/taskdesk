@@ -62,6 +62,7 @@ export default class Toast extends Component {
       textColor: config.textColor ? config.textColor : '#00ffff',
       buttonText: this.getButtonText(config.buttonText),
       buttonTextColor: config.buttonTextColor ? config.buttonTextColor : '#ffffff',
+      buttonBackgroundColor: config.buttonBackgroundColor ? config.buttonBackgroundColor : '#f44336',
       toastColor: this.getToastColor(config.type),
       onClose: config.onClose
     });
@@ -73,7 +74,7 @@ export default class Toast extends Component {
         duration: 350
       }).start();
 
-    if (config.duration > 0) {
+    if (config.duration && config.duration > 0) {
 
       setTimeout(() => {
         Animated.timing(
@@ -87,19 +88,6 @@ export default class Toast extends Component {
           });
         }, 500);
       }, config.duration);
-    } else {
-      setTimeout(() => {
-        Animated.timing(
-          this.animatedValue, {
-          toValue: 0,
-          duration: 350
-        }).start();
-        setTimeout(() => {
-          this.setState({
-            showToast: false
-          });
-        }, 500);
-      }, 1500);
     }
   }
 
@@ -176,7 +164,7 @@ export default class Toast extends Component {
               { this.state.text }
             </Text>
 
-            <TouchableOpacity style={styles.button} onPress={() => this.closeToast()}>
+            <TouchableOpacity style={[styles.button, {backgroundColor: this.state.buttonBackgroundColor}]} onPress={() => this.closeToast()}>
               <Text style={[styles.buttonText, {color: this.state.buttonTextColor}]}>
                 {this.state.buttonText}
               </Text>
@@ -201,7 +189,6 @@ const styles = StyleSheet.create({
   button: {
     flex: 1,
     maxWidth: windowWidth* 0.30,
-    backgroundColor:'#0c9fc6',  
     borderTopLeftRadius: 3,
     borderBottomLeftRadius: 3,
     paddingTop: 15
