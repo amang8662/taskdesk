@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
-  TouchableOpacity,
+  TouchableHighlight,
   FlatList,
   NetInfo,
-  ScrollView,
   ToastAndroid
 } from 'react-native';
 import {
@@ -114,12 +113,20 @@ export default class Home extends Component<{}> {
         <Header style={{ backgroundColor: "#dc4239" }} androidStatusBarColor="#dc2015" iosBarStyle="light-content"        >
           <Left>
             <Button transparent onPress={() => Actions.drawerOpen()}>
-              <Icon name="md-menu" style={{ color: "#FFF" }} />
+              <Icon name="md-menu" style={{ color: "#FFF", fontSize: 30,alignItems:  'center' }} />
             </Button>
           </Left>
           <Body>
-            <Title style={{ color: "#F2F2F2" }}> Tasks</Title>
+            <Title style={{ color: "#F2F2F2" }}> TaskDesk</Title>
           </Body>
+          <Right>
+            <Button transparent onPress={() => Actions.profile()}>
+              <Icon name="md-contact" style={{ color: "#FFF", fontSize: 30,alignItems:  'center' }} />
+            </Button>
+            <Button transparent onPress={() => Actions.addtask()}>
+              <Icon name="md-add" style={{ color: "#FFF", fontSize: 30,alignItems:  'center' }} />
+            </Button>
+          </Right>
         </Header>
         <Content padder>
         
@@ -132,10 +139,8 @@ export default class Home extends Component<{}> {
               <Card >
                    <CardItem bordered>
                      <Left>
-                         <Title style={{color: '#222',fontWeight: 'bold',fontSize: 24}}>{item.title}</Title>
-                         
+                         <Title style={{color: '#222',fontWeight: 'bold',fontSize: 24}}>{item.title}</Title>                         
                      </Left>
-                     
                    </CardItem>
 
                    <CardItem>
@@ -160,12 +165,22 @@ export default class Home extends Component<{}> {
                        </Button>
                      </Left>
                      <Right >
-                        <TouchableOpacity onPress={() => Actions.taskinfo({task: item})} >
-                           <Icon name="md-arrow-forward" style={{ color: "#000000",fontSize: 32 }} />
-                         </TouchableOpacity>
+                        <View style={{ alignSelf:  'center',}}>
+                          <Text style={styles.h1}>Reward</Text>
+                          <Text style={{fontSize: 24,color: '#f44336'}}>$40</Text>
+                        </View>
                      </Right>
                    </CardItem>
-                   
+                   <CardItem>
+                      <View style={{width: '100%'}} >
+                        <Button danger full onPress={() => Actions.taskinfo({task: item})}>
+                          <Text>View Details</Text>
+                          <TouchableHighlight  >
+                            <Icon name="md-arrow-forward" style={{ color: "#fcfcfc",fontSize: 32 }} />
+                          </TouchableHighlight>
+                        </Button>
+                      </View>
+                  </CardItem>
                  </Card> 
               </View>
               }
