@@ -85,7 +85,7 @@ export default class LoadingScreen extends Component<{}> {
       <View style={styles.container}>
         <Logo />
         <View style={styles.messageContainer}>
-          <Spinner color="#d7d4f0" />
+          <Spinner color="#dc4239" />
           <Text style={styles.loadscreenText}>{this.state.message}</Text>
         </View>
       </View>

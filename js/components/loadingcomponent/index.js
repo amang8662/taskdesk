@@ -26,7 +26,7 @@ export default class LoadingComponent extends Component<{}> {
           <View>
             {this.props.hasData ? (
                 <View>
-                  <Spinner size={50} color='#00c0ef' />
+                  <Spinner size={50} color='#dc4239' />
                   <Text style={styles.text}>Loading...</Text>
                 </View>
               ) : (

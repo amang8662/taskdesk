@@ -3,13 +3,28 @@ import {
   StyleSheet,
   View,
   Text,
-  TouchableOpacity,
+  TouchableHighlight,
   Image,
   NetInfo,
   ToastAndroid,
   AsyncStorage
 } from 'react-native';
-
+import {
+  Container,
+  Header,
+  Title,
+  Content,
+  Button,
+  Icon,
+  Left,
+  Right,
+  Body,
+  Card,
+  CardItem,
+  Form, Item, Input,Label,
+} from 'native-base';
+import { InputText, TextInputError, InputTag } from '../../components';
+import { Actions } from 'react-native-router-flux';
 import ImagePicker from 'react-native-image-picker';
 import { timeout } from '../../modules';
 import User from '../../helpers/User';
@@ -131,41 +146,120 @@ export default class EditProfile extends Component<{}> {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Image style={styles.image} 
-          source={{ uri: this.state.avatar.uri ? this.state.avatar.uri :
-            baseurl + "/uploads/avatar/" + User.get().avatar
-          }}
-        />
-        <TouchableOpacity style={styles.button} onPress={this.selectAvatar.bind(this)}> 
-          <Text>Select Avatar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={this.uploadAvatar}> 
-          <Text>Upload Avatar</Text>
-        </TouchableOpacity>
-      </View>
+      <Container style={styles.container}>
+        <Header  style={{ backgroundColor: "#dc4239" }} androidStatusBarColor="#dc2015" iosBarStyle="light-content"        >
+          <Left>
+            <Button transparent onPress={() => Actions.profilehome()}>
+              <Icon name="arrow-back" style={{ color: "#FFF", fontSize: 30,alignItems:  'center' }} />
+            </Button>
+          </Left>
+          <Body>
+            <Title style={{ color: "#FFF" }}>Edit Profile</Title>
+          </Body>
+          <Right>            
+            <Button danger onPress={() => Actions.editprofile()}>
+              <Icon name="md-checkbox-outline" style={{ color: "#FFF",fontSize: 30,alignItems:  'center' }} />
+            </Button>
+          </Right>
+        </Header>
+        <Content padder >
+          <Card style={{ elevation: 3}}>
+            <CardItem >
+              <Body style={{alignItems: 'center',}}>
+                <View style={styles.profilePicWrap} >
+                    <Image style={styles.profilePic} source={{ uri: this.state.avatar.uri ? this.state.avatar.uri :
+                        baseurl + "/uploads/avatar/" + User.get().avatar }}/>
+                </View>
+              </Body>
+            </CardItem>
+            
+            <CardItem>
+              <Left>
+                <Button warning  style={styles.btn}>
+                  <View  onPress={this.selectAvatar.bind(this)}> 
+                    <Text style={{color: '#ffffff',fontSize: 14}}>Select Avatar</Text>
+                  </View>
+                </Button>
+              </Left>
+              <Right>
+                <Button success style={styles.btn}>
+                 <View  onPress={this.uploadAvatar}> 
+                   <Text style={{color: '#ffffff',fontSize: 14}}>Upload Avatar</Text>
+                 </View>
+                </Button>
+              </Right>
+             </CardItem>
+            
+          </Card>
+        
+          <Card>
+              <Form>
+                <Item stackedLabel>
+                  <Label >Name</Label>
+                  <Input />
+                </Item>
+                <Item stackedLabel>
+                  <Label >Username</Label>
+                  <Input />
+                </Item>
+                <Item stackedLabel>
+                  <Label >Title</Label>
+                  <Input />
+                </Item>
+                <Item stackedLabel>
+                  <Label >About</Label>
+                  <Input />
+                </Item>
+                <Item stackedLabel>
+                  <Label >Email-Id</Label>
+                  <Input />
+                </Item>
+                <Item stackedLabel>
+                  <Label >Enter Current password</Label>
+                  <Input />
+                </Item>
+                <Item stackedLabel>
+                  <Label >Enter Current password</Label>
+                  <Input />
+                </Item>
+                <Item stackedLabel>
+                  <Label >Enter New password</Label>
+                  <Input />
+                </Item>
+              </Form>
+          </Card>
+        </Content>  
+              
+          
+      </Container>
+     
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container : {
-    backgroundColor:'#455a64',
-    flex: 1,
-    paddingTop: 30,
-    justifyContent:'center',
-    alignItems: 'center'
+  profilePicWrap:{
+    width: 90,
+    height: 90,
+    borderColor: '#f44336',
+    backgroundColor: '#292929',
+    borderWidth: 5,
+    borderRadius: 100,
+    alignContent: 'center',
+    elevation: 30
   },
-  button: {
-    width:200,
-    backgroundColor:'#ff0000',
-    borderRadius: 25,
-    marginVertical: 10,
-    paddingVertical: 13
+  profilePic:{
+    flex:1,
+    width: null,
+    alignSelf: 'stretch',
+    borderRadius: 100,
   },
-  image: {
-    width: 200,
-    height: 200,
-    backgroundColor: '#fff'
+  btn:{
+    margin: 5,
+    elevation: 10,
+    minWidth: '33%',
+    borderRadius: 0,
+    padding: 14,
+
   }
 });
