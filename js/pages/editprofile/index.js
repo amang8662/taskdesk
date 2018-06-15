@@ -21,12 +21,12 @@ import {
   Body,
   Card,
   CardItem,
-  Form, Item, Input,Label,
+  Form, Item, Label, Spinner
 } from 'native-base';
 import { InputText, TextInputError, InputTag } from '../../components';
+import { validate, timeout } from '../../modules';
 import { Actions } from 'react-native-router-flux';
 import ImagePicker from 'react-native-image-picker';
-import { timeout } from '../../modules';
 import User from '../../helpers/User';
 import { baseurl } from '../../Globals';
 
@@ -42,9 +42,34 @@ export default class EditProfile extends Component<{}> {
   constructor(props) {
     super(props);
 
+    let user = User.get();
     this.state = {
-      avatar: {}
+      avatar: {},
+      name: user.name,
+      nameError: {
+        'isError': false,
+        'errortype': '',
+        'message':  ''
+      },
+      username: user.username,
+      usernameError: {
+        'isError': false,
+        'errortype': '',
+        'message':  ''
+      },
+      email: user.email,
+      emailError: {
+        'isError': false,
+        'errortype': '',
+        'message':  ''
+      },
+      title: user.title,
+      about: user.about,
+      skills: user.skills,
+      clearTagList: false,
+      isLoading: false
     }
+    this.validateForm = this.validateForm.bind(this);
   }
 
   selectAvatar() {
@@ -108,6 +133,12 @@ export default class EditProfile extends Component<{}> {
                   AsyncStorage.setItem('user' , res.data);
                   User.set(res.data);
                   alert("Avatar Image Changed");
+
+                  this.setState(prevState => ({
+                      avatar: [...prevState.avatar, {data: ''}]
+                    })
+                  )
+
                 } catch(error) {
 
                   alert("Some error Occured. Try Again");
@@ -133,14 +164,141 @@ export default class EditProfile extends Component<{}> {
           });
 
         } else {
-          ToastAndroid.show('No Internet Connection!', ToastAndroid.SHORT);
+          Toast.show({text: 'No Internet Connection!',
+            textColor: '#cccccc',
+            duration: 5000});
         }
       });
+    } else {
+      alert("No Avatar Selected")
+    }
+  }
 
-      NetInfo.isConnected.addEventListener(
-        'connectionChange',
-        this.handleFirstConnectivityChange
-      );
+  validateForm() {
+
+    //Check name
+    const nameError = validate("name",this.state.name,{required:true,min:3,max:40});
+    
+    this.setState({
+      nameError: Object.assign(this.state.nameError, nameError)
+    })
+
+    //Check username
+    const usernameError = validate("username",this.state.username,{required:true,min:4,max:25});
+   
+    this.setState({
+      usernameError: Object.assign(this.state.usernameError, usernameError)
+    })
+
+    //Check Email
+    const emailError = validate("email",this.state.email,{required:true,regex:true});
+
+    this.setState({
+      emailError: Object.assign(this.state.emailError, emailError)
+    });
+
+    if(this.state.nameError.isError || this.state.usernameError.isError || this.state.emailError.isError) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  updateUser = () => {
+    const {name, username, email, title, about, skills} = this.state;
+    const isFormValid = this.validateForm();
+    
+    if(isFormValid) {
+
+      NetInfo.isConnected.fetch().then((isConnected) => {
+
+        this.setState({
+          isLoading: true
+        });
+
+        if(isConnected) {
+
+          let formdata = {
+            name: name,
+            username: username,
+            email: email,
+            title: title,
+            about: about,
+            skills: JSON.stringify(skills)
+          }
+
+          timeout(10000, 
+            fetch(baseurl + '/user/' + User.get()._id, {
+                method : 'put',
+                headers : {
+                  'Accept' : 'application/json',
+                  'Content-type' : 'application/json'
+                },
+                'body' : JSON.stringify(formdata)
+            })
+            .then((response) => response.json())
+            .then((res) => {
+              
+              this.setState({
+                isLoading: false,
+                clearTagList: false
+              });
+
+              if(res.status == 200) {
+
+                try {
+
+                  AsyncStorage.setItem('user' , res.data);
+                  User.set(res.data);
+                  alert("User Updated successfully");
+
+                } catch(error) {
+
+                  alert("Some error Occured. Try Again");
+                }
+              } else if(res.status == 500) {
+                if(res.errortype == 'validation') {
+
+                  alert("Please enter valid details");
+                } else if(res.errortype == 'unique-error') {
+
+                  if(res.fields.username && res.fields.email) {
+                    alert("Username and Email are already taken.");
+                  } else if(res.fields.username){
+                    alert("Username is already taken.");
+                  } else {
+                    alert("Email is already taken.");
+                  }
+                } else { 
+                  alert(res.data);
+                }
+              } else if(res.status == 404) {
+                alert(res.status)
+              }     
+            })
+            .catch((error) => {
+
+                this.setState({
+                  isLoading: false
+                });
+
+                alert(error);
+            })
+          ).catch((error) => {
+
+              this.setState({
+                isLoading: false
+              });
+
+              alert("Server not responding. Try again");
+          });
+
+        } else {
+          Toast.show({text: 'No Internet Connection!',
+            textColor: '#cccccc',
+            duration: 5000});
+        }
+      });
     }
   }
 
@@ -157,7 +315,7 @@ export default class EditProfile extends Component<{}> {
             <Title style={{ color: "#FFF" }}>Edit Profile</Title>
           </Body>
           <Right>            
-            <Button danger onPress={() => Actions.editprofile()}>
+            <Button danger onPress={this.updateUser}>
               <Icon name="md-checkbox-outline" style={{ color: "#FFF",fontSize: 30,alignItems:  'center' }} />
             </Button>
           </Right>
@@ -175,15 +333,15 @@ export default class EditProfile extends Component<{}> {
             
             <CardItem>
               <Left>
-                <Button warning  style={styles.btn}>
-                  <View  onPress={this.selectAvatar.bind(this)}> 
+                <Button warning  style={styles.btn} onPress={this.selectAvatar.bind(this)}>
+                  <View> 
                     <Text style={{color: '#ffffff',fontSize: 14}}>Select Avatar</Text>
                   </View>
                 </Button>
               </Left>
               <Right>
-                <Button success style={styles.btn}>
-                 <View  onPress={this.uploadAvatar}> 
+                <Button success style={styles.btn} onPress={this.uploadAvatar}>
+                 <View> 
                    <Text style={{color: '#ffffff',fontSize: 14}}>Upload Avatar</Text>
                  </View>
                 </Button>
@@ -196,37 +354,98 @@ export default class EditProfile extends Component<{}> {
               <Form>
                 <Item stackedLabel>
                   <Label >Name</Label>
-                  <Input />
+                  <InputText
+                      isError={this.state.nameError.isError}
+                      value={this.state.name}
+                      onChangeText={name => this.setState({name})}
+                      inputRef={(input) => this.name = input}
+                      returnKeyType={'next'}
+                      blurOnSubmit={false}
+                      onSubmitEditing={() => {this.username.focus()}}
+                      onBlur={() => {
+                          nameError = validate("name",this.state.name,{required:true})
+                          this.setState({
+                            nameError: Object.assign(this.state.nameError, nameError)
+                          })
+                        }}
+                      />
+                  <TextInputError isError={this.state.nameError.isError} message={this.state.nameError.message} />
                 </Item>
                 <Item stackedLabel>
                   <Label >Username</Label>
-                  <Input />
+                  <InputText
+                      isError={this.state.usernameError.isError}
+                      value={this.state.username}
+                      onChangeText={username => this.setState({username})}
+                      inputRef={(input) => this.username = input}
+                      returnKeyType={'next'}
+                      blurOnSubmit={false}
+                      onSubmitEditing={() => {this.email.focus()}}
+                      onBlur={() => {
+                          usernameError = validate("username",this.state.username,{required:true})
+                          this.setState({
+                            usernameError: Object.assign(this.state.usernameError, usernameError)
+                          })
+                        }}
+                      />
+                  <TextInputError isError={this.state.usernameError.isError} message={this.state.usernameError.message} />
+                </Item>
+                <Item stackedLabel>
+                  <Label >Email</Label>
+                  <InputText
+                      isError={this.state.emailError.isError}
+                      keyboardType="email-address"
+                      value={this.state.email}
+                      onChangeText={email => this.setState({email})}
+                      inputRef={(input) => this.email = input}
+                      returnKeyType={'next'}
+                      blurOnSubmit={false}
+                      onSubmitEditing={() => {this.title.focus()}}
+                      onBlur={() => {
+                          emailError = validate("email",this.state.email,{required:true,regex:true})
+                          this.setState({
+                            emailError: Object.assign(this.state.emailError, emailError)
+                          })
+                        }}
+                      />
+                  <TextInputError isError={this.state.emailError.isError} message={this.state.emailError.message} />
                 </Item>
                 <Item stackedLabel>
                   <Label >Title</Label>
-                  <Input />
+                  <InputText
+                      value={this.state.title}
+                      onChangeText={title => this.setState({title})}
+                      inputRef={(input) => this.title = input}
+                      returnKeyType={'next'}
+                      blurOnSubmit={false}
+                      onSubmitEditing={() => {this.about.focus()}}
+                      />
                 </Item>
                 <Item stackedLabel>
                   <Label >About</Label>
-                  <Input />
+                  <InputText
+                      value={this.state.about}
+                      onChangeText={about => this.setState({about})}
+                      inputRef={(input) => this.about = input}
+                      returnKeyType={'next'}
+                      blurOnSubmit={false}
+                      multiline={true}
+                      numberOfLines={10}
+                      />
                 </Item>
-                <Item stackedLabel>
-                  <Label >Email-Id</Label>
-                  <Input />
-                </Item>
-                <Item stackedLabel>
-                  <Label >Enter Current password</Label>
-                  <Input />
-                </Item>
-                <Item stackedLabel>
-                  <Label >Enter Current password</Label>
-                  <Input />
-                </Item>
-                <Item stackedLabel>
-                  <Label >Enter New password</Label>
-                  <Input />
+                <Item stackedLabel last>
+                  <Label>Skills</Label>
+                  <InputTag
+                      initialTags={this.state.skills}
+                      onChangeTags={skills => this.setState({skills})}
+                      inputRef={(input) => this.skill = input}
+                      returnKeyType={'done'}
+                      showTagCloseButton={true}
+                      clearTagList={this.state.clearTagList}
+                      />
                 </Item>
               </Form>
+              { this.state.isLoading == true ? <Spinner color='#dc4239' /> : null}
           </Card>
         </Content>  
               

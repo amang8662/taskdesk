@@ -148,11 +148,14 @@ exports.update = function(req, res) {
     if(req.body.about) {
       userdata.about = req.body.about;
     }
-    if(req.body.skills) {
+    if(req.body.skills && req.body.skills.length > 0) {
       userdata.skills = JSON.parse(req.body.skills);
+    } else if(req.body.skills) {
+      userdata.skills = [];
     }
 
     User.findByIdAndUpdate(req.params.userId, userdata, {new: true})
+    .populate('skills')
     .exec( function(err, user) {
 
       if(err) {
@@ -189,7 +192,7 @@ exports.update = function(req, res) {
         }
         res.status(200).send({
           status: 200,
-          data: "User Updated Successfully"
+          data: JSON.stringify(user)
         });
       }
     });    
