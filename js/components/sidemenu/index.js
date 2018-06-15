@@ -6,11 +6,26 @@ import {
   AsyncStorage,
   TouchableOpacity,
   Platform,
-  Dimensions
+  Dimensions,
+  Image
 } from 'react-native';
+import {
+  Container,
+  Header,
+  Title,
+  Content,
+  Button,
+  Icon,
+  Left,
+  Right,
+  Body,
+  Card,
+  CardItem,
+} from 'native-base';
+
 
 import { Actions } from 'react-native-router-flux';
-
+import { baseurl } from '../../Globals';
 import User from '../../helpers/User';
 
 const deviceHeight = Dimensions.get("window").height;
@@ -20,6 +35,9 @@ export default class SideMenu extends Component<{}> {
 
   constructor(props) {
     super(props);
+    this.state = {
+      user: User.get()
+    }
   }
 
   async logout() {
@@ -36,8 +54,22 @@ export default class SideMenu extends Component<{}> {
   render(){
 
     return (
-      <View style={styles.container}>
-      
+      <Container style={styles.container}>
+        <Content>
+            <Card style={{ elevation: 3}}>
+              <CardItem bordered>
+                <Left style={{alignItems: 'center',}}>
+                  <View style={styles.profilePicWrap} >
+                      <Image style={styles.profilePic}  source={{uri: baseurl + "/uploads/avatar/" + this.state.user.avatar}} />
+                  </View>
+                </Left>
+                <Body>
+                      <Text>{this.state.user.title}asd</Text>
+                      <Title style={styles.h1}>{this.state.user.name} kjckhcgkc</Title>
+                      <Text note>{this.state.user.level}122</Text>
+                </Body>
+              </CardItem>
+            </Card>
         <TouchableOpacity style={styles.listItem} onPress={() => Actions.dashboard()}>
           <Text style={styles.text}>DashBoard</Text>
         </TouchableOpacity>
@@ -65,23 +97,41 @@ export default class SideMenu extends Component<{}> {
         <TouchableOpacity style={styles.listItem} onPress={this.logout}>
           <Text style={styles.text}>Logout</Text>
         </TouchableOpacity>
-      </View>
+        </Content>
+      </Container>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container : {
-    backgroundColor:'#212121',
-    flex: 1,
-    paddingTop: 5
+  
+  profilePicWrap:{
+    width: 90,
+    height: 90,
+    borderColor: '#f44336',
+    backgroundColor: '#292929',
+    borderWidth: 5,
+    borderRadius: 100,
+    alignContent: 'center',
+    elevation: 30
+  },
+  profilePic:{
+    flex:1,
+    width: null,
+    alignSelf: 'stretch',
+    borderRadius: 100,
+  },
+  h1 :{
+    color: '#080808',
+    fontStyle: 'italic' ,
   },
   listItem: {
     height:50,
     backgroundColor:'#f44336',
     borderStyle: 'solid',
     borderBottomWidth: 1,
-    borderBottomColor: '#000',
+    borderBottomColor: '#ccc',
+    elevation: 10,
     padding: 10,
     marginTop: 0
   },
