@@ -56,17 +56,17 @@ export default class SideMenu extends Component<{}> {
     return (
       <Container style={styles.container}>
         <Content>
-            <Card style={{ elevation: 3}} onPress={() => Actions.profilehome()}>
-              <CardItem bordered>
+            <Card style={{ elevation: 3}} >
+              <CardItem bordered button onPress={() => Actions.profile()}>
                 <Left style={{alignItems: 'center',}}>
                   <View style={styles.profilePicWrap} >
                       <Image style={styles.profilePic}  source={{uri: baseurl + "/uploads/avatar/" + this.state.user.avatar}} />
                   </View>
                 </Left>
                 <Body>
-                      <Text>{this.state.user.title}asd</Text>
+                      <Text>{this.state.user.title}</Text>
                       <Title style={styles.h1}>{this.state.user.name}</Title>
-                      <Text note>{this.state.user.level}122</Text>
+                      <Text note>Lvl.{this.state.user.level}</Text>
                 </Body>
               </CardItem>
             </Card>

@@ -204,7 +204,7 @@ const errorStyle = StyleSheet.create({
     paddingHorizontal:16,
   },
   errorText : {
-    color: '#bbb',
+    color: '#000',
     fontSize: 14
   }
 });

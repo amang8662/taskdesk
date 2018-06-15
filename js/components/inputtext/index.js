@@ -25,12 +25,12 @@ const styles = StyleSheet.create({
   inputBox: {
     width:null,
     alignSelf: 'stretch',
+    color: '#222'
   },
   inputBoxError: {
     width:null,
     alignSelf: 'stretch' ,
-    color: '#fff',
-    marginRight: 10,
+    color: '#222',
     borderBottomWidth: 3,
     borderStyle: 'solid',
     borderBottomColor : '#d83c3c'
