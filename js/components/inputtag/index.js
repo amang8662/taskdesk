@@ -10,6 +10,10 @@ import {
   NetInfo,
   ToastAndroid
 } from "react-native";
+import {
+  Button,
+  Icon,
+} from 'native-base';
 
 import { validate, timeout } from '../../modules';
 import { baseurl } from '../../Globals';
@@ -148,17 +152,17 @@ export default class InputTag extends Component<{}> {
                 value={this.state.text}
                 isError={this.props.isError}
                 onChangeText={this.onChangeText}
-                placeholder="Add Tag"
+                placeholder="Add skill Tags"
                 underlineColorAndroid="rgba(0,0,0,0)"
                 {...this.props}
               />
-              <FlatList
+              <FlatList style={{flexDirection: 'column',flexWrap: 'wrap',}}
                 data={this.state.tagList}
                 keyExtractor={item => item._id}
                 renderItem={({item}) => 
-                  <TouchableOpacity style={styles.tagListItem} onPress={() => this.onListPress(item)}>
+                  <Button style={styles.tagListItem} onPress={() => this.onListPress(item)}>
                     <Text style={styles.tagListItemText}>{item.name}</Text>
-                  </TouchableOpacity>
+                  </Button>
                   }
                 />
             </View>
@@ -191,29 +195,22 @@ const styles = StyleSheet.create({
 
     container: {
         flex: 1,
-        width: 300,
+        width: '100%',
         paddingTop: 10
     },
     tagAreaContainer: {
-        flexDirection: "row",
-        flexWrap: "wrap",
-        alignItems: "center",
-        width: 300,
-        backgroundColor: '#fff'
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      backgroundColor: '#fff'
     },
     tagListItem: {
-      height:50,
-      backgroundColor:'#f44336',
-      borderStyle: 'solid',
-      borderBottomWidth: 1,
-      borderBottomColor: '#000',
-      padding: 10,
-      marginTop: 0
+      margin: 5,
+      width: '90%',
+      backgroundColor: '#999',
     },
     tagListItemText: {
       fontSize: 22,
-      textAlign: 'left',
-      textAlignVertical: 'center',
-      color: '#fff' 
+      color: '#fff',
+      padding: 20  
     },
 });

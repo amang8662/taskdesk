@@ -23,24 +23,16 @@ export default class InputText extends Component<{}> {
 
 const styles = StyleSheet.create({
   inputBox: {
-    width:300,
-    backgroundColor:'#222',
-    borderBottomColor: '#eee',
-    borderWidth: 2,
-    paddingHorizontal:16,
-    fontSize:16,
-    color:'#ffffff',
-    marginVertical: 10
+    width:null,
+    alignSelf: 'stretch',
   },
   inputBoxError: {
-    width:300,
-    borderWidth: 3,
-    paddingHorizontal:16,
-    fontSize:16,
-    marginVertical: 10,
+    width:null,
+    alignSelf: 'stretch' ,
+    color: '#fff',
+    marginRight: 10,
+    borderBottomWidth: 3,
     borderStyle: 'solid',
-    color: '#eee',
-    backgroundColor: '#222',
     borderBottomColor : '#d83c3c'
   }
 });

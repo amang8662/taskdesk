@@ -20,13 +20,12 @@ export default class TextInputError extends Component<{}> {
 }
 
 const errorStyle = StyleSheet.create({
-  container : {
-    justifyContent:'flex-start',
-    alignItems: 'flex-start',    
-    paddingHorizontal:16,
+  container : { 
+    padding:16,
+    alignSelf:  'flex-end'
   },
   errorText : {
-    color: '#bbb',
-    fontSize: 14
+    color: '#dc4239',
+    fontSize: 16
   }
 });

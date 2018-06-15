@@ -1,20 +1,21 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {  View, StyleSheet } from "react-native";
+import { Text, Button, Icon } from 'native-base';
+
 
 export default class Tag extends Component<{}> {
 
   render() {
     return (
-        <TouchableOpacity style={[styles.tag, this.props.tagContainerStyle]}>
+        <Button style={[styles.tag, this.props.tagContainerStyle]}>
           <Text style={[styles.tagLabel, this.props.tagTextStyle]}>{this.props.label}</Text>
           {this.props.showCloseButton && (
-            <TouchableOpacity onPress={this.props.onClose}>
-              <Icon name="close" size={15} />
-            </TouchableOpacity>
+            <Button style={styles.tagIcon} onPress={this.props.onClose}>
+              <Icon name="close"  />
+            </Button>
           )}
-        </TouchableOpacity>
+        </Button>
       );
   }
 }
@@ -32,25 +33,22 @@ Tag.propTypes = {
 
 const styles = StyleSheet.create({
   tag: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: "center",
-    backgroundColor: "#00c0ef",
-    borderRadius: 16,
-    paddingLeft: 12,
-    paddingRight: 12,
-    height: 32,
-    margin: 4
+    backgroundColor: "#f44336",
+    minWidth: '25%',
+    margin: 5,
+    elevation: 10
   },
   tagLabel: {
-    flex: 0.7,
     fontSize: 13,
     color: '#fff',
     fontWeight: 'bold'
   },
-  tagClose: {
-    flex: 0.3
+  tagIcon:{
+    backgroundColor: '#00000000',
+    borderRadius: 100,
+    alignSelf: 'center',
   }
+  
 });
 
 export { Tag };
