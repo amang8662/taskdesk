@@ -123,27 +123,7 @@ Replacing Component: React Native View
 
 const styles = StyleSheet.create({
   
-  bar :{
-   backgroundColor: '#f44336',
-   flexDirection: 'row',
-   elevation: 3,
-  },
-  barItem :{
-   flex: 1,
-   padding: 20,
-   alignItems: 'center',
-  },
-  barTop :{
-   color: '#fff',
-   fontSize: 14,
-   fontWeight: 'bold',
-   fontStyle: 'italic' 
-  },
-  barBottom :{
-   color: '#ccc',
-   fontSize: 16,
-   fontWeight: 'bold',
-  },
+  
   profilePicWrap:{
     width: 90,
     height: 90,
