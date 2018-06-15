@@ -221,7 +221,7 @@ export default class Signup extends Component<{}> {
               placeholder="Username"
               value={this.state.userName}
               onChangeText={userName => this.setState({userName})}
-              ref={(input) => this.username = input}
+              inputRef={(input) => this.username = input}
               returnKeyType={'next'}
               blurOnSubmit={false}
               onSubmitEditing={() => {this.email.focus()}}
@@ -239,7 +239,7 @@ export default class Signup extends Component<{}> {
               keyboardType="email-address"
               value={this.state.email}
               onChangeText={email => this.setState({email})}
-              ref={(input) => this.email = input}
+              inputRef={(input) => this.email = input}
               returnKeyType={'next'}
               blurOnSubmit={false}
               onSubmitEditing={() => {this.password.focus()}}
@@ -255,10 +255,10 @@ export default class Signup extends Component<{}> {
               isError={this.state.passwordError.isError} 
               placeholder="Password"
               secureTextEntry={true}
-              ref={(input) => this.password = input}
+              inputRef={(input) => this.password = input}
               value={this.state.password}
               onChangeText={password => this.setState({password})}
-              ref={(input) => this.password = input}
+              inputRef={(input) => this.password = input}
               returnKeyType={'done'}
               onBlur={() => {
                   passwordError = validate("password",this.state.password,{required:true,min:8,max:30})

@@ -12,9 +12,9 @@ export default class InputText extends Component<{}> {
 		return(
 			<TextInput
         style={this.props.isError ? errorStyle : style}
-        selectionColor={this.props.placeholderTextColor ? this.props.placeholderTextColor :'#fff'}
         placeholderTextColor = {this.props.placeholderTextColor ? this.props.placeholderTextColor :'#aeaeae'}
         underlineColorAndroid={this.props.underlineColorAndroid ? this.props.underlineColorAndroid :'rgba(0,0,0,0)'}
+        ref={this.props.inputRef}
         {...this.props} 
         />
 		)

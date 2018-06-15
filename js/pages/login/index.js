@@ -185,7 +185,7 @@ export default class Login extends Component<{}> {
               secureTextEntry={true}
               value={this.state.password}
               onChangeText={password => this.setState({password})}
-              ref={(input) => this.password = input}
+              inputRef={(input) => this.password = input}
               returnKeyType={'done'}
               onBlur={() => {
                   passwordError = validate("password",this.state.password,{required:true})

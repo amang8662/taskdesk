@@ -154,6 +154,7 @@ export default class InputTag extends Component<{}> {
                 onChangeText={this.onChangeText}
                 placeholder="Add skill Tags"
                 underlineColorAndroid="rgba(0,0,0,0)"
+                ref={this.props.inputRef}
                 {...this.props}
               />
               <FlatList style={{flexDirection: 'column',flexWrap: 'wrap',}}

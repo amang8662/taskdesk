@@ -242,7 +242,7 @@ export default class AddTask extends Component<{}> {
                     isError={this.state.descriptionError.isError} 
                     value={this.state.description}
                     onChangeText={description => this.setState({description})}
-                    ref={(input) => this.description = input}
+                    inputRef={(input) => this.description = input}
                     returnKeyType={'next'}
                     blurOnSubmit={false}
                     onBlur={() => {
@@ -261,7 +261,7 @@ export default class AddTask extends Component<{}> {
                     isError={this.state.tagError.isError}
                     initialTags={this.state.tags}
                     onChangeTags={tags => this.setState({tags})}
-                    ref={(input) => this.tag = input}
+                    inputRef={(input) => this.tag = input}
                     returnKeyType={'done'}
                     showTagCloseButton={true}
                     clearTags={this.state.clearTags}
