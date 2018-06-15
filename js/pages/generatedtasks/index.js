@@ -154,8 +154,8 @@ export default class GeneratedTasks extends Component<{}> {
                      <CardItem style={{ paddingVertical: 0 }}>
                           <View style={{flexDirection: 'row',flexWrap: 'wrap'}}>
                             {item.skills.map((tag, i) => (
-                              <Button style={styles.tags}  danger key={i}><Text> {tag.name}</Text></Button>
-                            ))}
+                              <Button style={styles.tags}  dark key={i}><Text> {tag.name}</Text></Button>
+                            ))} 
                           </View>
                      </CardItem>
                      <CardItem>
@@ -208,4 +208,11 @@ const styles = StyleSheet.create({
   container : {
     backgroundColor:'#ddd',
   },
+  tags:{
+    margin: 5,
+    elevation: 10,
+    minWidth: '10%',
+    height: 30,
+    backgroundColor: '#f44336',
+  }
 });
