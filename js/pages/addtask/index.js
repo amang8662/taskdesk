@@ -1,21 +1,31 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  Text,
-  View,
-  TouchableHighlight,
   AsyncStorage,
   NetInfo,
-  ScrollView,
-  ToastAndroid
+  ToastAndroid,
+  Text,
 } from 'react-native';
+import {
+  Container,
+  Header,
+  Title,
+  Content,
+  Button,
+  Icon,
+  Body,
+  Left,
+  Right,
+  Form, Item, Input,Label,
+} from 'native-base';
 
 import { InputText, TextInputError, InputTag } from '../../components';
 import { validate, timeout } from '../../modules';
 import User from '../../helpers/User';
 import { Spinner } from 'native-base';
 import { baseurl } from '../../Globals';
-import styles from '../style';
+import { Actions } from 'react-native-router-flux';
+
 
 
 
@@ -187,63 +197,89 @@ export default class AddTask extends Component<{}> {
 
   render() {
     return (
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-        <View style={styles.formContainer}>
-          <Text style={styles.text}>Title</Text>
-          <InputText
-              isError={this.state.titleError.isError}
-              placeholder="Title"
-              keyboardType="email-address"
-              value={this.state.title}
-              onChangeText={title => this.setState({title})}
-              returnKeyType={'next'}
-              blurOnSubmit={false}
-              onSubmitEditing={() => {this.description.focus()}}
-              onBlur={() => {
-                  titleError = validate("title",this.state.title,{required:true})
-                  this.setState({
-                    titleError: Object.assign(this.state.titleError, titleError)
-                  })
-                }}
-              />
-          <TextInputError isError={this.state.titleError.isError} message={this.state.titleError.message} />
-          <Text style={styles.text}>Description</Text>
-          <InputText
-              multiline={true}
-              numberOfLines={20}
-              isError={this.state.descriptionError.isError} 
-              placeholder="Description"
-              value={this.state.description}
-              onChangeText={description => this.setState({description})}
-              ref={(input) => this.description = input}
-              returnKeyType={'next'}
-              blurOnSubmit={false}
-              onBlur={() => {
-                  descriptionError = validate("description",this.state.description,{required:true})
-                  this.setState({
-                    descriptionError: Object.assign(this.state.descriptionError, descriptionError)
-                  })
-                }}
-              />
-          <TextInputError isError={this.state.descriptionError.isError} message={this.state.descriptionError.message} /> 
-          <Text style={styles.text}>Tags</Text>
-          <InputTag
-              isError={this.state.tagError.isError}
-              initialTags={this.state.tags}
-              onChangeTags={tags => this.setState({tags})}
-              ref={(input) => this.tag = input}
-              returnKeyType={'done'}
-              showTagCloseButton={true}
-              clearTags={this.state.clearTags}
-              />
-          <TextInputError isError={this.state.tagError.isError} message={this.state.tagError.message} /> 
-          <TouchableHighlight style={styles.button} onPress={this.addTask}>
-            <Text style={styles.buttonText}>Add</Text>
-          </TouchableHighlight>
-          { this.state.isLoading == true ? <Spinner color='#d7d4f0' /> : null}
-        </View>
-      </ScrollView>
+
+
+        <Container style={{backgroundColor: '#fff'}}>
+     
+          <Header  style={{ backgroundColor: "#dc4239" }} androidStatusBarColor="#dc2015" iosBarStyle="light-content"        >
+            <Left>
+              <Button transparent onPress={() => Actions.generatedtasks()}>
+                <Icon name="arrow-back" style={{ color: "#FFF", fontSize: 30,alignItems:  'center' }} />
+              </Button>
+            </Left>
+            <Body>
+              <Title style={{ color: "#FFF" }}>Add Task</Title>
+            </Body>
+            
+          </Header>
+
+          <Content>
+            <Form>
+              <Item stackedLabel>
+                <Label >Title</Label>
+                <InputText
+                    isError={this.state.titleError.isError}
+                    keyboardType="email-address"
+                    value={this.state.title}
+                    onChangeText={title => this.setState({title})}
+                    returnKeyType={'next'}
+                    blurOnSubmit={false}
+                    onSubmitEditing={() => {this.description.focus()}}
+                    onBlur={() => {
+                        titleError = validate("title",this.state.title,{required:true})
+                        this.setState({
+                          titleError: Object.assign(this.state.titleError, titleError)
+                        })
+                      }}
+                    />
+                <TextInputError isError={this.state.titleError.isError} message={this.state.titleError.message} />
+              </Item>
+              <Item stackedLabel >
+                <Label>Description</Label>
+                <InputText
+                    multiline={true}
+                    numberOfLines={3}
+                    isError={this.state.descriptionError.isError} 
+                    value={this.state.description}
+                    onChangeText={description => this.setState({description})}
+                    ref={(input) => this.description = input}
+                    returnKeyType={'next'}
+                    blurOnSubmit={false}
+                    onBlur={() => {
+                        descriptionError = validate("description",this.state.description,{required:true})
+                        this.setState({
+                          descriptionError: Object.assign(this.state.descriptionError, descriptionError)
+                        })
+                      }}
+                    />
+                <TextInputError isError={this.state.descriptionError.isError} message={this.state.descriptionError.message} /> 
+              </Item>
+
+              <Item stackedLabel last>
+                <Label>Skills</Label>
+                <InputTag
+                    isError={this.state.tagError.isError}
+                    initialTags={this.state.tags}
+                    onChangeTags={tags => this.setState({tags})}
+                    ref={(input) => this.tag = input}
+                    returnKeyType={'done'}
+                    showTagCloseButton={true}
+                    clearTags={this.state.clearTags}
+                    />
+                <TextInputError isError={this.state.tagError.isError} message={this.state.tagError.message} /> 
+              </Item>
+            </Form>
+            <Button block style={{ margin: 15, marginTop: 50,backgroundColor: '#369' }} onPress={this.addTask}>
+                <Label style={{color: '#fff'}} >Add Task</Label>
+            </Button>
+            { this.state.isLoading == true ? <Spinner color='#d7d4f0' /> : null}
+          </Content>
+  
+        </Container>
     );
   }
 }
+const styles = StyleSheet.create({
 
+
+});
