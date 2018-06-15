@@ -18,7 +18,6 @@ import {
   Text,
   Card,
   CardItem,
-  Thumbnail,
 } from 'native-base';
 
 import { Actions } from 'react-native-router-flux';
@@ -37,19 +36,18 @@ export default class Profile extends Component<{}> {
 
     return (
       <Container style={styles.container}>
-        <Header          style={{ backgroundColor: "#dc4239" }} androidStatusBarColor="#dc2015" iosBarStyle="light-content"        >
+        <Header  style={{ backgroundColor: "#dc4239" }} androidStatusBarColor="#dc2015" iosBarStyle="light-content"        >
           <Left>
-            <Button transparent onPress={() => Actions.dashboard()}>
-              <Icon name="arrow-back" style={{ color: "#FFF" }} />
+            <Button transparent onPress={() => Actions.drawerOpen()}>
+              <Icon name="md-menu" style={{ color: "#FFF", fontSize: 30,alignItems:  'center' }} />
             </Button>
           </Left>
           <Body>
             <Title style={{ color: "#FFF" }}>{this.state.user.username}</Title>
           </Body>
-          <Right>
-            
+          <Right>            
             <Button transparent onPress={() => Actions.editprofile()}>
-              <Icon name="md-build" style={{ color: "#FFF" }} />
+              <Icon name="settings" style={{ color: "#FFF",fontSize: 30,alignItems:  'center' }} />
             </Button>
           </Right>
         </Header>
