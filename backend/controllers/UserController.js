@@ -142,13 +142,13 @@ exports.update = function(req, res) {
       email: req.body.email
     }
 
-    if(req.body.title) {
+    if(req.body.hasOwnProperty("title")) {
       userdata.title = req.body.title;
     }
-    if(req.body.about) {
+    if(req.body.hasOwnProperty("about")) {
       userdata.about = req.body.about;
     }
-    if(req.body.skills && req.body.skills.length > 0) {
+    if(req.body.hasOwnProperty("skills") && req.body.skills.length > 0) {
       userdata.skills = JSON.parse(req.body.skills);
     } else if(req.body.skills) {
       userdata.skills = [];

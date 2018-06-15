@@ -86,15 +86,17 @@ export default class Profile extends Component<{}> {
                     <Text>{this.state.user.name}</Text>
                   </Left>
                 </CardItem>
-                <CardItem bordered>
-                  <Left>
-                    <Icon
-                      name="md-bowtie"
-                      style={{ color: "#454545" }}
-                    />
-                    <Text>{this.state.user.title}</Text>
-                  </Left>
-                </CardItem>
+                {this.state.user.title ? (
+                  <CardItem bordered>
+                    <Left>
+                      <Icon
+                        name="md-bowtie"
+                        style={{ color: "#454545" }}
+                      />
+                      <Text>{this.state.user.title}</Text>
+                    </Left>
+                  </CardItem>
+                ) : null}
                 <CardItem bordered>
                   <Left>
                     <Icon
@@ -108,7 +110,7 @@ export default class Profile extends Component<{}> {
                   <Left>
                     <Icon
                       name='ios-list-box'
-                      style={{ color: "#454545",position: 'absolute' ,top: 0,marginRight: 15  }}
+                      style={{ color: "#454545" }}
                     />
                     <Text>{this.state.user.about} </Text>
                   </Left>
@@ -123,11 +125,13 @@ export default class Profile extends Component<{}> {
                 </CardItem>
                 <CardItem>
                   <View style={{flexDirection: 'row',flexWrap: 'wrap'}}>
-                    <Button style={styles.tags} dark><Text> Dark asasdas </Text></Button>  
-                    <Button style={styles.tags} dark><Text> Dark </Text></Button>
-                    <Button style={styles.tags} dark><Text> Dark </Text></Button>
-                    <Button style={styles.tags} dark><Text> Dark </Text></Button>
-                    <Button style={styles.tags} dark><Text> Dark </Text></Button>
+                    {this.state.user.skills.length > 0 ? (
+                      this.state.user.skills.map((tag, i) => (
+                          <Button style={styles.tags}  dark key={i}><Text> {tag.name}</Text></Button>
+                        )
+                      )) : (
+                      <Text>No Skills Found</Text>
+                    )}
                   </View>
                 </CardItem>
 
