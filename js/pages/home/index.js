@@ -134,14 +134,14 @@ export default class Home extends Component<{}> {
             keyExtractor={item => item._id}
             renderItem={({item}) => 
               <Card>
-                   <CardItem bordered>
+                   <CardItem bordered style={styles.hr}>
                      <Left>
-                         <Title style={{color: '#222',fontWeight: 'bold',fontSize: 24}}>{item.title}</Title>                         
+                         <Title style={styles.h1}>{item.title}</Title>                         
                      </Left>
                    </CardItem>
                    <CardItem>
                      <Body>
-                       <Text numberOfLines = { 3 }>
+                       <Text numberOfLines = { 3 } style={{textAlign:  'justify' }}>
                         {item.description}
                        </Text>
                      </Body>
@@ -161,8 +161,8 @@ export default class Home extends Component<{}> {
                      </Left>
                      <Right>
                         <View style={{ alignSelf:  'center',}}>
-                          <Text style={styles.h1}>Reward</Text>
-                          <Text style={{fontSize: 24,color: '#f44336'}}>$40</Text>
+                          <Text>Reward</Text>
+                          <Text style={{fontSize: 24,color: '#f44336',textAlign: 'right' }}>{item.rewardscore}</Text>
                         </View>
                      </Right>
                    </CardItem>
@@ -189,7 +189,19 @@ export default class Home extends Component<{}> {
 }
 
 const styles = StyleSheet.create({
-  
+  hr:{
+    width: '100%',
+    marginTop: 10,
+    marginBottom: 10,
+    borderBottomColor: '#f44336',
+    borderBottomWidth: 2,
+  },
+  h1 :{
+    color: '#080808',
+    fontStyle: 'italic' ,
+    fontSize: 24,
+
+  },
  tags:{
     margin: 5,
     elevation: 10,
