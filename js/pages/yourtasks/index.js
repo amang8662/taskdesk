@@ -141,41 +141,47 @@ export default class YourTasks extends Component<{}> {
                 data={this.state.tasks}
                 keyExtractor={item => item._id}
                 renderItem={({item}) => 
-                  <Card>
-                    <CardItem bordered>
+                  <Card >
+                   <CardItem bordered style={styles.hr}>
                      <Left>
-                         <Title style={{color: '#222',fontWeight: 'bold',fontSize: 24}}>{item.title}</Title>                         
+                         <Title style={styles.h1}>{item.title}</Title>                         
                      </Left>
-                    </CardItem>
+                     <Right>
+                        <TouchableHighlight onPress={() => Actions.edittask({task: item})} >
+                          <Icon name="settings" style={{ color: "#474747",fontSize: 32 }} />
+                        </TouchableHighlight> 
+                     </Right>
+                     
+                   </CardItem>
 
-                    <CardItem>
+                   <CardItem>
                      <Body>
                        
-                       <Text numberOfLines = { 3 }>
+                       <Text numberOfLines = { 3 }  style={{textAlign:  'justify' }}>
                         {item.description}
                        </Text>
                      </Body>
-                    </CardItem>
-                    <CardItem style={{ paddingVertical: 0 }}>
+                   </CardItem>
+                   <CardItem>
                         <View style={{flexDirection: 'row',flexWrap: 'wrap'}}>
                           {item.skills.map((tag, i) => (
                             <Button style={styles.tags}  dark key={i}><Text> {tag.name}</Text></Button>
-                          ))}
+                          ))} 
                         </View>
-                    </CardItem>
-                    <CardItem>
+                   </CardItem>
+                   <CardItem>
                      <Left>
                        <Button transparent>
-                         <Text note>Applied on : {new Date(item.createdAt).toDateString()}</Text>
+                         <Text note>Created At : {new Date(item.createdAt).toDateString()}</Text>
                        </Button>
                      </Left>
                      <Right >
-                        <View style={{ alignSelf:  'center',}}>
-                          <Text style={styles.h1}>Reward</Text>
-                          <Text style={{fontSize: 24,color: '#f44336'}}>$40</Text>
-                        </View>
+                      <View style={{ alignSelf:  'center',}}>
+                        <Text>Reward</Text>
+                        <Text style={{fontSize: 24,color: '#f44336'}}>{item.rewardscore}</Text>
+                      </View>
                      </Right>
-                    </CardItem>
+                   </CardItem>
                     <CardItem>
                       <View style={{width: '100%'}} >
                         <Button danger full onPress={() => Actions.taskinfo({task: item})}>
@@ -212,7 +218,18 @@ export default class YourTasks extends Component<{}> {
 }
 
 const styles = StyleSheet.create({
-  
+ hr:{
+    width: '100%',
+    marginTop: 10,
+    marginBottom: 10,
+    borderBottomColor: '#f44336',
+    borderBottomWidth: 2,
+  },
+  h1 :{
+    color: '#080808',
+    fontStyle: 'italic' ,
+    fontSize: 24,
+  },
  tags:{
     margin: 5,
     elevation: 10,

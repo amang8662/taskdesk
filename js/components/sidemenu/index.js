@@ -71,31 +71,61 @@ export default class SideMenu extends Component<{}> {
               </CardItem>
             </Card>
         <TouchableOpacity style={styles.listItem} onPress={() => Actions.dashboard()}>
-          <Text style={styles.text}>DashBoard</Text>
+          <Button transparent>
+            <Icon name="ios-home" style={{ color: "#fcfcfc",  }} />
+            <Text style={styles.text}>
+                DashBoard
+            </Text>
+          </Button>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.listItem} onPress={() => Actions.yourtasks()}>
-          <Text style={styles.text}>Your Tasks</Text>
+          <Button transparent>
+            <Icon name="md-calendar" style={{ color: "#fcfcfc",  }} />
+            <Text style={styles.text}>
+                Your Tasks
+            </Text>
+          </Button>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.listItem} onPress={() => Actions.task()}>
-          <Text style={styles.text}>Generated Tasks</Text>
+          <Button transparent>
+            <Icon name="md-create" style={{ color: "#fcfcfc",  }} />
+            <Text style={styles.text}>
+                Generated Tasks
+            </Text>
+          </Button>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.listItem} onPress={() => Actions.aboutus()}>
-          <Text style={styles.text}>About Us</Text>
+          <Button transparent>
+            <Icon name="information-circle" style={{ color: "#fcfcfc",  }} />
+            <Text style={styles.text}>
+                About Us
+            </Text>
+          </Button>
         </TouchableOpacity>
         
         {User.get().user_type == 1 ? 
           (<TouchableOpacity style={styles.listItem} onPress={() => Actions.addskill()}>
-            <Text style={styles.text}>Add Skill</Text>
+            <Button transparent>
+              <Icon name="md-add-circle" style={{ color: "#fcfcfc",  }} />
+              <Text style={styles.text}>
+                  Add Skill
+              </Text>
+            </Button>
           </TouchableOpacity>)
           : null
         }
         
 
         <TouchableOpacity style={styles.listItem} onPress={this.logout}>
-          <Text style={styles.text}>Logout</Text>
+          <Button transparent>
+            <Icon name="md-log-out" style={{ color: "#fcfcfc",  }} />
+            <Text style={styles.text}>
+                Logout
+            </Text>
+          </Button>
         </TouchableOpacity>
         </Content>
       </Container>
@@ -132,12 +162,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
     elevation: 10,
-    padding: 10,
     marginTop: 0
   },
   text: {
-    fontSize: 22,
-    textAlign: 'left',
+    fontSize: 18,
     textAlignVertical: 'center',
     color: '#fff' 
   },

@@ -163,8 +163,8 @@ export default class GeneratedTasks extends Component<{}> {
                        </Left>
                        <Right >
                         <View style={{ alignSelf:  'center',}}>
-                          <Text style={styles.h1}>Reward</Text>
-                          <Text style={{fontSize: 24,color: '#f44336'}}>$40</Text>
+                          <Text>Reward</Text>
+                          <Text style={{fontSize: 24,color: '#f44336'}}>{item.rewardscore}</Text>
                         </View>
                        </Right>
                      </CardItem>
