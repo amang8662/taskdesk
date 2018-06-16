@@ -95,7 +95,7 @@ export default class LoadingScreen extends Component<{}> {
 
 const styles = StyleSheet.create({
   container : {
-    backgroundColor:'rgba(0, 0, 0, 0.9)',
+    backgroundColor:'#fff',
     flex: 1,
     paddingTop: 30,
     justifyContent:'flex-end',
@@ -110,6 +110,6 @@ const styles = StyleSheet.create({
   loadscreenText : {
     marginVertical: 15,
     fontSize:18,
-    color:'rgba(255, 255, 255, 0.7)'
+    color:'#222'
   }
 });

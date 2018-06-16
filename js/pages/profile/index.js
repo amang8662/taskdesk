@@ -52,93 +52,86 @@ export default class Profile extends Component<{}> {
           </Right>
         </Header>
         <Content>
-          <View style={styles.bar} >
+            <View style={styles.bar} >
 
-              <View style={styles.barItem }>
-                
-                <Text style={styles.barTop}> Score</Text>
-                <Text style={styles.barBottom}>{this.state.user.score}</Text>
+                <View style={styles.barItem }>
+                  
+                  <Text style={styles.barTop}> Score</Text>
+                  <Text style={styles.barBottom}>{this.state.user.score}</Text>
 
-              </View>
-              <View style={styles.barItem}>
-                
-                <Text style={styles.barTop}> Level</Text>
-                <Text style={styles.barBottom}>{this.state.user.level}</Text>
+                </View>
+                <View style={styles.barItem}>
+                  
+                  <Text style={styles.barTop}> Level</Text>
+                  <Text style={styles.barBottom}>{this.state.user.level}</Text>
 
-              </View>
-          </View>
+                </View>
+            </View>
           
-            <Content padder >
-              <Card style={{ elevation: 3}}>
-                <CardItem bordered>
-                  <Body style={{alignItems: 'center',}}>
-                    <View style={styles.profilePicWrap} >
-                        <Image style={styles.profilePic}  source={{uri: baseurl + "/uploads/avatar/" + this.state.user.avatar}} />
-                    </View>
-                  </Body>
-                </CardItem>
-                <CardItem bordered>
-                  <Left>
-                    <Icon
-                      name="ios-person"
-                      style={{ color: "#454545" }}
-                    />
-                    <Text>{this.state.user.name}</Text>
-                  </Left>
-                </CardItem>
-                {this.state.user.title ? (
-                  <CardItem bordered>
-                    <Left>
-                      <Icon
-                        name="md-bowtie"
-                        style={{ color: "#454545" }}
-                      />
-                      <Text>{this.state.user.title}</Text>
-                    </Left>
-                  </CardItem>
-                ) : null}
-                <CardItem bordered>
-                  <Left>
-                    <Icon
-                      name="md-mail"
-                      style={{ color: "#454545" }}
-                    />
-                    <Text>{this.state.user.email}</Text>
-                  </Left>
-                </CardItem>
-                <CardItem bordered>
-                  <Left>
-                    <Icon
-                      name='ios-list-box'
-                      style={{ color: "#454545" }}
-                    />
-                    <Text>{this.state.user.about} </Text>
-                  </Left>
-                </CardItem>
-                
-              </Card>
-            </Content>
-            <Content padder>
-              <Card>
-                <CardItem style={styles.hr}>
-                  <Title style={styles.h1}> Skills</Title>
-                </CardItem>
-                <CardItem>
-                  <View style={{flexDirection: 'row',flexWrap: 'wrap'}}>
-                    {this.state.user.skills.length > 0 ? (
-                      this.state.user.skills.map((tag, i) => (
-                          <Button style={styles.tags}  dark key={i}><Text> {tag.name}</Text></Button>
-                        )
-                      )) : (
-                      <Text>No Skills Found</Text>
-                    )}
+            <Card>
+              <CardItem bordered>
+                <Body style={{alignItems: 'center',}}>
+                  <View style={styles.profilePicWrap} >
+                      <Image style={styles.profilePic}  source={{uri: baseurl + "/uploads/avatar/" + this.state.user.avatar}} />
                   </View>
+                </Body>
+              </CardItem>
+              <CardItem bordered>
+                <Left>
+                  <Icon
+                    name="ios-person"
+                    style={{ color: "#454545" }}
+                  />
+                  <Text>{this.state.user.name}</Text>
+                </Left>
+              </CardItem>
+              {this.state.user.title ? (
+                <CardItem bordered>
+                  <Left>
+                    <Icon
+                      name="md-bowtie"
+                      style={{ color: "#454545" }}
+                    />
+                    <Text>{this.state.user.title}</Text>
+                  </Left>
                 </CardItem>
-
-              </Card>
-            </Content>  
-              
+              ) : null}
+              <CardItem bordered>
+                <Left>
+                  <Icon
+                    name="md-mail"
+                    style={{ color: "#454545" }}
+                  />
+                  <Text>{this.state.user.email}</Text>
+                </Left>
+              </CardItem>
+              <CardItem bordered>
+                <Left>
+                  <Icon
+                    name='ios-list-box'
+                    style={{ color: "#454545" }}
+                  />
+                  <Text>{this.state.user.about} </Text>
+                </Left>
+              </CardItem>  
+            </Card>
           
+            <Card>
+              <CardItem style={styles.hr}>
+                <Title style={styles.h1}> Skills</Title>
+              </CardItem>
+              <CardItem>
+                <View style={{flexDirection: 'row',flexWrap: 'wrap'}}>
+                  {this.state.user.skills.length > 0 ? (
+                    this.state.user.skills.map((tag, i) => (
+                        <Button style={styles.tags}  dark key={i}><Text> {tag.name}</Text></Button>
+                      )
+                    )) : (
+                    <Text>No Skills Found</Text>
+                  )}
+                </View>
+              </CardItem>
+            </Card>            
         </Content>
       </Container>
     );

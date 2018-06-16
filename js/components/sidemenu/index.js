@@ -4,7 +4,6 @@ import {
   View,
   Text,
   AsyncStorage,
-  TouchableOpacity,
   Platform,
   Dimensions,
   Image
@@ -70,63 +69,63 @@ export default class SideMenu extends Component<{}> {
                 </Body>
               </CardItem>
             </Card>
-        <TouchableOpacity style={styles.listItem} onPress={() => Actions.dashboard()}>
-          <Button transparent>
+        <Button style={styles.listItem}>
+          <Button transparent style={{width:'100%',justifyContent:'flex-start'}} onPress={() => Actions.dashboard()}>
             <Icon name="ios-home" style={{ color: "#fcfcfc",  }} />
             <Text style={styles.text}>
                 DashBoard
             </Text>
           </Button>
-        </TouchableOpacity>
+        </Button>
 
-        <TouchableOpacity style={styles.listItem} onPress={() => Actions.yourtasks()}>
-          <Button transparent>
+        <Button style={styles.listItem}>
+          <Button transparent style={{width:'100%',justifyContent:'flex-start'}} onPress={() => Actions.yourtasks()}>
             <Icon name="md-calendar" style={{ color: "#fcfcfc",  }} />
             <Text style={styles.text}>
                 Your Tasks
             </Text>
           </Button>
-        </TouchableOpacity>
+        </Button>
 
-        <TouchableOpacity style={styles.listItem} onPress={() => Actions.task()}>
-          <Button transparent>
+        <Button style={styles.listItem}>
+          <Button transparent style={{width:'100%',justifyContent:'flex-start'}} onPress={() => Actions.task()}>
             <Icon name="md-create" style={{ color: "#fcfcfc",  }} />
             <Text style={styles.text}>
                 Generated Tasks
             </Text>
           </Button>
-        </TouchableOpacity>
+        </Button>
 
-        <TouchableOpacity style={styles.listItem} onPress={() => Actions.aboutus()}>
-          <Button transparent>
+        {/*<Button style={styles.listItem}>
+          <Button transparent style={{width:'100%',justifyContent:'flex-start'}} onPress={() => Actions.aboutus()}>
             <Icon name="information-circle" style={{ color: "#fcfcfc",  }} />
             <Text style={styles.text}>
                 About Us
             </Text>
           </Button>
-        </TouchableOpacity>
+        </Button>*/}
         
         {User.get().user_type == 1 ? 
-          (<TouchableOpacity style={styles.listItem} onPress={() => Actions.addskill()}>
-            <Button transparent>
+          (<Button style={styles.listItem}>
+            <Button transparent style={{width:'100%',justifyContent:'flex-start'}} onPress={() => Actions.addskill()}>
               <Icon name="md-add-circle" style={{ color: "#fcfcfc",  }} />
               <Text style={styles.text}>
                   Add Skill
               </Text>
             </Button>
-          </TouchableOpacity>)
+          </Button>)
           : null
         }
         
 
-        <TouchableOpacity style={styles.listItem} onPress={this.logout}>
-          <Button transparent>
+        <Button style={styles.listItem}>
+          <Button transparent style={{width:'100%',justifyContent:'flex-start'}} onPress={this.logout}>
             <Icon name="md-log-out" style={{ color: "#fcfcfc",  }} />
             <Text style={styles.text}>
                 Logout
             </Text>
           </Button>
-        </TouchableOpacity>
+        </Button>
         </Content>
       </Container>
     );
