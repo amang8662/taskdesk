@@ -29,12 +29,12 @@ import { validate, timeout } from '../../modules';
 import User from '../../helpers/User';
 import { baseurl } from '../../Globals';
 
-export default class GeneratedTasks extends Component<{}> {
+export default class Proposals extends Component<{}> {
 
   constructor(props) {
     super(props);
     this.state = {
-      tasks: [],
+      proposals: [],
       showLoadingScreen: true,
       loadingComponent: {
         internet: true,
@@ -50,7 +50,7 @@ export default class GeneratedTasks extends Component<{}> {
       if(isConnected) {
 
         timeout(10000, 
-          fetch(baseurl + '/task/user/' + User.get()._id, {
+          fetch(baseurl + '/task/proposal/' + this.props.task._id, {
               method : 'get',
               headers : {
                 'Accept' : 'application/json',
@@ -62,7 +62,7 @@ export default class GeneratedTasks extends Component<{}> {
             if(res.status == 200) {
             
               this.setState({
-                tasks: res.data,
+                proposals: res.data.proposals,
                 showLoadingScreen: false
               });
 
@@ -106,36 +106,26 @@ export default class GeneratedTasks extends Component<{}> {
           <Container style={styles.container}>
           <Header style={{ backgroundColor: "#dc4239" }} androidStatusBarColor="#dc2015" iosBarStyle="light-content"        >
             <Left>
-              <Button transparent onPress={() => Actions.drawerOpen()}>
-                <Icon name="md-menu" style={{ color: "#FFF", fontSize: 30,alignItems:  'center' }} />
+              <Button transparent onPress={() => Actions.pop()}>
+                <Icon name="arrow-back" style={{ color: "#FFF", fontSize: 30,alignItems:  'center' }} />
               </Button>
             </Left>
             <Body>
-              <Title style={{ color: "#F2F2F2" }}>Genrated Tasks</Title>
+              <Title style={{ color: "#F2F2F2" }}>Task Proposals</Title>
             </Body>
-            <Right>
-              <Button transparent onPress={() => Actions.profile()}>
-                <Icon name="md-contact" style={{ color: "#FFF", fontSize: 30,alignItems:  'center' }} />
-              </Button>
-              <Button transparent onPress={() => Actions.addtask()}>
-                <Icon name="md-add" style={{ color: "#FFF", fontSize: 30,alignItems:  'center' }} />
-              </Button>
-            </Right>
           </Header>
           <Content>
               <FlatList
-              data={this.state.tasks}
+              data={this.state.proposals}
               keyExtractor={item => item._id}
               renderItem={({item}) => 
                 <Card >
                      <CardItem bordered style={styles.hr}>
                        <Left>
-                           <Title style={styles.h1}>{item.title}</Title>                         
+                           <Title style={styles.h1}>{item.user.name}</Title>                         
                        </Left>
                        <Right>
-                          <TouchableHighlight onPress={() => Actions.edittask({task: item})} >
-                            <Icon name="settings" style={{ color: "#474747",fontSize: 32 }} />
-                          </TouchableHighlight> 
+                          <Text note>{item.user.title}</Text>
                        </Right>
                        
                      </CardItem>
@@ -149,42 +139,19 @@ export default class GeneratedTasks extends Component<{}> {
                        </Body>
                      </CardItem>
                      <CardItem>
-                          <View style={{flexDirection: 'row',flexWrap: 'wrap'}}>
-                            {item.skills.map((tag, i) => (
-                              <Button style={styles.tags}  dark key={i}><Text> {tag.name}</Text></Button>
-                            ))} 
-                          </View>
-                     </CardItem>
-                     <CardItem>
                        <Left>
                          <Button transparent>
                            <Text note>Created At : {new Date(item.createdAt).toDateString()}</Text>
                          </Button>
                        </Left>
-                       <Right >
-                        <View style={{ alignSelf:  'center',}}>
-                          <Text>Reward</Text>
-                          <Text style={{fontSize: 24,color: '#f44336'}}>{item.rewardscore}</Text>
-                        </View>
-                       </Right>
                      </CardItem>
                      <CardItem>
                       <Left>
-                        <Button danger  onPress={() => Actions.taskinfo({task: item})}>
+                        <Button danger  onPress={() => Actions.proposalinfo({proposal: item})}>
                           <Text>View Details</Text>
                           
                         </Button>
                       </Left>
-                      <Right>
-                        <Button danger style={{padding: 8}}  onPress={() => Actions.proposals({task: item})}>
-                          <Text>Applicants</Text>
-                          <TouchableHighlight>
-                            <Badge success>
-                              <Text>200</Text>
-                            </Badge>
-                          </TouchableHighlight>
-                        </Button>
-                      </Right>
                      </CardItem>
                      
                    </Card> 

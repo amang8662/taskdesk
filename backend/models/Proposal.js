@@ -11,7 +11,7 @@ var proposalSchema = new Schema({
     type: String,
     required: true
   },
-});
+}, {timestamps: true});
 proposalSchema.plugin(uniqueValidator);
 
 // Export Mongoose model

@@ -16,6 +16,8 @@ import YourTasks from './pages/yourtasks';
 import EditTask from './pages/edittask';
 import AboutUs from './pages/aboutus';
 import GeneratedTasks from './pages/generatedtasks';
+import Proposals from './pages/proposals';
+import ProposalInfo from './pages/proposalinfo';
 
 //Admin Scene
 import AddSkill from './pages/addskill';
@@ -53,6 +55,8 @@ export default class Routes extends Component<{}> {
 	    			    		<Scene key="generatedtasks" component={GeneratedTasks} title="Generated Tasks" initial hideNavBar/>
 	    			    		<Scene key="addtask" component={AddTask} tabBarIcon={iconAddCircle} hideNavBar title="Add Task"/>
 	    			    		<Scene key="edittask" component={EditTask} hideNavBar title="Edit Task"/>
+	    			    		<Scene key="proposals" component={Proposals} hideNavBar title="Proposals"/>
+	    			    		<Scene key="proposalinfo" component={ProposalInfo} hideNavBar title="Proposal Info"/>
     			    		</Stack>
 
     			    		<Scene key="yourtasks" component={YourTasks} hideNavBar title="Your Tasks"/>

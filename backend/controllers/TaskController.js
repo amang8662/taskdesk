@@ -306,7 +306,7 @@ exports.savetaskproposal = function(req, res) {
       } else {
 
         Task.findByIdAndUpdate(req.params.taskId, {
-          $push: { proposals: proposal._id  }
+          $addToSet: { proposals: proposal._id  }
         })
         .exec( function(err, task) {
 
@@ -338,4 +338,73 @@ exports.savetaskproposal = function(req, res) {
       }
     });      
   }
+};
+
+exports.findproposalsbytask = function(req, res) {
+  
+  Task.findById(req.params.taskId, "task_taker proposals")
+  .populate({
+    path: 'proposals',
+    populate: { path: 'user', select: 'name title level' }
+  })
+  .exec(function (err, task) {
+    if (err) {
+      if(err.kind === 'ObjectId') {
+       
+          return res.status(404).send({
+              status: 404,
+              data: "Task not found"
+          });                
+      }
+      return res.status(500).send({
+          status: 500,
+          data: "Error retrieving task"
+      });
+
+    } else {
+      if(!task) {
+          return res.status(404).send({
+              status: 404,
+              data: "Task not found"
+          });            
+      }
+      res.status(200).send({
+        status: 200,
+        data: task
+      });
+    }
+  });
+};
+
+exports.findproposalsbyid = function(req, res) {
+  
+  Proposal.findById(req.params.proposalId)
+  .populate('user')
+  .exec(function (err, proposal) {
+    if (err) {
+      if(err.kind === 'ObjectId') {
+       
+          return res.status(404).send({
+              status: 404,
+              data: "Proposal not found"
+          });                
+      }
+      return res.status(500).send({
+          status: 500,
+          data: "Error retrieving proposal"
+      });
+
+    } else {
+      if(!proposal) {
+          return res.status(404).send({
+              status: 404,
+              data: "Proposal not found"
+          });            
+      }
+      res.status(200).send({
+        status: 200,
+        data: proposal
+      });
+    }
+  });
 };
