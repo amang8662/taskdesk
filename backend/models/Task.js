@@ -32,6 +32,12 @@ var taskSchema = new Schema({
       ref: 'Skill'
     }
   ],
+  proposals: [
+    { 
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Proposal'
+    }
+  ],
 }, {timestamps: true});
 taskSchema.plugin(uniqueValidator);
 

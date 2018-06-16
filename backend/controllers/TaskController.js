@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import Task from '../models/Task';
+import Proposal from '../models/Proposal';
 
 exports.add = function(req, res) {
   
@@ -103,9 +104,30 @@ exports.findallexceptuser = function(req, res) {
 
 exports.findbyuser = function(req, res) {
   
-  Task.find({'task_creater': req.params.userId})
-  .populate('skills')
-  .exec(function (err, tasks) {
+  Task.aggregate([
+    {
+      $match: {
+        task_creater: mongoose.Types.ObjectId(req.params.userId)
+      }
+    },
+    {
+      "$project": {
+        _id: 1,
+        task_creater: 1,
+        task_taker: 1,
+        title: 1,
+        description: 1,
+        rewardscore: 1,
+        status: 1,
+        skills: 1,
+        proposals: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        nop: { $size: "$proposals"}
+      }
+    }
+  ])
+  .exec(function (err, result) {
     if (err) {
       return res.status(500).send({
           status: 500,
@@ -113,16 +135,20 @@ exports.findbyuser = function(req, res) {
       });
 
     } else {
-      if(!tasks || tasks.length <= 0) {
+      if(!result || result.length <= 0) {
           return res.status(404).send({
               status: 404,
               data: "No Tasks found"
           });            
+      } 
+      else {
+        Task.populate(result, {path: 'skills'}, function(err, tasks) {      
+            res.status(200).send({
+              status: 200,
+              data: tasks
+            });
+        });
       }
-      res.status(200).send({
-        status: 200,
-        data: tasks
-      });
     }
   });
 };
@@ -227,5 +253,89 @@ exports.update = function(req, res) {
         });
       }
     });    
+  }
+};
+
+exports.savetaskproposal = function(req, res) {
+  
+  req.checkBody('userid', 'User ID is required').notEmpty();
+  req.checkBody('description', 'Description is required').notEmpty();
+  
+  // check the validation object for errors
+  var errors = req.validationErrors();
+
+  var resdata = {};
+
+  if (errors) {
+
+    return res.status(400).send({ 
+      status: 400,
+      errortype: 'validation',
+      data:  errors
+    });
+
+  } else {
+
+    var proposaldata = {
+      user: req.body.userid,
+      description: req.body.description
+    };
+   
+    Proposal.create(proposaldata, function (err, proposal) {
+      if(err) {
+        console.log(err);
+        if (err.name === 'ValidationError') {
+
+          var error_fields = err.errors;
+          for(var key in error_fields) {
+            error_fields[key] = true;
+          }
+          return res.status(500).send({
+              status: 500,
+              errortype: 'unique-error',
+              data: { 
+                fields: error_fields
+              }
+          });
+        } else {
+          return res.status(500).send({
+              status: 500,
+              data: "Error Adding Proposal"
+          });
+        }
+      } else {
+
+        Task.findByIdAndUpdate(req.params.taskId, {
+          $push: { proposals: proposal._id  }
+        })
+        .exec( function(err, task) {
+
+          if(err) {
+            if(err.kind === 'ObjectId') {
+                return res.status(404).send({
+                  status: 404,
+                  data: "Task not found"
+                });                
+            } else {
+              return res.status(500).send({
+                  status: 500,
+                  data: "Error updating Task"
+              });
+            }
+          } else {
+            if(!task) {
+                return res.status(404).send({
+                    status: 404,
+                    data: "Task not found"
+                });            
+            }
+            res.status(200).send({
+              status: 200,
+              data: "Proposal Sent Successfully"
+            });
+          }
+        });
+      }
+    });      
   }
 };
