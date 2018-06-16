@@ -122,22 +122,19 @@ export default class GeneratedTasks extends Component<{}> {
               </Button>
             </Right>
           </Header>
-          <Content padder>
-          
-          <View >
-            <FlatList
+          <Content>
+              <FlatList
               data={this.state.tasks}
               keyExtractor={item => item._id}
               renderItem={({item}) => 
-                <View >
                 <Card >
-                     <CardItem bordered>
+                     <CardItem bordered style={styles.hr}>
                        <Left>
-                           <Title style={{color: '#222',fontWeight: 'bold',fontSize: 24}}>{item.title}</Title>
+                           <Title style={styles.h1}>{item.title}</Title>                         
                        </Left>
                        <Right>
                           <TouchableHighlight onPress={() => Actions.edittask({task: item})} >
-                            <Icon name="settings" style={{ color: "#989898",fontSize: 32 }} />
+                            <Icon name="settings" style={{ color: "#474747",fontSize: 32 }} />
                           </TouchableHighlight> 
                        </Right>
                        
@@ -146,12 +143,12 @@ export default class GeneratedTasks extends Component<{}> {
                      <CardItem>
                        <Body>
                          
-                         <Text numberOfLines = { 3 }>
+                         <Text numberOfLines = { 3 }  style={{textAlign:  'justify' }}>
                           {item.description}
                          </Text>
                        </Body>
                      </CardItem>
-                     <CardItem style={{ paddingVertical: 0 }}>
+                     <CardItem>
                           <View style={{flexDirection: 'row',flexWrap: 'wrap'}}>
                             {item.skills.map((tag, i) => (
                               <Button style={styles.tags}  dark key={i}><Text> {tag.name}</Text></Button>
@@ -191,10 +188,8 @@ export default class GeneratedTasks extends Component<{}> {
                      </CardItem>
                      
                    </Card> 
-                </View>
                 }
               />
-          </View>
             
           </Content>
         </Container>
@@ -205,8 +200,17 @@ export default class GeneratedTasks extends Component<{}> {
 }
 
 const styles = StyleSheet.create({
-  container : {
-    backgroundColor:'#ddd',
+  hr:{
+    width: '100%',
+    marginTop: 10,
+    marginBottom: 10,
+    borderBottomColor: '#f44336',
+    borderBottomWidth: 2,
+  },
+  h1 :{
+    color: '#080808',
+    fontStyle: 'italic' ,
+    fontSize: 24,
   },
   tags:{
     margin: 5,

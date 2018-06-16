@@ -130,72 +130,80 @@ export default class YourTasks extends Component<{}> {
             </Button>*/}
           </Right>
         </Header>
-        <Tabs initialPage={0}>
-          <Tab heading="All" page>
-              <Content padder>
-              
-                <View >
-                  <FlatList
-                    data={this.state.tasks}
-                    keyExtractor={item => item._id}
-                    renderItem={({item}) => 
-                      <View >
-                      <Card >
-                           <CardItem bordered>
-                             <Left>
-                                 <Title style={{color: '#222',fontWeight: 'bold',fontSize: 24}}>{item.title}</Title>                         
-                             </Left>
-                           </CardItem>
+        <Tabs initialPage={0} >
+          <Tab heading="All" page 
+              tabStyle={{backgroundColor: '#f44336'}}
+              textStyle={{color: '#fff'}} 
+              activeTabStyle={{backgroundColor: '#f44336'}}
+              activeTextStyle={{color: '#fff', fontWeight: 'normal'}}>
+              <Content>
+                <FlatList
+                data={this.state.tasks}
+                keyExtractor={item => item._id}
+                renderItem={({item}) => 
+                  <Card>
+                    <CardItem bordered>
+                     <Left>
+                         <Title style={{color: '#222',fontWeight: 'bold',fontSize: 24}}>{item.title}</Title>                         
+                     </Left>
+                    </CardItem>
 
-                           <CardItem>
-                             <Body>
-                               
-                               <Text numberOfLines = { 3 }>
-                                {item.description}
-                               </Text>
-                             </Body>
-                           </CardItem>
-                           <CardItem style={{ paddingVertical: 0 }}>
-                                <View style={{flexDirection: 'row',flexWrap: 'wrap'}}>
-                                  {item.skills.map((tag, i) => (
-                                    <Button style={styles.tags}  dark key={i}><Text> {tag.name}</Text></Button>
-                                  ))}
-                                </View>
-                           </CardItem>
-                           <CardItem>
-                             <Left>
-                               <Button transparent>
-                                 <Text note>Applied on : {new Date(item.createdAt).toDateString()}</Text>
-                               </Button>
-                             </Left>
-                             <Right >
-                                <View style={{ alignSelf:  'center',}}>
-                                  <Text style={styles.h1}>Reward</Text>
-                                  <Text style={{fontSize: 24,color: '#f44336'}}>$40</Text>
-                                </View>
-                             </Right>
-                           </CardItem>
-                           <CardItem>
-                              <View style={{width: '100%'}} >
-                                <Button danger full onPress={() => Actions.taskinfo({task: item})}>
-                                  <Text>View Details</Text>
-                                  <TouchableHighlight  >
-                                    <Icon name="md-arrow-forward" style={{ color: "#fcfcfc",fontSize: 32 }} />
-                                  </TouchableHighlight>
-                                </Button>
-                              </View>
-                          </CardItem>
-                         </Card> 
+                    <CardItem>
+                     <Body>
+                       
+                       <Text numberOfLines = { 3 }>
+                        {item.description}
+                       </Text>
+                     </Body>
+                    </CardItem>
+                    <CardItem style={{ paddingVertical: 0 }}>
+                        <View style={{flexDirection: 'row',flexWrap: 'wrap'}}>
+                          {item.skills.map((tag, i) => (
+                            <Button style={styles.tags}  dark key={i}><Text> {tag.name}</Text></Button>
+                          ))}
+                        </View>
+                    </CardItem>
+                    <CardItem>
+                     <Left>
+                       <Button transparent>
+                         <Text note>Applied on : {new Date(item.createdAt).toDateString()}</Text>
+                       </Button>
+                     </Left>
+                     <Right >
+                        <View style={{ alignSelf:  'center',}}>
+                          <Text style={styles.h1}>Reward</Text>
+                          <Text style={{fontSize: 24,color: '#f44336'}}>$40</Text>
+                        </View>
+                     </Right>
+                    </CardItem>
+                    <CardItem>
+                      <View style={{width: '100%'}} >
+                        <Button danger full onPress={() => Actions.taskinfo({task: item})}>
+                          <Text>View Details</Text>
+                          <Right>
+                            <Button danger>
+                              <Icon name="md-arrow-forward" style={{ color: "#fcfcfc",fontSize: 32 }} />
+                            </Button>
+                         </Right>
+                        </Button>
                       </View>
-                      }
-                    />
-                </View>
-                
+                    </CardItem>
+                  </Card> 
+                  }
+                />              
               </Content>
           </Tab>
-          <Tab heading="Working">
+          <Tab heading="Working"
+          tabStyle={{backgroundColor: '#f44336'}}
+              textStyle={{color: '#fff'}} 
+              activeTabStyle={{backgroundColor: '#f44336'}}
+              activeTextStyle={{color: '#fff', fontWeight: 'normal'}}>
           </Tab>
-          <Tab heading="Completed" page>
+          <Tab heading="Completed" page
+          tabStyle={{backgroundColor: '#f44336'}}
+              textStyle={{color: '#fff'}} 
+              activeTabStyle={{backgroundColor: '#f44336'}}
+              activeTextStyle={{color: '#fff', fontWeight: 'normal'}}>
           </Tab>
         </Tabs>
       </Container>

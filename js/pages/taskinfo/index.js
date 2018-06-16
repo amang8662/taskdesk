@@ -29,7 +29,12 @@ export default class TaskInfo extends Component<{}> {
   constructor(props) {
     super(props);
     this.state = {
-      user: User.get()
+      tasks: [],
+      showLoadingScreen: true,
+      loadingComponent: {
+        internet: true,
+        hasData: true
+      }
     }
   }
 
@@ -55,67 +60,60 @@ export default class TaskInfo extends Component<{}> {
             </Button>
           </Right>
         </Header>
-        <Content>
-            <Content padder >
-              <Card style={{ elevation: 3}}>
-                <CardItem bordered>
-                  <Left style={{alignItems: 'center',}}>
-                    <View style={styles.profilePicWrap} >
-                        <Image style={styles.profilePic}  source={{uri: baseurl + "/uploads/avatar/" + this.state.user.avatar}} />
-                    </View>
-                  </Left>
-                  <Body>
-                        <Text>{this.state.user.title}asd</Text>
-                        <Title style={styles.h1}>{this.state.user.name} kjckhcgkc</Title>
-                        <Text note>{this.state.user.level}122</Text>
-                  </Body>
-                </CardItem>
-              </Card>
-            </Content>
+        <Content >
+          <Card>
+            <CardItem style={styles.hr}>
+              <Title style={styles.h1}>{this.props.task.title}</Title>
+            </CardItem>
+            <CardItem bordered>
+              <Left>
+                <Icon
+                  name='ios-time'
+                  style={{ color: "#ccc",margin: 5,alignSelf: 'center'}}
+                />
+                <Text note> {new Date(this.props.task.createdAt).toDateString()}</Text>
+              </Left>
+            </CardItem>
+            <CardItem>
+              <Text style={{textAlign:  'justify' }}> 
+                {this.props.task.description}
+              </Text>
+            </CardItem>
+            <CardItem>
+              <View style={{flexDirection: 'row',flexWrap: 'wrap'}}>
+               {this.props.task.skills.map((tag, i) => (
+                 <Button style={styles.tags}  key={i}><Text> {tag.name}</Text></Button>
+               ))}
+              </View>
+            </CardItem>
 
-            <Content padder>
-
-              <Card>
-                  <View style={{ alignSelf:  'center',   padding: 20}}>
-                    <Text style={styles.h1}>Reward</Text>
-                    <Text style={{fontSize: 30,color: '#f44336'}}>$40</Text>
-                  </View>
-                
-              </Card>
-            </Content>
-            <Content padder>
-              <Card>
-                <CardItem style={styles.hr}>
-                  <Title style={styles.h1}>{this.state.user.title}asd</Title>
-                </CardItem>
-                <CardItem bordered>
-                  <Left>
-                    <Icon
-                      name='ios-time'
-                      style={{ color: "#ccc",margin: 5,alignSelf: 'center'}}
-                    />
-                    <Text note> {this.state.user.timestamp}22:22:22 sgsg </Text>
-                  </Left>
-                </CardItem>
-                <CardItem>
-                  <Text> asdasdafSeparator component is a separator usually used in list, which can be used for grouping list items. Though it is used with List, you can use it anywhere in your app.
-
-Replacing Component: React Native View
-                  </Text>
-                </CardItem>
-                <CardItem>
-                  <View style={{flexDirection: 'row',flexWrap: 'wrap'}}>
-                    <Button style={styles.tags} dark><Text> Dark asasdas </Text></Button>  
-                    <Button style={styles.tags} dark><Text> Dark </Text></Button>
-                    
-                  </View>
-                </CardItem>
-
-              </Card>
-            </Content>  
-              
+          </Card>
+          <Card>
+              <View style={{ alignSelf:  'center',   padding: 20}}>
+                <Text style={styles.h1}>Reward</Text>
+                <Text style={{fontSize: 30,color: '#f44336'}}>{this.props.task.rewardscore}</Text>
+              </View>
+            
+          </Card>
+          <Card style={{ elevation: 3}}>
+            <CardItem style={styles.hr}>
+              <Title style={styles.h1}> Submitted By :</Title>
+            </CardItem>
+            <CardItem bordered>
+              <Left style={{alignItems: 'center',}}>
+                <View style={styles.profilePicWrap} >
+                    <Image style={styles.profilePic}  source={{uri: baseurl + "/uploads/avatar/" + this.props.task.task_creater.avatar}} />
+                </View>
+              </Left>
+              <Body>
+                    <Text>{this.props.task.title}</Text>
+                    <Title style={styles.h1}>{this.props.task.task_creater.name} </Title>
+                    <Text note>{this.props.task.task_creater.level}</Text>
+              </Body>
+            </CardItem>
+          </Card>
+        </Content>  
           
-        </Content>
       </Container>
     );
   }
