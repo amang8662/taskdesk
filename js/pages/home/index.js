@@ -128,33 +128,28 @@ export default class Home extends Component<{}> {
             </Button>
           </Right>
         </Header>
-        <Content padder>
-        
-        <View >
+        <Content>
           <FlatList
             data={this.state.tasks}
             keyExtractor={item => item._id}
             renderItem={({item}) => 
-              <View >
-              <Card >
+              <Card>
                    <CardItem bordered>
                      <Left>
                          <Title style={{color: '#222',fontWeight: 'bold',fontSize: 24}}>{item.title}</Title>                         
                      </Left>
                    </CardItem>
-
                    <CardItem>
                      <Body>
-                       
                        <Text numberOfLines = { 3 }>
                         {item.description}
                        </Text>
                      </Body>
                    </CardItem>
-                   <CardItem style={{ paddingVertical: 0 }}>
+                   <CardItem>
                         <View style={{flexDirection: 'row',flexWrap: 'wrap'}}>
                           {item.skills.map((tag, i) => (
-                            <Button style={styles.tags}  dark key={i}><Text> {tag.name}</Text></Button>
+                            <Button style={styles.tags}  key={i}><Text> {tag.name}</Text></Button>
                           ))}
                         </View>
                    </CardItem>
@@ -164,7 +159,7 @@ export default class Home extends Component<{}> {
                          <Text note>Created At : {new Date(item.createdAt).toDateString()}</Text>
                        </Button>
                      </Left>
-                     <Right >
+                     <Right>
                         <View style={{ alignSelf:  'center',}}>
                           <Text style={styles.h1}>Reward</Text>
                           <Text style={{fontSize: 24,color: '#f44336'}}>$40</Text>
@@ -175,17 +170,17 @@ export default class Home extends Component<{}> {
                       <View style={{width: '100%'}} >
                         <Button danger full onPress={() => Actions.taskinfo({task: item})}>
                           <Text>View Details</Text>
-                          <TouchableHighlight  >
+                         <Right>
+                          <Button danger>
                             <Icon name="md-arrow-forward" style={{ color: "#fcfcfc",fontSize: 32 }} />
-                          </TouchableHighlight>
+                          </Button>
+                         </Right>
                         </Button>
                       </View>
                   </CardItem>
                  </Card> 
-              </View>
               }
             />
-        </View>
           
         </Content>
       </Container>

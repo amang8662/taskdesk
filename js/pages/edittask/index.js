@@ -5,6 +5,7 @@ import {
   NetInfo,
   ToastAndroid,
   Text,
+  Alert,
 } from 'react-native';
 import {
   Container,
@@ -184,6 +185,19 @@ export default class EditTask extends Component<{}> {
       );
     }
   }
+  deleteTask = () =>{
+    Alert.alert(      
+      'Delete Task ?',   
+      '',
+      [
+        {text: 'Cancel', onPress: () => console.log('Cancel Button Pressed'), style: 'cancel'}, 
+        {text: 'OK', onPress: () => console.log('OK ButtonPressed')},      
+      ]
+   
+    )
+   
+  }
+   
 
   render() {
     if(this.state.showLoadingScreen == true)
@@ -203,7 +217,11 @@ export default class EditTask extends Component<{}> {
             <Body>
               <Title style={{ color: "#FFF" }}>Edit Task</Title>
             </Body>
-            
+            <Right>
+              <Button transparent onPress={this.deleteTask}>
+                <Icon name="trash" style={{ color: "#FFF", fontSize: 30,alignItems:  'center' }} />
+              </Button>
+            </Right>
           </Header>
 
           <Content>

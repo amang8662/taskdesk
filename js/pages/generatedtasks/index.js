@@ -122,14 +122,11 @@ export default class GeneratedTasks extends Component<{}> {
               </Button>
             </Right>
           </Header>
-          <Content padder>
-          
-          <View >
-            <FlatList
+          <Content>
+              <FlatList
               data={this.state.tasks}
               keyExtractor={item => item._id}
               renderItem={({item}) => 
-                <View >
                 <Card >
                      <CardItem bordered>
                        <Left>
@@ -137,7 +134,7 @@ export default class GeneratedTasks extends Component<{}> {
                        </Left>
                        <Right>
                           <TouchableHighlight onPress={() => Actions.edittask({task: item})} >
-                            <Icon name="settings" style={{ color: "#989898",fontSize: 32 }} />
+                            <Icon name="settings" style={{ color: "#474747",fontSize: 32 }} />
                           </TouchableHighlight> 
                        </Right>
                        
@@ -151,7 +148,7 @@ export default class GeneratedTasks extends Component<{}> {
                          </Text>
                        </Body>
                      </CardItem>
-                     <CardItem style={{ paddingVertical: 0 }}>
+                     <CardItem>
                           <View style={{flexDirection: 'row',flexWrap: 'wrap'}}>
                             {item.skills.map((tag, i) => (
                               <Button style={styles.tags}  dark key={i}><Text> {tag.name}</Text></Button>
@@ -191,10 +188,8 @@ export default class GeneratedTasks extends Component<{}> {
                      </CardItem>
                      
                    </Card> 
-                </View>
                 }
               />
-          </View>
             
           </Content>
         </Container>
