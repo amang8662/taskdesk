@@ -43,7 +43,7 @@ export default class TaskInfo extends Component<{}> {
       <Container style={styles.container}>
         <Header  style={{ backgroundColor: "#dc4239" }} androidStatusBarColor="#dc2015" iosBarStyle="light-content"        >
           <Left>
-            <Button transparent onPress={() => Actions.home()}>
+            <Button transparent onPress={() => Actions.pop()}>
               <Icon name="arrow-back" style={{ color: "#FFF", fontSize: 30,alignItems:  'center' }} />
             </Button>
           </Left>
