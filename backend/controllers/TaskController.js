@@ -506,3 +506,50 @@ exports.getaquiredtasks = function(req, res) {
     }
   });
 };
+
+exports.submittask = function(req, res) {
+  
+  Task.findByIdAndUpdate(req.params.taskId, {
+      status: 2
+  })
+  .exec( function(err, task) {
+
+    if(err) {
+      if(err.kind === 'ObjectId') {
+          return res.status(404).send({
+            status: 404,
+            data: "Task not found"
+          });                
+      } else if (err.name === 'ValidationError') {
+
+        var error_fields = err.errors;
+        for(var key in error_fields) {
+          error_fields[key] = true;
+        }
+        return res.status(500).send({
+            status: 500,
+            errortype: 'unique-error',
+            data: { 
+              fields: error_fields
+            }
+        });
+      } else {
+        return res.status(500).send({
+            status: 500,
+            data: "Error updating Task"
+        });
+      }
+    } else {
+      if(!task) {
+          return res.status(404).send({
+              status: 404,
+              data: "Task not found"
+          });            
+      }
+      res.status(200).send({
+        status: 200,
+        data: "Task Submitted Successfully"
+      });
+    }
+  });    
+};

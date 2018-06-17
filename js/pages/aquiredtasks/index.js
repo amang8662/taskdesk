@@ -108,6 +108,53 @@ export default class AquiredTasks extends Component<{}> {
     });
   }
 
+  submitTask = (taskid) => {
+
+    NetInfo.isConnected.fetch().then((isConnected) => {
+
+      if(isConnected) {
+
+        timeout(10000, 
+          fetch(baseurl + '/task/submit/' + taskid, {
+              method : 'put',
+              headers : {
+                'Accept' : 'application/json',
+                'Content-type' : 'application/json'
+              }
+          })
+          .then((response) => response.json())
+          .then((res) => {
+            
+            if(res.status == 200) {
+              this.setState({
+                working: this.state.working.map(
+                    (el)=> el._id === taskid ? Object.assign({}, el, {status: 2}) : el 
+                  )
+              },
+                () => alert(res.data)
+              );
+
+            } else {
+              alert(res.data)         
+            }       
+          })
+          .catch((error) => {
+            console.log(error)
+            alert("Some Error Occured");
+          })
+        ).catch((error) => {
+
+            alert("Server not responding.");
+        });
+
+      } else {
+        this.setState({
+          loadingComponent: { ...this.state.loadingComponent, internet: false} 
+        });
+      }
+    });
+  }
+
   render() {
     if(this.state.showLoadingScreen == true)
       return (
@@ -245,16 +292,23 @@ export default class AquiredTasks extends Component<{}> {
                        </Right>
                      </CardItem>
                       <CardItem>
-                        <View style={{width: '100%'}} >
-                          <Button danger full onPress={() => Actions.taskinfo({task: item})}>
+                        <Left>
+                          <Button danger onPress={() => Actions.taskinfo({task: item})}>
                             <Text>View Details</Text>
-                            <Right>
-                              <Button danger>
-                                <Icon name="md-arrow-forward" style={{ color: "#fcfcfc",fontSize: 32 }} />
-                              </Button>
-                           </Right>
                           </Button>
-                        </View>
+                        </Left>
+                        <Right>
+                        {item.status == 1 ? (
+                          <Button danger onPress={() => this.submitTask(item._id)}>
+                            <Text>Submit</Text>
+                            <Icon name="paper-plane" style={{ color: "#fcfcfc",fontSize: 32 }} />
+                          </Button>
+                        ) : (
+                          <Button danger>
+                            <Text>Waiting Approval</Text>
+                          </Button>
+                        )}
+                        </Right>
                       </CardItem>
                     </Card> 
                     }
