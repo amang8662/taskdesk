@@ -481,7 +481,7 @@ exports.selectproposal = function(req, res) {
   }
 };
 
-exports.aquiredtasks = function(req, res) {
+exports.getaquiredtasks = function(req, res) {
   
   Task.find({'task_taker': req.params.userId})
   .populate('skills')
