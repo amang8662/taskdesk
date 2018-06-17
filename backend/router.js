@@ -28,6 +28,7 @@ router.get('/task/all/except/user/:userId', TaskController.findallexceptuser);
 router.get('/task/user/:userId', TaskController.findbyuser);
 router.get('/task/:taskId', TaskController.findbyid);
 router.put('/task/:taskId', TaskController.update);
+router.get('/task/aquired/user/:userId', TaskController.aquiredtasks);
 router.post('/task/proposal/:taskId', TaskController.savetaskproposal);
 router.get('/task/proposal/:taskId', TaskController.findproposalsbytask);
 router.get('/proposal/:proposalId', TaskController.findproposalsbyid);

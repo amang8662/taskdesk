@@ -480,3 +480,29 @@ exports.selectproposal = function(req, res) {
     });    
   }
 };
+
+exports.aquiredtasks = function(req, res) {
+  
+  Task.find({'task_taker': req.params.userId})
+  .populate('skills')
+  .exec(function (err, tasks) {
+    if (err) {
+      return res.status(500).send({
+          status: 500,
+          data: err.message || "Error retrieving tasks"
+      });
+
+    } else {
+      if(!tasks || tasks.length <= 0) {
+          return res.status(404).send({
+              status: 404,
+              data: "No Tasks found"
+          });            
+      }
+      res.status(200).send({
+        status: 200,
+        data: tasks
+      });
+    }
+  });
+};

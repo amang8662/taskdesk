@@ -79,10 +79,10 @@ export default class SideMenu extends Component<{}> {
         </Button>
 
         <Button style={styles.listItem}>
-          <Button transparent style={{width:'100%',justifyContent:'flex-start'}} onPress={() => Actions.yourtasks()}>
+          <Button transparent style={{width:'100%',justifyContent:'flex-start'}} onPress={() => Actions.aquiredtasks()}>
             <Icon name="md-calendar" style={{ color: "#fcfcfc",  }} />
             <Text style={styles.text}>
-                Your Tasks
+                Aquired Tasks
             </Text>
           </Button>
         </Button>

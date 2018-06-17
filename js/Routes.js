@@ -12,7 +12,7 @@ import TaskInfo from './pages/taskinfo';
 import AddTask from './pages/addtask';
 import ProfileHome from './pages/profile';
 import EditProfile from './pages/editprofile';
-import YourTasks from './pages/yourtasks';
+import AquiredTasks from './pages/aquiredtasks';
 import EditTask from './pages/edittask';
 import AboutUs from './pages/aboutus';
 import GeneratedTasks from './pages/generatedtasks';
@@ -59,7 +59,7 @@ export default class Routes extends Component<{}> {
 	    			    		<Scene key="proposalinfo" component={ProposalInfo} hideNavBar title="Proposal Info"/>
     			    		</Stack>
 
-    			    		<Scene key="yourtasks" component={YourTasks} hideNavBar title="Your Tasks"/>
+    			    		<Scene key="aquiredtasks" component={AquiredTasks} hideNavBar title="Aquired Tasks"/>
     			    		<Scene key="aboutus" component={AboutUs} title="About Us"/>
     			    		<Scene key="addskill" component={AddSkill} title="Add Skill"/>
     			    	</Scene>
