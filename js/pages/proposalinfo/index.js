@@ -98,6 +98,56 @@ export default class ProposalInfo extends Component<{}> {
     });
   }
 
+  selectProposal = () => {
+
+    const {proposal} = this.state;
+
+    NetInfo.isConnected.fetch().then((isConnected) => {
+
+      if(isConnected) {
+
+        timeout(10000, 
+          fetch(baseurl + '/task/proposal/' + this.props.taskid, {
+              method : 'put',
+              headers : {
+                'Accept' : 'application/json',
+                'Content-type' : 'application/json'
+              },
+              body: JSON.stringify({
+                userid: proposal.user._id
+              })
+          })
+          .then((response) => response.json())
+          .then((res) => {
+            if(res.status == 200) {
+            
+              alert(res.data)
+              Actions.generatedtasks();
+
+            } else {
+              if(res.status == 404) {
+
+                alert(res.data)
+              } else {
+                alert("Error Selecting Proposal");
+              }
+            }       
+          })
+          .catch((error) => {
+            console.log(error)
+            alert("Some Error Occured");
+          })
+        ).catch((error) => {
+
+            alert("Server not responding.");
+        });
+
+      } else {
+        ToastAndroid.show('No Internet Connection!', ToastAndroid.SHORT);
+      }
+    });    
+  }
+
   render() {
     if(this.state.showLoadingScreen == true)
       return (
@@ -115,15 +165,15 @@ export default class ProposalInfo extends Component<{}> {
             <Body>
               <Title style={{ color: "#FFF" }}>Proposal  Info...</Title>
             </Body>
-            {/*<Right>
+            <Right>
               
-              <Button style={styles.tags} transparent >
+              <Button style={styles.tags} transparent onPress={() => this.selectProposal()}>
                 <Text style={{ color: "#FFF",fontSize: 16,alignItems:  'center' }}>
                   <Icon name="paper-plane" style={{ color: "#FFF",fontSize: 18,alignItems:  'center' }} />
                   Apply 
                 </Text>
               </Button>
-            </Right>*/}  
+            </Right>  
           </Header>
           <Content >
             <Card>
