@@ -176,14 +176,20 @@ export default class GeneratedTasks extends Component<{}> {
                         </Button>
                       </Left>
                       <Right>
-                        <Button danger style={{padding: 8}}  onPress={() => Actions.proposals({task: item})}>
-                          <Text>Applicants</Text>
-                          <TouchableHighlight>
-                            <Badge success>
-                              <Text>200</Text>
-                            </Badge>
-                          </TouchableHighlight>
-                        </Button>
+                        {item.status == 0 ? (
+                          <Button danger style={{padding: 8}}  onPress={() => Actions.proposals({task: item})}>
+                            <Text>Applicants</Text>
+                            <TouchableHighlight>
+                              <Badge success>
+                                <Text>200</Text>
+                              </Badge>
+                            </TouchableHighlight>
+                          </Button>
+                        ) : (
+                          <Button danger style={{padding: 8}}  onPress={() => Actions.profile({userid: item.task_taker})}>
+                            <Text>View Task Taker</Text>
+                          </Button>
+                        )}
                       </Right>
                      </CardItem>
                      

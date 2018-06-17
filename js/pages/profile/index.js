@@ -3,6 +3,7 @@ import {
   StyleSheet,
   View,
   Image,
+  NetInfo,
   TouchableOpacity
 } from 'react-native';
 import {
@@ -21,120 +22,197 @@ import {
 } from 'native-base';
 
 import { Actions } from 'react-native-router-flux';
+import { LoadingComponent } from '../../components';
+import { timeout } from '../../modules';
 import User from '../../helpers/User';
 import { baseurl } from '../../Globals';
+
 export default class Profile extends Component<{}> {
 
   constructor(props) {
     super(props);
     this.state = {
-      user: User.get()
+      userid: this.props.userid ? this.props.userid : User.get()._id,
+      user: {},
+      foreignUser: this.props.userid ? true : false,
+      showLoadingScreen: true,
+      loadingComponent: {
+        internet: true,
+        hasData: true
+      }
+    }
+  }
+
+  componentDidMount() {
+
+    const {userid} = this.state;
+
+    if(this.state.foreignUser == true) {
+
+      NetInfo.isConnected.fetch().then((isConnected) => {
+
+        if(isConnected) {
+
+          timeout(10000, 
+            fetch(baseurl + '/user/' + userid, {
+                method : 'get',
+                headers : {
+                  'Accept' : 'application/json',
+                  'Content-type' : 'application/json'
+                }
+            })
+            .then((response) => response.json())
+            .then((res) => {
+              if(res.status == 200) {
+              
+                this.setState({
+                  user: res.data,
+                  showLoadingScreen: false
+                });
+
+              } else {
+                if(res.status == 404) {
+
+                  this.setState({ 
+                    loadingComponent: { ...this.state.loadingComponent, hasData: false} 
+                  });
+                } else {
+                  alert(res.data);
+                }
+              }       
+            })
+            .catch((error) => {
+                alert(error);
+            })
+          ).catch((error) => {
+
+              alert("Server not responding.");
+          });
+
+        } else {
+          this.setState({
+            loadingComponent: { ...this.state.loadingComponent, internet: false} 
+          });
+        }
+      });
+    } else {
+      this.setState({
+        user: User.get(),
+        showLoadingScreen: false
+      })
     }
   }
 
   render() {
 
-    return (
-      <Container style={styles.container}>
-        <Header  style={{ backgroundColor: "#dc4239" }} androidStatusBarColor="#dc2015" iosBarStyle="light-content"        >
-          <Left>
-            <Button transparent onPress={() => Actions.drawerOpen()}>
-              <Icon name="md-menu" style={{ color: "#FFF", fontSize: 30,alignItems:  'center' }} />
-            </Button>
-          </Left>
-          <Body>
-            <Title style={{ color: "#FFF" }}>{this.state.user.username}</Title>
-          </Body>
-          <Right>            
-            <Button transparent onPress={() => Actions.editprofile()}>
-              <Icon name="settings" style={{ color: "#FFF",fontSize: 30,alignItems:  'center' }} />
-            </Button>
-          </Right>
-        </Header>
-        <Content>
-            <View style={styles.bar} >
+    if(this.state.showLoadingScreen == true)
+      return (
+        <LoadingComponent internet={this.state.loadingComponent.internet} hasData={this.state.loadingComponent.hasData} />
+      );
+    else
+      return (
+        <Container style={styles.container}>
+          <Header  style={{ backgroundColor: "#dc4239" }} androidStatusBarColor="#dc2015" iosBarStyle="light-content"        >
+            <Left>
+              <Button transparent onPress={() => Actions.drawerOpen()}>
+                <Icon name="md-menu" style={{ color: "#FFF", fontSize: 30,alignItems:  'center' }} />
+              </Button>
+            </Left>
+            <Body>
+              <Title style={{ color: "#FFF" }}>{this.state.user.username}</Title>
+            </Body>
+            {this.state.foreignUser == false ? (
+              <Right>            
+                <Button transparent onPress={() => Actions.editprofile()}>
+                  <Icon name="settings" style={{ color: "#FFF",fontSize: 30,alignItems:  'center' }} />
+                </Button>
+              </Right>
+            ): null}
+          </Header>
+          <Content>
+              <View style={styles.bar} >
 
-                <View style={styles.barItem }>
-                  
-                  <Text style={styles.barTop}> Score</Text>
-                  <Text style={styles.barBottom}>{this.state.user.score}</Text>
+                  <View style={styles.barItem }>
+                    
+                    <Text style={styles.barTop}> Score</Text>
+                    <Text style={styles.barBottom}>{this.state.user.score}</Text>
 
-                </View>
-                <View style={styles.barItem}>
-                  
-                  <Text style={styles.barTop}> Level</Text>
-                  <Text style={styles.barBottom}>{this.state.user.level}</Text>
-
-                </View>
-            </View>
-          
-            <Card>
-              <CardItem bordered>
-                <Body style={{alignItems: 'center',}}>
-                  <View style={styles.profilePicWrap} >
-                      <Image style={styles.profilePic}  source={{uri: baseurl + "/uploads/avatar/" + this.state.user.avatar}} />
                   </View>
-                </Body>
-              </CardItem>
-              <CardItem bordered>
-                <Left>
-                  <Icon
-                    name="ios-person"
-                    style={{ color: "#454545" }}
-                  />
-                  <Text>{this.state.user.name}</Text>
-                </Left>
-              </CardItem>
-              {this.state.user.title ? (
+                  <View style={styles.barItem}>
+                    
+                    <Text style={styles.barTop}> Level</Text>
+                    <Text style={styles.barBottom}>{this.state.user.level}</Text>
+
+                  </View>
+              </View>
+            
+              <Card>
+                <CardItem bordered>
+                  <Body style={{alignItems: 'center',}}>
+                    <View style={styles.profilePicWrap} >
+                        <Image style={styles.profilePic}  source={{uri: baseurl + "/uploads/avatar/" + this.state.user.avatar}} />
+                    </View>
+                  </Body>
+                </CardItem>
                 <CardItem bordered>
                   <Left>
                     <Icon
-                      name="md-bowtie"
+                      name="ios-person"
                       style={{ color: "#454545" }}
                     />
-                    <Text>{this.state.user.title}</Text>
+                    <Text>{this.state.user.name}</Text>
                   </Left>
                 </CardItem>
-              ) : null}
-              <CardItem bordered>
-                <Left>
-                  <Icon
-                    name="md-mail"
-                    style={{ color: "#454545" }}
-                  />
-                  <Text>{this.state.user.email}</Text>
-                </Left>
-              </CardItem>
-              <CardItem bordered>
-                <Left>
-                  <Icon
-                    name='ios-list-box'
-                    style={{ color: "#454545" }}
-                  />
-                  <Text>{this.state.user.about} </Text>
-                </Left>
-              </CardItem>  
-            </Card>
-          
-            <Card>
-              <CardItem style={styles.hr}>
-                <Title style={styles.h1}> Skills</Title>
-              </CardItem>
-              <CardItem>
-                <View style={{flexDirection: 'row',flexWrap: 'wrap'}}>
-                  {this.state.user.skills.length > 0 ? (
-                    this.state.user.skills.map((tag, i) => (
-                        <Button style={styles.tags}  dark key={i}><Text> {tag.name}</Text></Button>
-                      )
-                    )) : (
-                    <Text>No Skills Found</Text>
-                  )}
-                </View>
-              </CardItem>
-            </Card>            
-        </Content>
-      </Container>
-    );
+                {this.state.user.title ? (
+                  <CardItem bordered>
+                    <Left>
+                      <Icon
+                        name="md-bowtie"
+                        style={{ color: "#454545" }}
+                      />
+                      <Text>{this.state.user.title}</Text>
+                    </Left>
+                  </CardItem>
+                ) : null}
+                <CardItem bordered>
+                  <Left>
+                    <Icon
+                      name="md-mail"
+                      style={{ color: "#454545" }}
+                    />
+                    <Text>{this.state.user.email}</Text>
+                  </Left>
+                </CardItem>
+                <CardItem bordered>
+                  <Left>
+                    <Icon
+                      name='ios-list-box'
+                      style={{ color: "#454545" }}
+                    />
+                    <Text>{this.state.user.about} </Text>
+                  </Left>
+                </CardItem>  
+              </Card>
+            
+              <Card>
+                <CardItem style={styles.hr}>
+                  <Title style={styles.h1}> Skills</Title>
+                </CardItem>
+                <CardItem>
+                  <View style={{flexDirection: 'row',flexWrap: 'wrap'}}>
+                    {this.state.user.skills.length > 0 ? (
+                      this.state.user.skills.map((tag, i) => (
+                          <Button style={styles.tags}  dark key={i}><Text> {tag.name}</Text></Button>
+                        )
+                      )) : (
+                      <Text>No Skills Found</Text>
+                    )}
+                  </View>
+                </CardItem>
+              </Card>            
+          </Content>
+        </Container>
+      );
   }
 }
 
