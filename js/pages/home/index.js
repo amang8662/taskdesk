@@ -168,7 +168,7 @@ export default class Home extends Component<{}> {
                    </CardItem>
                    <CardItem>
                       <View style={{width: '100%'}} >
-                        <Button danger full onPress={() => Actions.taskinfo({task: item})}>
+                        <Button danger full onPress={() => Actions.taskinfo({task: item, canApply: true})}>
                           <Text>View Details</Text>
                          <Right>
                           <Button danger>

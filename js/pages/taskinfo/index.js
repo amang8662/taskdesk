@@ -29,7 +29,8 @@ export default class TaskInfo extends Component<{}> {
   constructor(props) {
     super(props);
     this.state = {
-      tasks: [],
+      tasks: {},
+      canApply: this.props.canApply ? this.props.canApply : false,
       showLoadingScreen: true,
       loadingComponent: {
         internet: true,
@@ -50,15 +51,17 @@ export default class TaskInfo extends Component<{}> {
           <Body>
             <Title style={{ color: "#FFF" }}>Task  Info...</Title>
           </Body>
-          <Right>
-            
-            <Button style={styles.tags} transparent >
-              <Text style={{ color: "#FFF",fontSize: 16,alignItems:  'center' }}>
-                <Icon name="paper-plane" style={{ color: "#FFF",fontSize: 18,alignItems:  'center' }} />
-                Apply 
-              </Text>
-            </Button>
-          </Right>
+          {this.state.canApply == true ? (
+            <Right>
+              
+              <Button style={styles.tags} transparent >
+                <Text style={{ color: "#FFF",fontSize: 16,alignItems:  'center' }}>
+                  <Icon name="paper-plane" style={{ color: "#FFF",fontSize: 18,alignItems:  'center' }} />
+                  Apply 
+                </Text>
+              </Button>
+            </Right>
+          ) : null}
         </Header>
         <Content >
           <Card>
