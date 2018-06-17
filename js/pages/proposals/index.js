@@ -62,7 +62,7 @@ export default class Proposals extends Component<{}> {
             if(res.status == 200) {
             
               this.setState({
-                proposals: res.data.proposals,
+                proposals: res.data,
                 showLoadingScreen: false
               });
 
@@ -147,7 +147,7 @@ export default class Proposals extends Component<{}> {
                      </CardItem>
                      <CardItem>
                       <Left>
-                        <Button danger  onPress={() => Actions.proposalinfo({proposal: item})}>
+                        <Button danger  onPress={() => Actions.proposalinfo({proposal: item, taskid: this.props.task._id})}>
                           <Text>View Details</Text>
                           
                         </Button>

@@ -367,11 +367,17 @@ exports.findproposalsbytask = function(req, res) {
               status: 404,
               data: "Task not found"
           });            
+      } else if(task.proposals.length == 0) {
+        return res.status(404).send({
+            status: 404,
+            data: "Proposals not found"
+        });            
+      } else {   
+        res.status(200).send({
+          status: 200,
+          data: task.proposals
+        });
       }
-      res.status(200).send({
-        status: 200,
-        data: task
-      });
     }
   });
 };
