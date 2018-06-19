@@ -181,7 +181,7 @@ export default class GeneratedTasks extends Component<{}> {
                             <Text>Applicants</Text>
                             <TouchableHighlight>
                               <Badge success>
-                                <Text>200</Text>
+                                <Text>{item.proposals.length}</Text>
                               </Badge>
                             </TouchableHighlight>
                           </Button>

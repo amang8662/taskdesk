@@ -104,30 +104,9 @@ exports.findallexceptuser = function(req, res) {
 
 exports.findbyuser = function(req, res) {
   
-  Task.aggregate([
-    {
-      $match: {
-        task_creater: mongoose.Types.ObjectId(req.params.userId)
-      }
-    },
-    {
-      "$project": {
-        _id: 1,
-        task_creater: 1,
-        task_taker: 1,
-        title: 1,
-        description: 1,
-        rewardscore: 1,
-        status: 1,
-        skills: 1,
-        proposals: 1,
-        createdAt: 1,
-        updatedAt: 1,
-        nop: { $size: "$proposals"}
-      }
-    }
-  ])
-  .exec(function (err, result) {
+  Task.find({'task_creater': req.params.userId}) 
+  .populate('skills')
+  .exec(function (err, tasks) {
     if (err) {
       return res.status(500).send({
           status: 500,
@@ -135,18 +114,16 @@ exports.findbyuser = function(req, res) {
       });
 
     } else {
-      if(!result || result.length <= 0) {
+      if(!tasks || tasks.length <= 0) {
           return res.status(404).send({
               status: 404,
               data: "No Tasks found"
           });            
       } 
       else {
-        Task.populate(result, {path: 'skills'}, function(err, tasks) {      
-            res.status(200).send({
-              status: 200,
-              data: tasks
-            });
+        res.status(200).send({
+          status: 200,
+          data: tasks
         });
       }
     }
