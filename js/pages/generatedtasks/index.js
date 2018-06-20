@@ -24,7 +24,7 @@ import {
   Spinner
 } from 'native-base';
 import { Actions } from 'react-native-router-flux';
-import { LoadingComponent } from '../../components';
+import { LoadingComponent, Toast } from '../../components';
 import Tag from "../../components/inputtag/Tag";
 import { validate, timeout } from '../../modules';
 import User from '../../helpers/User';
