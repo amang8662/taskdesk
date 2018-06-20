@@ -2,6 +2,9 @@ import mongoose from 'mongoose';
 import Task from '../models/Task';
 import Proposal from '../models/Proposal';
 
+// Pagination limit
+var page_limit = 20
+
 exports.add = function(req, res) {
   
   req.checkBody('user', 'UserData is required').notEmpty();
@@ -76,8 +79,16 @@ exports.add = function(req, res) {
 };
 
 exports.findallexceptuser = function(req, res) {
+
+  var pageOptions = {
+      page: (Math.abs(req.query.page) || 1) - 1,
+      limit: Math.abs(req.query.limit) || page_limit
+  }
   
   Task.find({'task_creater': { "$ne": req.params.userId}})
+  .sort({createdAt: 'desc'})
+  .skip(pageOptions.page*pageOptions.limit)
+  .limit(pageOptions.limit)
   .populate('task_creater')
   .populate('skills')
   .exec(function (err, tasks) {
@@ -96,7 +107,11 @@ exports.findallexceptuser = function(req, res) {
       }
       res.status(200).send({
         status: 200,
-        data: tasks
+        data: {
+          page: pageOptions.page + 1,
+          limit: pageOptions.limit,
+          tasks: tasks
+        }
       });
     }
   });

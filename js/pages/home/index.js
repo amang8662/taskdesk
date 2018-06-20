@@ -20,6 +20,7 @@ import {
   Text,
   Card,
   CardItem,
+  Spinner
 } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import { LoadingComponent } from '../../components';
@@ -34,15 +35,21 @@ export default class Home extends Component<{}> {
     super(props);
     this.state = {
       tasks: [],
+      page: 1,
       showLoadingScreen: true,
       loadingComponent: {
         internet: true,
         hasData: true
-      }
+      },
+      isLoading: false
     }
   }
 
   componentDidMount() {
+    this.getTasks()
+  }
+
+  getTasks = () => {
 
     NetInfo.isConnected.fetch().then((isConnected) => {
 
@@ -61,15 +68,15 @@ export default class Home extends Component<{}> {
             if(res.status == 200) {
             
               this.setState({
-                tasks: res.data,
+                tasks: res.data.tasks,
                 showLoadingScreen: false
               });
 
             } else {
               if(res.status == 404) {
 
-                this.setState({ 
-                  loadingComponent: { ...this.state.loadingComponent, hasData: false} 
+                this.setState({
+                  loadingComponent: { ...this.state.loadingComponent, hasData: false}
                 });
               } else {
                 alert(res.data);
@@ -102,6 +109,107 @@ export default class Home extends Component<{}> {
     });
   }
 
+  loadMoreTasks = () => {
+
+    const {page} = this.state;
+    url = `${baseurl}/task/all/except/user/${User.get()._id}?page=${page}`;
+
+    NetInfo.isConnected.fetch().then((isConnected) => {
+
+      if(isConnected) {
+
+        this.setState({
+          isLoading: true
+        });
+
+        timeout(10000, 
+          fetch(url, {
+              method : 'get',
+              headers : {
+                'Accept' : 'application/json',
+                'Content-type' : 'application/json'
+              }
+          })
+          .then((response) => response.json())
+          .then((res) => {
+            if(res.status == 200) {
+            
+              this.setState({
+                tasks: [...this.state.tasks, ...res.data.tasks],
+                isLoading: false
+              });
+
+            } else {
+              if(res.status == 404) {
+
+                this.setState({
+                  isLoading: false
+                });
+              } else {
+                alert(res.data);
+                this.setState({
+                  isLoading: false
+                });
+              }              
+            }       
+          })
+          .catch((error) => {
+              alert(error);
+
+              this.setState({
+                isLoading: false
+              });
+          })
+        ).catch((error) => {
+
+            alert("Server not responding.");
+            this.setState({
+              isLoading: false
+            });
+        });
+
+      } else {
+        Toast.show({text: 'No Internet Connection!',
+          textColor: '#cccccc',
+          duration: 10000
+        });
+      }
+    });
+  }
+
+  renderFooter = () => {
+    
+    return this.state.isLoading ?  (
+      <View>
+        <Spinner size={25} color='#dc4239' />
+      </View>
+    ) : null;
+  };
+
+  handleRefresh = () => {
+    this.setState(
+      {
+        page: 1,
+        showLoadingScreen: true,
+        loadingComponent: Object.assign(this.state.loadingComponent, { internet: true, hasData: true })
+      },
+      () => {
+        this.getTasks();
+      }
+    );
+  };
+
+  handleLoadMore = () => {
+    this.setState(
+      {
+        page: this.state.page + 1
+      },
+      () => {
+        this.loadMoreTasks();
+      }
+    );
+  };
+
   render() {
     if(this.state.showLoadingScreen == true)
       return (
@@ -128,61 +236,66 @@ export default class Home extends Component<{}> {
             </Button>
           </Right>
         </Header>
-        <Content>
+        <View style={{flex:1}}>
           <FlatList
             data={this.state.tasks}
             keyExtractor={item => item._id}
             renderItem={({item}) => 
               <Card>
-                   <CardItem bordered style={styles.hr}>
-                     <Left>
-                         <Title style={styles.h1}>{item.title}</Title>                         
-                     </Left>
-                   </CardItem>
-                   <CardItem>
-                     <Body>
-                       <Text numberOfLines = { 3 } style={{textAlign:  'justify' }}>
-                        {item.description}
-                       </Text>
-                     </Body>
-                   </CardItem>
-                   <CardItem>
-                        <View style={{flexDirection: 'row',flexWrap: 'wrap'}}>
-                          {item.skills.map((tag, i) => (
-                            <Button style={styles.tags}  key={i}><Text> {tag.name}</Text></Button>
-                          ))}
-                        </View>
-                   </CardItem>
-                   <CardItem>
-                     <Left>
-                       <Button transparent>
-                         <Text note>Created At : {new Date(item.createdAt).toDateString()}</Text>
-                       </Button>
-                     </Left>
-                     <Right>
-                        <View style={{ alignSelf:  'center',}}>
-                          <Text>Reward</Text>
-                          <Text style={{fontSize: 24,color: '#f44336',textAlign: 'right' }}>{item.rewardscore}</Text>
-                        </View>
-                     </Right>
-                   </CardItem>
-                   <CardItem>
-                      <View style={{width: '100%'}} >
-                        <Button danger full onPress={() => Actions.taskinfo({task: item, canApply: true})}>
-                          <Text>View Details</Text>
-                         <Right>
-                          <Button danger>
-                            <Icon name="md-arrow-forward" style={{ color: "#fcfcfc",fontSize: 32 }} />
-                          </Button>
-                         </Right>
-                        </Button>
+                 <CardItem bordered style={styles.hr}>
+                   <Left>
+                       <Title style={styles.h1}>{item.title}</Title>                         
+                   </Left>
+                 </CardItem>
+                 <CardItem>
+                   <Body>
+                     <Text numberOfLines = { 3 } style={{textAlign:  'justify' }}>
+                      {item.description}
+                     </Text>
+                   </Body>
+                 </CardItem>
+                 <CardItem>
+                      <View style={{flexDirection: 'row',flexWrap: 'wrap'}}>
+                        {item.skills.map((tag, i) => (
+                          <Button style={styles.tags}  key={i}><Text> {tag.name}</Text></Button>
+                        ))}
                       </View>
-                  </CardItem>
-                 </Card> 
+                 </CardItem>
+                 <CardItem>
+                   <Left>
+                     <Button transparent>
+                       <Text note>Created At : {new Date(item.createdAt).toDateString()}</Text>
+                     </Button>
+                   </Left>
+                   <Right>
+                      <View style={{ alignSelf:  'center',}}>
+                        <Text>Reward</Text>
+                        <Text style={{fontSize: 24,color: '#f44336',textAlign: 'right' }}>{item.rewardscore}</Text>
+                      </View>
+                   </Right>
+                 </CardItem>
+                 <CardItem>
+                    <View style={{width: '100%'}} >
+                      <Button danger full onPress={() => Actions.taskinfo({task: item, canApply: true})}>
+                        <Text>View Details</Text>
+                       <Right>
+                        <Button danger>
+                          <Icon name="md-arrow-forward" style={{ color: "#fcfcfc",fontSize: 32 }} />
+                        </Button>
+                       </Right>
+                      </Button>
+                    </View>
+                </CardItem>
+              </Card> 
               }
+              ListFooterComponent={this.renderFooter}
+              onRefresh={this.handleRefresh}
+              refreshing={this.state.showLoadingScreen}
+              onEndReached={this.handleLoadMore}
+              onEndReachedThreshold={0.25}
             />
           
-        </Content>
+        </View>
       </Container>
       );
   }
