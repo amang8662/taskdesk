@@ -118,8 +118,16 @@ exports.findallexceptuser = function(req, res) {
 };
 
 exports.findbyuser = function(req, res) {
+
+  var pageOptions = {
+      page: (Math.abs(req.query.page) || 1) - 1,
+      limit: Math.abs(req.query.limit) || page_limit
+  }
   
-  Task.find({'task_creater': req.params.userId}) 
+  Task.find({'task_creater': req.params.userId})
+  .sort({createdAt: 'desc'})
+  .skip(pageOptions.page*pageOptions.limit)
+  .limit(pageOptions.limit)
   .populate('skills')
   .exec(function (err, tasks) {
     if (err) {
@@ -138,7 +146,11 @@ exports.findbyuser = function(req, res) {
       else {
         res.status(200).send({
           status: 200,
-          data: tasks
+          data: {
+            page: pageOptions.page + 1,
+            limit: pageOptions.limit,
+            tasks: tasks
+          }
         });
       }
     }

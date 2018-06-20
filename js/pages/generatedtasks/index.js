@@ -21,6 +21,7 @@ import {
   Card,
   CardItem,
   Badge,
+  Spinner
 } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import { LoadingComponent } from '../../components';
@@ -35,15 +36,21 @@ export default class GeneratedTasks extends Component<{}> {
     super(props);
     this.state = {
       tasks: [],
+      page: 1,
       showLoadingScreen: true,
       loadingComponent: {
         internet: true,
         hasData: true
-      }
+      },
+      isLoading: false
     }
   }
 
   componentDidMount() {
+    this.getTasks()
+  }
+
+  getTasks = () => {
 
     NetInfo.isConnected.fetch().then((isConnected) => {
 
@@ -62,30 +69,37 @@ export default class GeneratedTasks extends Component<{}> {
             if(res.status == 200) {
             
               this.setState({
-                tasks: res.data,
+                tasks: res.data.tasks,
                 showLoadingScreen: false
               });
 
             } else {
               if(res.status == 404) {
 
-                this.setState({ 
-                  loadingComponent: { ...this.state.loadingComponent, hasData: false} 
+                this.setState({
+                  loadingComponent: { ...this.state.loadingComponent, hasData: false}
                 });
               } else {
                 alert(res.data);
                 this.setState({
                   showLoadingScreen: false
                 });
-              }
+              }              
             }       
           })
           .catch((error) => {
               alert(error);
+
+              this.setState({
+                showLoadingScreen: false
+              });
           })
         ).catch((error) => {
 
             alert("Server not responding.");
+            this.setState({
+                showLoadingScreen: false
+              });
         });
 
       } else {
@@ -95,6 +109,107 @@ export default class GeneratedTasks extends Component<{}> {
       }
     });
   }
+
+  loadMoreTasks = () => {
+
+    const {page} = this.state;
+    url = `${baseurl}/task/user/${User.get()._id}?page=${page}`;
+
+    NetInfo.isConnected.fetch().then((isConnected) => {
+
+      if(isConnected) {
+
+        this.setState({
+          isLoading: true
+        });
+
+        timeout(10000, 
+          fetch(url, {
+              method : 'get',
+              headers : {
+                'Accept' : 'application/json',
+                'Content-type' : 'application/json'
+              }
+          })
+          .then((response) => response.json())
+          .then((res) => {
+            if(res.status == 200) {
+            
+              this.setState({
+                tasks: [...this.state.tasks, ...res.data.tasks],
+                isLoading: false
+              });
+
+            } else {
+              if(res.status == 404) {
+
+                this.setState({
+                  isLoading: false
+                });
+              } else {
+                alert(res.data);
+                this.setState({
+                  isLoading: false
+                });
+              }              
+            }       
+          })
+          .catch((error) => {
+              alert(error);
+
+              this.setState({
+                isLoading: false
+              });
+          })
+        ).catch((error) => {
+
+            alert("Server not responding.");
+            this.setState({
+              isLoading: false
+            });
+        });
+
+      } else {
+        Toast.show({text: 'No Internet Connection!',
+          textColor: '#cccccc',
+          duration: 10000
+        });
+      }
+    });
+  }
+
+  renderFooter = () => {
+    
+    return this.state.isLoading ?  (
+      <View>
+        <Spinner size={25} color='#dc4239' />
+      </View>
+    ) : null;
+  };
+
+  handleRefresh = () => {
+    this.setState(
+      {
+        page: 1,
+        showLoadingScreen: true,
+        loadingComponent: Object.assign(this.state.loadingComponent, { internet: true, hasData: true })
+      },
+      () => {
+        this.getTasks();
+      }
+    );
+  };
+
+  handleLoadMore = () => {
+    this.setState(
+      {
+        page: this.state.page + 1
+      },
+      () => {
+        this.loadMoreTasks();
+      }
+    );
+  };
 
   render() {
     if(this.state.showLoadingScreen == true)
@@ -111,7 +226,7 @@ export default class GeneratedTasks extends Component<{}> {
               </Button>
             </Left>
             <Body>
-              <Title style={{ color: "#F2F2F2" }}>Genrated Tasks</Title>
+              <Title style={{ color: "#F2F2F2" }}>Generated Tasks</Title>
             </Body>
             <Right>
               <Button transparent onPress={() => Actions.profile()}>
@@ -122,7 +237,7 @@ export default class GeneratedTasks extends Component<{}> {
               </Button>
             </Right>
           </Header>
-          <Content>
+          <View style={{flex: 1}}>
               <FlatList
               data={this.state.tasks}
               keyExtractor={item => item._id}
@@ -195,9 +310,14 @@ export default class GeneratedTasks extends Component<{}> {
                      
                    </Card> 
                 }
+                ListFooterComponent={this.renderFooter}
+                onRefresh={this.handleRefresh}
+                refreshing={this.state.showLoadingScreen}
+                onEndReached={this.handleLoadMore}
+                onEndReachedThreshold={0.25}
               />
             
-          </Content>
+          </View>
         </Container>
 
           
