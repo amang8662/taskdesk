@@ -20,7 +20,7 @@ export default class App extends Component<{}> {
     return (
       <View style={styles.container}>
         <StatusBar
-           backgroundColor="#1c313a"
+           backgroundColor="#dc2015"
            barStyle="light-content"
          />
         <Routes/>
