@@ -3,7 +3,13 @@ import Task from '../models/Task';
 import Proposal from '../models/Proposal';
 
 // Pagination limit
-var page_limit = 20
+
+function paginationOptions(page, limit) {
+  return {
+    page: (Math.abs(page) || 1) - 1,
+    limit: Math.abs(limit) || 20
+  }
+}
 
 exports.add = function(req, res) {
   
@@ -80,10 +86,7 @@ exports.add = function(req, res) {
 
 exports.findallexceptuser = function(req, res) {
 
-  var pageOptions = {
-      page: (Math.abs(req.query.page) || 1) - 1,
-      limit: Math.abs(req.query.limit) || page_limit
-  }
+  var pageOptions = paginationOptions(req.query.page, req.query.limit);
   
   Task.find({'task_creater': { "$ne": req.params.userId}})
   .sort({createdAt: 'desc'})
@@ -119,10 +122,7 @@ exports.findallexceptuser = function(req, res) {
 
 exports.findbyuser = function(req, res) {
 
-  var pageOptions = {
-      page: (Math.abs(req.query.page) || 1) - 1,
-      limit: Math.abs(req.query.limit) || page_limit
-  }
+  var pageOptions = paginationOptions(req.query.page, req.query.limit);
   
   Task.find({'task_creater': req.params.userId})
   .sort({createdAt: 'desc'})
