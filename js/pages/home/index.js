@@ -189,6 +189,7 @@ export default class Home extends Component<{}> {
   handleRefresh = () => {
     this.setState(
       {
+        tasks: [],
         page: 1,
         showLoadingScreen: true,
         loadingComponent: Object.assign(this.state.loadingComponent, { internet: true, hasData: true })
