@@ -16,6 +16,8 @@ exports.add = function(req, res) {
   req.checkBody('user', 'UserData is required').notEmpty();
   req.checkBody('title', 'Title is required').notEmpty();
   req.checkBody('description', 'Description is required').notEmpty();
+  req.checkBody('payment', 'Payment is required').notEmpty();
+  req.checkBody('payment', 'Payment must be a number').isInt();
   req.checkBody('skills', 'Skills are required').notEmpty();
   // req.checkBody('skills', 'Maximum 10 skills allowed').length();
   
@@ -41,6 +43,7 @@ exports.add = function(req, res) {
       task_creater: req.body.user._id,
       title: req.body.title,
       description: req.body.description,
+      payment: req.body.payment,
       rewardscore: rewardscore,
       skills: JSON.parse(req.body.skills)
     };
@@ -194,6 +197,8 @@ exports.update = function(req, res) {
   
   req.checkBody('title', 'Title is required').notEmpty();
   req.checkBody('description', 'Description is required').notEmpty();
+  req.checkBody('payment', 'Payment is required').notEmpty();
+  req.checkBody('payment', 'Payment must be a number').isInt();
   req.checkBody('skills', 'Skills are required').notEmpty();
   // req.checkBody('skills', 'Maximum 10 skills allowed').length();
   
@@ -215,6 +220,7 @@ exports.update = function(req, res) {
     Task.findByIdAndUpdate(req.params.taskId, {
         title: req.body.title,
         description: req.body.description,
+        payment: req.body.payment,
         skills: JSON.parse(req.body.skills)
     }, {new: true})
     .exec( function(err, task) {

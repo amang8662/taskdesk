@@ -22,6 +22,9 @@ var taskSchema = new Schema({
   rewardscore: {
     type: Number,
   },
+  payment: {
+    type: Number,
+  },
   status: {
     type: Number,
     default: 0,

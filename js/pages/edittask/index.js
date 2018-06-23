@@ -48,6 +48,12 @@ export default class EditTask extends Component<{}> {
         'errortype': '',
         'message':  ''
       },
+      payment: this.props.task.payment | 0,
+      paymentError: {
+        'isError': false,
+        'errortype': '',
+        'message':  ''
+      },
       tags: this.props.task.skills,
       tagError: {
         'isError': false,
@@ -86,6 +92,13 @@ export default class EditTask extends Component<{}> {
       descriptionError: Object.assign(this.state.descriptionError, descriptionError)
     })
 
+    //Check Payment
+    const paymentError = validate("payment",Number(this.state.payment),{required:true, integer: true});
+    
+    this.setState({
+      paymentError: Object.assign(this.state.paymentError, paymentError)
+    })
+
     //Check tag
     const tagError = validate("tag",this.state.tags,{required:true,type: 'array'});
     
@@ -93,7 +106,7 @@ export default class EditTask extends Component<{}> {
       tagError: Object.assign(this.state.tagError, tagError)
     })
 
-    if(this.state.titleError.isError || this.state.descriptionError.isError|| this.state.tagError.isError) {
+    if(this.state.titleError.isError || this.state.descriptionError.isError|| this.state.paymentError.isError|| this.state.tagError.isError) {
       return false;
     } else {
       return true;
@@ -101,7 +114,7 @@ export default class EditTask extends Component<{}> {
   }
 
   updateTask = () => {
-    const {title, description, tags} = this.state;
+    const {title, description, payment, tags} = this.state;
 
     let tagArr = [];
     tags.forEach(function(tag) {
@@ -132,6 +145,7 @@ export default class EditTask extends Component<{}> {
                 'body' : JSON.stringify({
                   title : title,
                   description : description,
+                  payment : Number(payment),
                   skills : JSON.stringify(tagArr)
                 })
             })
@@ -266,6 +280,27 @@ export default class EditTask extends Component<{}> {
                 <TextInputError isError={this.state.descriptionError.isError} message={this.state.descriptionError.message} /> 
               </Item>
 
+              <Item stackedLabel >
+                <Label>Payment</Label>
+                <InputText
+                    isError={this.state.paymentError.isError}
+                    keyboardType={'numeric'}
+                    value={`${this.state.payment}`}
+                    onChangeText={payment => this.setState({payment})}
+                    inputRef={(input) => this.payment = input}
+                    returnKeyType={'next'}
+                    blurOnSubmit={false}
+                    onSubmitEditing={() => {this.tag.focus()}}
+                    onBlur={() => {
+                        paymentError = validate("payment",Number(this.state.payment) ,{required:true, integer: true})
+                        this.setState({
+                          paymentError: Object.assign(this.state.paymentError, paymentError)
+                        })
+                      }}
+                    />
+                <TextInputError isError={this.state.paymentError.isError} message={this.state.paymentError.message} /> 
+              </Item>
+
               <Item stackedLabel last>
                 <Label>Skills</Label>
                 <InputTag
@@ -280,7 +315,7 @@ export default class EditTask extends Component<{}> {
                 <TextInputError isError={this.state.tagError.isError} message={this.state.tagError.message} /> 
               </Item>
             </Form>
-            <Button block style={{ margin: 15, marginTop: 50,backgroundColor: '#369' }} onPress={this.addTask}>
+            <Button block style={{ margin: 15, marginTop: 50,backgroundColor: '#369' }} onPress={this.updateTask}>
                 <Label style={{color: '#fff'}} >Update Task</Label>
             </Button>
             { this.state.isLoading == true ? <Spinner color='#d7d4f0' /> : null}

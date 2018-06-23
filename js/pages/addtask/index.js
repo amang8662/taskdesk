@@ -47,6 +47,12 @@ export default class AddTask extends Component<{}> {
         'errortype': '',
         'message':  ''
       },
+      payment: 0,
+      paymentError: {
+        'isError': false,
+        'errortype': '',
+        'message':  ''
+      },
       tags: [],
       tagError: {
         'isError': false,
@@ -84,6 +90,13 @@ export default class AddTask extends Component<{}> {
       descriptionError: Object.assign(this.state.descriptionError, descriptionError)
     })
 
+    //Check Payment
+    const paymentError = validate("payment",Number(this.state.payment),{required:true, integer: true});
+    
+    this.setState({
+      paymentError: Object.assign(this.state.paymentError, paymentError)
+    })
+
     //Check tag
     const tagError = validate("tag",this.state.tags,{required:true,type: 'array'});
     
@@ -91,7 +104,7 @@ export default class AddTask extends Component<{}> {
       tagError: Object.assign(this.state.tagError, tagError)
     })
 
-    if(this.state.titleError.isError || this.state.descriptionError.isError|| this.state.tagError.isError) {
+    if(this.state.titleError.isError || this.state.descriptionError.isError|| this.state.paymentError.isError|| this.state.tagError.isError) {
       return false;
     } else {
       return true;
@@ -99,7 +112,7 @@ export default class AddTask extends Component<{}> {
   }
 
   addTask = () => {
-    const {title, description, tags} = this.state;
+    const {title, description, payment, tags} = this.state;
 
     let tagArr = [];
     tags.forEach(function(tag) {
@@ -130,6 +143,7 @@ export default class AddTask extends Component<{}> {
                 'body' : JSON.stringify({
                   title : title.toLowerCase(),
                   description : description,
+                  payment : Number(payment),
                   skills : JSON.stringify(tagArr),
                   user : {
                             _id : userdata._id,
@@ -151,6 +165,7 @@ export default class AddTask extends Component<{}> {
                 this.setState({
                   title: '',
                   description: '',
+                  payment : 0,
                   tags: [],
                   clearTags: true
                 });
@@ -253,6 +268,27 @@ export default class AddTask extends Component<{}> {
                       }}
                     />
                 <TextInputError isError={this.state.descriptionError.isError} message={this.state.descriptionError.message} /> 
+              </Item>
+
+              <Item stackedLabel >
+                <Label>Payment</Label>
+                <InputText
+                    isError={this.state.paymentError.isError}
+                    keyboardType={'numeric'}
+                    value={`${this.state.payment}`}
+                    onChangeText={payment => this.setState({payment})}
+                    inputRef={(input) => this.payment = input}
+                    returnKeyType={'next'}
+                    blurOnSubmit={false}
+                    onSubmitEditing={() => {this.tag.focus()}}
+                    onBlur={() => {
+                        paymentError = validate("payment",Number(this.state.payment),{required:true, integer: true})
+                        this.setState({
+                          paymentError: Object.assign(this.state.paymentError, paymentError)
+                        })
+                      }}
+                    />
+                <TextInputError isError={this.state.paymentError.isError} message={this.state.paymentError.message} /> 
               </Item>
 
               <Item stackedLabel last>
