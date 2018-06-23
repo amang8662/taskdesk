@@ -1,8 +1,7 @@
 import express, { Router } from 'express';
 import validator from 'express-validator';
 // Import actions from controllers
-import RegisterController  from './controllers/RegisterController';
-import LoginController from './controllers/LoginController';
+import AuthController  from './controllers/AuthController';
 import TaskController  from './controllers/TaskController';
 import SkillController  from './controllers/SkillController';
 import UserController  from './controllers/UserController';
@@ -17,8 +16,8 @@ router.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 router.use(validator());
 
 // routes
-router.post('/register', RegisterController.register);
-router.post('/login', LoginController.login);
+router.post('/register', AuthController.register);
+router.post('/login', AuthController.login);
 router.get('/user/:userId', UserController.findbyid);
 router.put('/user/:userId', UserController.update);
 router.post('/user/update/avatar/:userId', UserController.updateavatar);
