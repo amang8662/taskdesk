@@ -221,7 +221,7 @@ export default class AquiredTasks extends Component<{}> {
                        <Right >
                         <View style={{ alignSelf:  'center',}}>
                           <Text>Reward</Text>
-                          <Text style={{fontSize: 24,color: '#f44336'}}>{item.rewardscore}</Text>
+                          <Text style={{fontSize: 24,color: '#f44336'}}>Rs. {item.payment}</Text>
                         </View>
                        </Right>
                      </CardItem>
@@ -287,7 +287,7 @@ export default class AquiredTasks extends Component<{}> {
                        <Right >
                         <View style={{ alignSelf:  'center',}}>
                           <Text>Reward</Text>
-                          <Text style={{fontSize: 24,color: '#f44336'}}>{item.rewardscore}</Text>
+                          <Text style={{fontSize: 24,color: '#f44336'}}>Rs. {item.payment}</Text>
                         </View>
                        </Right>
                      </CardItem>
@@ -360,7 +360,7 @@ export default class AquiredTasks extends Component<{}> {
                        <Right >
                         <View style={{ alignSelf:  'center',}}>
                           <Text>Reward</Text>
-                          <Text style={{fontSize: 24,color: '#f44336'}}>{item.rewardscore}</Text>
+                          <Text style={{fontSize: 24,color: '#f44336'}}>Rs. {item.payment}</Text>
                         </View>
                        </Right>
                      </CardItem>

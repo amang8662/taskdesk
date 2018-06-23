@@ -271,7 +271,7 @@ export default class Home extends Component<{}> {
                    <Right>
                       <View style={{ alignSelf:  'center',}}>
                         <Text>Reward</Text>
-                        <Text style={{fontSize: 24,color: '#f44336',textAlign: 'right' }}>{item.rewardscore}</Text>
+                        <Text style={{fontSize: 24,color: '#f44336',textAlign: 'right' }}>Rs. {item.payment}</Text>
                       </View>
                    </Right>
                  </CardItem>
