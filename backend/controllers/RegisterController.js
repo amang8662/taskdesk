@@ -12,7 +12,7 @@ exports.register = function(req, res) {
   req.checkBody({
     contact: {
       matches: {
-        options: /^[789]\d{9}$/i,
+        options: /^[789]\d{9}$/,
         errorMessage: 'Contact does not appear to be valid'
       }
     }
