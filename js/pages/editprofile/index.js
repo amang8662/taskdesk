@@ -57,8 +57,8 @@ export default class EditProfile extends Component<{}> {
         'errortype': '',
         'message':  ''
       },
-      email: user.email,
-      emailError: {
+      contact: user.contact,
+      contactError: {
         'isError': false,
         'errortype': '',
         'message':  ''
@@ -190,14 +190,14 @@ export default class EditProfile extends Component<{}> {
       usernameError: Object.assign(this.state.usernameError, usernameError)
     })
 
-    //Check Email
-    const emailError = validate("email",this.state.email,{required:true,regex:true});
+    //Check Contact
+    const contactError = validate("contact",this.state.contact,{required:true,regex:true});
 
     this.setState({
-      emailError: Object.assign(this.state.emailError, emailError)
+      contactError: Object.assign(this.state.contactError, contactError)
     });
 
-    if(this.state.nameError.isError || this.state.usernameError.isError || this.state.emailError.isError) {
+    if(this.state.nameError.isError || this.state.usernameError.isError || this.state.contactError.isError) {
       return false;
     } else {
       return true;
@@ -205,7 +205,7 @@ export default class EditProfile extends Component<{}> {
   }
 
   updateUser = () => {
-    const {name, username, email, title, about, skills} = this.state;
+    const {name, username, contact, title, about, skills} = this.state;
     const isFormValid = this.validateForm();
     
     if(isFormValid) {
@@ -221,7 +221,7 @@ export default class EditProfile extends Component<{}> {
           let formdata = {
             name: name,
             username: username,
-            email: email,
+            contact: contact,
             title: title,
             about: about,
             skills: JSON.stringify(skills)
@@ -262,12 +262,12 @@ export default class EditProfile extends Component<{}> {
                   alert("Please enter valid details");
                 } else if(res.errortype == 'unique-error') {
 
-                  if(res.fields.username && res.fields.email) {
-                    alert("Username and Email are already taken.");
+                  if(res.fields.username && res.fields.contact) {
+                    alert("Username and contact are already taken.");
                   } else if(res.fields.username){
                     alert("Username is already taken.");
                   } else {
-                    alert("Email is already taken.");
+                    alert("contact is already taken.");
                   }
                 } else { 
                   alert(res.data);
@@ -380,7 +380,7 @@ export default class EditProfile extends Component<{}> {
                       inputRef={(input) => this.username = input}
                       returnKeyType={'next'}
                       blurOnSubmit={false}
-                      onSubmitEditing={() => {this.email.focus()}}
+                      onSubmitEditing={() => {this.contact.focus()}}
                       onBlur={() => {
                           usernameError = validate("username",this.state.username,{required:true})
                           this.setState({
@@ -391,24 +391,24 @@ export default class EditProfile extends Component<{}> {
                   <TextInputError isError={this.state.usernameError.isError} message={this.state.usernameError.message} />
                 </Item>
                 <Item stackedLabel>
-                  <Label >Email</Label>
+                  <Label >contact</Label>
                   <InputText
-                      isError={this.state.emailError.isError}
-                      keyboardType="email-address"
-                      value={this.state.email}
-                      onChangeText={email => this.setState({email})}
-                      inputRef={(input) => this.email = input}
+                      isError={this.state.contactError.isError}
+                      keyboardType={'numeric'}
+                      value={this.state.contact}
+                      onChangeText={contact => this.setState({contact})}
+                      inputRef={(input) => this.contact = input}
                       returnKeyType={'next'}
                       blurOnSubmit={false}
                       onSubmitEditing={() => {this.title.focus()}}
                       onBlur={() => {
-                          emailError = validate("email",this.state.email,{required:true,regex:true})
+                          contactError = validate("contact",this.state.contact,{required:true,regex:true})
                           this.setState({
-                            emailError: Object.assign(this.state.emailError, emailError)
+                            contactError: Object.assign(this.state.contactError, contactError)
                           })
                         }}
                       />
-                  <TextInputError isError={this.state.emailError.isError} message={this.state.emailError.message} />
+                  <TextInputError isError={this.state.contactError.isError} message={this.state.contactError.message} />
                 </Item>
                 <Item stackedLabel>
                   <Label >Title</Label>

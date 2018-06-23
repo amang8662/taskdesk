@@ -164,7 +164,7 @@ export default class Login extends Component<{}> {
           <Logo/>
           <InputText
               isError={this.state.userNameError.isError}
-              placeholder="Username/Email"
+              placeholder="Username/Contact"
               keyboardType="email-address"
               value={this.state.userName}
               onChangeText={userName => this.setState({userName})}
@@ -172,7 +172,7 @@ export default class Login extends Component<{}> {
               blurOnSubmit={false}
               onSubmitEditing={() => {this.password.focus()}}
               onBlur={() => {
-                  userNameError = validate("username/Email",this.state.userName,{required:true})
+                  userNameError = validate("username/Contact",this.state.userName,{required:true})
                   this.setState({
                     userNameError: Object.assign(this.state.userNameError, userNameError)
                   })

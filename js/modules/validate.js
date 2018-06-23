@@ -2,7 +2,7 @@
 
 var regexEmail = new RegExp('^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$', 'i');
 
-var regexMobile = new RegExp('^[789]\d{9}$');
+var regexMobile = new RegExp(/^[789]\d{9}$/);
 
 var regex = '';
 
@@ -92,7 +92,7 @@ function ucwords(value) {
 function getRegex(name) {
 	if(name == "email") {
 		return regexEmail;
-	} else if(name == "mobile") {
+	} else if(name == "contact") {
 		return regexMobile;
 	} else {
 		return new RegExp('[\s\S]*');

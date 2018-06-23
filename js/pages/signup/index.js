@@ -36,8 +36,8 @@ export default class Signup extends Component<{}> {
         'errortype': '',
         'message':  ''
       },
-      email: '',
-      emailError: {
+      contact: '',
+      contactError: {
         'isError': false,
         'errortype': '',
         'message':  ''
@@ -85,11 +85,11 @@ export default class Signup extends Component<{}> {
       userNameError: Object.assign(this.state.userNameError, userNameError)
     })
 
-    //Check Email
-    const emailError = validate("email",this.state.email,{required:true,regex:true});
+    //Check Contact
+    const contactError = validate("contact",this.state.contact,{required:true,regex:true});
 
     this.setState({
-      emailError: Object.assign(this.state.emailError, emailError)
+      contactError: Object.assign(this.state.contactError, contactError)
     });
 
     //Check Password
@@ -99,7 +99,7 @@ export default class Signup extends Component<{}> {
       passwordError: Object.assign(this.state.passwordError, passwordError)
     })
 
-    if(this.state.nameError.isError || this.state.userNameError.isError || this.state.emailError.isError || this.state.passwordError.isError) {
+    if(this.state.nameError.isError || this.state.userNameError.isError || this.state.contactError.isError || this.state.passwordError.isError) {
       return false;
     } else {
       return true;
@@ -107,7 +107,7 @@ export default class Signup extends Component<{}> {
   }
 
   register = () => {
-    const {name, userName, email, password} = this.state;
+    const {name, userName, contact, password} = this.state;
     const isFormValid = this.validateForm();
     
     if(isFormValid) {
@@ -130,7 +130,7 @@ export default class Signup extends Component<{}> {
                 'body' : queryString.stringify({
                   name : name,
                   username : userName.toLowerCase(),
-                  email : email.toLowerCase(),
+                  contact : contact,
                   password : password
                 })
             })
@@ -148,12 +148,12 @@ export default class Signup extends Component<{}> {
                   alert("Please enter valid details");
                 } else if(res.errortype == 'unique-error') {
 
-                  if(res.fields.username && res.fields.email) {
-                    alert("Username and Email are already taken.");
+                  if(res.fields.username && res.fields.contact) {
+                    alert("Username and Contact are already taken.");
                   } else if(res.fields.username){
                     alert("Username is already taken.");
                   } else {
-                    alert("Email is already taken.");
+                    alert("Contact is already taken.");
                   }
                 } else if(res.errortype == 'db-error') {
                   
@@ -194,7 +194,7 @@ export default class Signup extends Component<{}> {
 
     var nameError = {};
     var userNameError = {};
-    var emailError = {};
+    var contactError = {};
     var passwordError = {};
     return(
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
@@ -224,7 +224,7 @@ export default class Signup extends Component<{}> {
               inputRef={(input) => this.username = input}
               returnKeyType={'next'}
               blurOnSubmit={false}
-              onSubmitEditing={() => {this.email.focus()}}
+              onSubmitEditing={() => {this.contact.focus()}}
               onBlur={() => {
                   userNameError = validate("username",this.state.userName,{required:true,regex:true,regexExp:'^[a-zA-Z0-9\-]+$',regexMsg:'Username must contain only letters, numbers or -',min:4,max:25})
                   this.setState({
@@ -234,23 +234,24 @@ export default class Signup extends Component<{}> {
               />
           <TextInputError styles={errorStyle} isError={this.state.userNameError.isError} message={this.state.userNameError.message} />
           <InputText
-              isError={this.state.emailError.isError} 
-              placeholder="Email"
-              keyboardType="email-address"
-              value={this.state.email}
-              onChangeText={email => this.setState({email})}
-              inputRef={(input) => this.email = input}
+              isError={this.state.contactError.isError} 
+              placeholder="contact"
+              keyboardType={'numeric'}
+              maxLength={10}
+              value={this.state.contact}
+              onChangeText={contact => this.setState({contact})}
+              inputRef={(input) => this.contact = input}
               returnKeyType={'next'}
               blurOnSubmit={false}
               onSubmitEditing={() => {this.password.focus()}}
               onBlur={() => {
-                  emailError = validate("email",this.state.email,{required:true,regex:true})
+                  contactError = validate("contact",Number(this.state.contact),{required:true,regex:true})
                   this.setState({
-                    emailError: Object.assign(this.state.emailError, emailError)
+                    contactError: Object.assign(this.state.contactError, contactError)
                   })
                 }}
               />
-          <TextInputError styles={errorStyle} isError={this.state.emailError.isError} message={this.state.emailError.message} />
+          <TextInputError styles={errorStyle} isError={this.state.contactError.isError} message={this.state.contactError.message} />
           <InputText
               isError={this.state.passwordError.isError} 
               placeholder="Password"

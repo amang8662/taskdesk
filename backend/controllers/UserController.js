@@ -120,8 +120,15 @@ exports.update = function(req, res) {
 
   req.checkBody('name', 'Name is required').notEmpty();
   req.checkBody('username', 'Username is required').notEmpty();
-  req.checkBody('email', 'Email is required').notEmpty();
-  req.checkBody('email', 'Email does not appear to be valid').isEmail();
+  req.checkBody('contact', 'Contact is required').notEmpty();
+  req.checkBody({
+    contact: {
+      matches: {
+        options: /^[789]\d{9}$/,
+        errorMessage: 'Contact does not appear to be valid'
+      }
+    }
+  })
   
   // check the validation object for errors
   var errors = req.validationErrors();
@@ -139,7 +146,7 @@ exports.update = function(req, res) {
     var userdata = {
       name: req.body.name,
       username: req.body.username,
-      email: req.body.email
+      contact: req.body.contact
     }
 
     if(req.body.hasOwnProperty("title")) {

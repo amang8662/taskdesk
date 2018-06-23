@@ -23,7 +23,7 @@ exports.login = function(req, res) {
     res.json(resdata);
   } else {
 
-    User.findOne({$or:[ {'username': req.body.username}, {'email': req.body.username} ]})
+    User.findOne({$or:[ {'username': req.body.username}, {'contact': req.body.username} ]})
     .populate('skills')
     .exec(function (err, user) {
       if (err) {

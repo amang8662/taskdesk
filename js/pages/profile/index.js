@@ -177,10 +177,10 @@ export default class Profile extends Component<{}> {
                 <CardItem bordered>
                   <Left>
                     <Icon
-                      name="md-mail"
+                      name="md-phone-portrait"
                       style={{ color: "#454545" }}
                     />
-                    <Text>{this.state.user.email}</Text>
+                    <Text>{this.state.user.contact}</Text>
                   </Left>
                 </CardItem>
                 <CardItem bordered>

@@ -12,7 +12,7 @@ var userSchema = new Schema({
     unique: true,
     required: true,
   },
-  email: {
+  contact: {
     type: String,
     unique: true,
     required: true,
@@ -23,9 +23,11 @@ var userSchema = new Schema({
   },
   title: {
     type: String,
+    default: '',
   },
   about: {
     type: String,
+    default: '',
   },
   avatar: {
     type: String,
