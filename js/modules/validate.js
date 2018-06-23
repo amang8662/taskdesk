@@ -62,7 +62,7 @@ function validate(name,value, options = {}) {
 			if(!Number.isInteger(value)) {
 				response.isError = true;
 				response.errortype = 'integer';
-				response.message = ucwords(name) + "is not an Integer";
+				response.message = ucwords(name) + " must be an Integer";
 			}
 		} 
 
