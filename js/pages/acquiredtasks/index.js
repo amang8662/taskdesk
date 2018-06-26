@@ -30,7 +30,7 @@ import { validate, timeout } from '../../modules';
 import User from '../../helpers/User';
 import { baseurl } from '../../Globals';
 
-export default class AquiredTasks extends Component<{}> {
+export default class AcquiredTasks extends Component<{}> {
 
  constructor(props) {
     super(props);

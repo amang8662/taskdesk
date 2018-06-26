@@ -94,7 +94,7 @@ export default class TaskInfo extends Component<{}> {
           <Card>
               <View style={{ alignSelf:  'center',   padding: 20}}>
                 <Text style={styles.h1}>Reward</Text>
-                <Text style={{fontSize: 30,color: '#f44336'}}>{this.props.task.rewardscore}</Text>
+                <Text style={{fontSize: 30,color: '#f44336'}}>Rs. {this.props.task.payment}</Text>
               </View>
             
           </Card>
