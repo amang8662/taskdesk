@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import Task from '../models/Task';
+import User from '../models/User';
 import Proposal from '../models/Proposal';
 
 // Pagination limit
@@ -563,3 +564,85 @@ exports.submittask = function(req, res) {
     }
   });    
 };
+
+exports.approvetask = function(req, res) {
+  
+  Task.findOneAndUpdate({ _id: req.params.taskId, status: 2 }, { status: 3})
+  .exec( function(err, task) {
+
+    if(err) {
+
+      return res.status(500).send({
+          status: 500,
+          data: "Error Approving Task"
+      });
+    } else {
+      if(!task) {
+          return res.status(404).send({
+              status: 404,
+              data: "Task not found"
+          });            
+      } else {
+
+        User.findById(task.task_taker)
+        .exec( function(err, user) {
+
+          if(err) {
+            return res.status(500).send({
+                status: 500,
+                data: "Error Approving Task"
+            });
+          } else {
+            if(!user) {
+                return res.status(404).send({
+                    status: 404,
+                    data: "User not found"
+                });            
+            } else {
+
+              var inc = checkScore(user.level, user.score + task.rewardscore)
+
+              user.score += task.rewardscore;
+
+              if(inc == true)
+                user.level++;
+
+              user.save(function(err) {
+                if(err) {
+
+                  Task.findByIdAndUpdate(req.params.taskId, { status: 2})
+                  .exec()
+                  return res.status(500).send({
+                      status: 500,
+                      data: "Error Approving Task"
+                  });
+                } else {
+                  res.status(200).send({
+                    status: 200,
+                    data: "Task Approved Successfully"
+                  });
+                }
+              })
+            }
+          }
+        });
+      }
+    }
+  });    
+};
+
+function checkScore(level, score) {
+
+  var base = 10;
+  var boundary = 0;
+  for(var i=0; i<level; i++) {
+    boundary += base*level*level;
+  }
+
+  if(score >= boundary) {
+    return true;
+  } else {
+    return false;
+  }
+
+}
