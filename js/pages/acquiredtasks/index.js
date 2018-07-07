@@ -53,7 +53,7 @@ export default class AcquiredTasks extends Component<{}> {
       if(isConnected) {
 
         timeout(10000, 
-          fetch(baseurl + '/task/aquired/user/' + User.get()._id, {
+          fetch(baseurl + '/task/acquired/user/' + User.get()._id, {
               method : 'get',
               headers : {
                 'Accept' : 'application/json',
