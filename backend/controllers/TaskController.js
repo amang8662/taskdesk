@@ -127,8 +127,24 @@ exports.findallexceptuser = function(req, res) {
 exports.findbyuser = function(req, res) {
 
   var pageOptions = paginationOptions(req.query.page, req.query.limit);
+
+  var whereClause = {};
+
+  if(req.query.taskstatus) {
+
+    whereClause = {
+      $and: [
+          { task_creater: req.params.userId },
+          { status: Number(req.query.taskstatus) }
+      ]    
+    }
+  } else {
+    whereClause = {
+      task_creater: req.params.userId 
+    }
+  }
   
-  Task.find({'task_creater': req.params.userId})
+  Task.find(whereClause)
   .sort({createdAt: 'desc'})
   .skip(pageOptions.page*pageOptions.limit)
   .limit(pageOptions.limit)
