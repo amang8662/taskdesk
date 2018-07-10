@@ -91,7 +91,12 @@ exports.findallexceptuser = function(req, res) {
 
   var pageOptions = paginationOptions(req.query.page, req.query.limit);
   
-  Task.find({'task_creater': { "$ne": req.params.userId}})
+  Task.find({
+    $and: [
+      {task_creater: { "$ne": req.params.userId}},
+      {status: 0}
+    ]
+  })
   .select('-proposals')
   .sort({createdAt: 'desc'})
   .skip(pageOptions.page*pageOptions.limit)
@@ -146,7 +151,7 @@ exports.findbyuser = function(req, res) {
   
   Task.find(whereClause)
   .select('-proposals')
-  .sort({createdAt: 'desc'})
+  .sort({updatedAt: 'desc'})
   .skip(pageOptions.page*pageOptions.limit)
   .limit(pageOptions.limit)
   .populate('skills')
@@ -417,9 +422,15 @@ exports.selectproposal = function(req, res) {
 
   } else {
 
-    Task.findByIdAndUpdate(req.params.taskId, {
-        task_taker: req.body.userid,
-        status: 1
+    Task.findOneAndUpdate({
+      $and: [
+          { _id: req.params.taskId },
+          { status: 0 }
+      ]
+    }, 
+    {
+      task_taker: req.body.userid,
+      status: 1
     })
     .exec( function(err, task) {
 
@@ -429,19 +440,6 @@ exports.selectproposal = function(req, res) {
               status: 404,
               data: "Task not found"
             });                
-        } else if (err.name === 'ValidationError') {
-
-          var error_fields = err.errors;
-          for(var key in error_fields) {
-            error_fields[key] = true;
-          }
-          return res.status(500).send({
-              status: 500,
-              errortype: 'unique-error',
-              data: { 
-                fields: error_fields
-              }
-          });
         } else {
           return res.status(500).send({
               status: 500,
@@ -476,11 +474,11 @@ exports.getacquiredtasks = function(req, res) {
       whereClause = {
         $and: [
             { 'proposals.user': req.params.userId },
-            { status: Number(req.query.taskstatus) }
+            { status: 0 }
         ]    
       }
     } else {
-      
+
       whereClause = {
         $and: [
             { task_taker: req.params.userId },
