@@ -6,6 +6,7 @@ import TextInputError from './textinputerror';
 import Toast from './toast';
 import InputTag from './inputtag';
 import LoadingComponent from './loadingcomponent';
+import LoadingView from './loadingview';
 
 export {
 	InputText,
@@ -15,5 +16,6 @@ export {
 	TextInputError,
 	Toast,
 	InputTag,
-	LoadingComponent
+	LoadingComponent,
+	LoadingView
 };

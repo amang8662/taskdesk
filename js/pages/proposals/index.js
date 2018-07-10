@@ -23,7 +23,7 @@ import {
   Badge,
 } from 'native-base';
 import { Actions } from 'react-native-router-flux';
-import { LoadingComponent } from '../../components';
+import { LoadingView } from '../../components';
 import Tag from "../../components/inputtag/Tag";
 import { validate, timeout } from '../../modules';
 import User from '../../helpers/User';
@@ -35,11 +35,7 @@ export default class Proposals extends Component<{}> {
     super(props);
     this.state = {
       proposals: [],
-      showLoadingScreen: true,
-      loadingComponent: {
-        internet: true,
-        hasData: true
-      }
+      status: 100
     }
   }
 
@@ -63,106 +59,104 @@ export default class Proposals extends Component<{}> {
             
               this.setState({
                 proposals: res.data,
-                showLoadingScreen: false
+                status: 200
               });
 
             } else {
               if(res.status == 404) {
 
                 this.setState({ 
-                  loadingComponent: { ...this.state.loadingComponent, hasData: false} 
+                  status: res.status
                 });
               } else {
                 alert(res.data);
                 this.setState({
-                  showLoadingScreen: false
+                  status: res.status
                 });
               }
             }       
           })
           .catch((error) => {
-              alert(error);
+              this.setState({
+                status: 505
+              });
           })
         ).catch((error) => {
-
-            alert("Server not responding.");
+          this.setState({
+              status: 408
+            });
         });
 
       } else {
         this.setState({
-          loadingComponent: { ...this.state.loadingComponent, internet: false} 
+          status: 150
         });
       }
     });
   }
 
   render() {
-    if(this.state.showLoadingScreen == true)
-      return (
-        <LoadingComponent internet={this.state.loadingComponent.internet} hasData={this.state.loadingComponent.hasData} />
-      );
-    else
-      return (
-          <Container style={styles.container}>
-          <Header style={{ backgroundColor: "#dc4239" }} androidStatusBarColor="#dc2015" iosBarStyle="light-content"        >
-            <Left>
-              <Button transparent onPress={() => Actions.pop()}>
-                <Icon name="arrow-back" style={{ color: "#FFF", fontSize: 30,alignItems:  'center' }} />
-              </Button>
-            </Left>
-            <Body>
-              <Title style={{ color: "#F2F2F2" }}>Task Proposals</Title>
-            </Body>
-          </Header>
-          <Content>
-              <FlatList
-              data={this.state.proposals}
-              keyExtractor={item => item._id}
-              renderItem={({item}) => 
-                <Card >
-                     <CardItem bordered style={styles.hr}>
-                       <Left>
-                           <Title style={styles.h1}>{item.user.name}</Title>                         
-                       </Left>
-                       <Right>
-                          <Text note>{item.user.title}</Text>
-                       </Right>
-                       
-                     </CardItem>
+    
+    return (
+      <Container style={styles.container}>
+        <Header style={{ backgroundColor: "#dc4239" }} androidStatusBarColor="#dc2015" iosBarStyle="light-content"        >
+          <Left>
+            <Button transparent onPress={() => Actions.pop()}>
+              <Icon name="arrow-back" style={{ color: "#FFF", fontSize: 30,alignItems:  'center' }} />
+            </Button>
+          </Left>
+          <Body>
+            <Title style={{ color: "#F2F2F2" }}>Task Proposals</Title>
+          </Body>
+        </Header>
+        <View style={{flex: 1}}>
+          <LoadingView status={this.state.status}>
+            <FlatList
+            data={this.state.proposals}
+            keyExtractor={item => item._id}
+            renderItem={({item}) => 
+              <Card >
+                 <CardItem bordered style={styles.hr}>
+                   <Left>
+                       <Title style={styles.h1}>{item.user.name}</Title>                         
+                   </Left>
+                   <Right>
+                      <Text note>{item.user.title}</Text>
+                   </Right>
+                   
+                 </CardItem>
 
-                     <CardItem>
-                       <Body>
-                         
-                         <Text numberOfLines = { 3 }  style={{textAlign:  'justify' }}>
-                          {item.description}
-                         </Text>
-                       </Body>
-                     </CardItem>
-                     <CardItem>
-                       <Left>
-                         <Button transparent>
-                           <Text note>Created At : {new Date(item.createdAt).toDateString()}</Text>
-                         </Button>
-                       </Left>
-                     </CardItem>
-                     <CardItem>
-                      <Left>
-                        <Button danger  onPress={() => Actions.proposalinfo({proposal: item, taskid: this.props.task._id})}>
-                          <Text>View Details</Text>
-                          
-                        </Button>
-                      </Left>
-                     </CardItem>
+                 <CardItem>
+                   <Body>
                      
-                   </Card> 
-                }
-              />
-            
-          </Content>
-        </Container>
-
-          
-      );
+                     <Text numberOfLines = { 3 }  style={{textAlign:  'justify' }}>
+                      {item.description}
+                     </Text>
+                   </Body>
+                 </CardItem>
+                 <CardItem>
+                   <Left>
+                     <Button transparent>
+                       <Text note>Created At : {new Date(item.createdAt).toDateString()}</Text>
+                     </Button>
+                   </Left>
+                 </CardItem>
+                 <CardItem>
+                  <Left>
+                    <Button danger  onPress={() => Actions.proposalinfo({proposal: item, taskid: this.props.task._id})}>
+                      <Text>View Details</Text>
+                      
+                    </Button>
+                  </Left>
+                 </CardItem>
+                 
+               </Card> 
+              }
+            />
+          </LoadingView>
+        </View>
+      </Container>        
+    );
   }
 }
 

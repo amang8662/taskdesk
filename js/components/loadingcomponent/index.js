@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    backgroundColor: '#eee'
+    backgroundColor: '#fff'
   },
   text: {
     textAlign: 'center',

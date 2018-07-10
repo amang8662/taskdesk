@@ -22,7 +22,7 @@ import {
   Tab
 } from 'native-base';
 import { Actions } from 'react-native-router-flux';
-import { LoadingComponent, Toast } from '../../components';
+import { LoadingView, Toast } from '../../components';
 import Tag from "../../components/inputtag/Tag";
 import { validate, timeout } from '../../modules';
 import User from '../../helpers/User';
@@ -36,11 +36,7 @@ export default class WorkingList extends Component<{}> {
     this.state = {
       tasks: [],
       page: 1,
-      showLoadingScreen: true,
-      loadingComponent: {
-        internet: true,
-        hasData: true
-      },
+      status: 100,
       isLoading: false
     }
   }
@@ -72,19 +68,19 @@ export default class WorkingList extends Component<{}> {
             
               this.setState({
                 tasks: res.data.tasks,
-                showLoadingScreen: false
+                status: 200
               });
 
             } else {
               if(res.status == 404) {
 
                 this.setState({
-                  loadingComponent: { ...this.state.loadingComponent, hasData: false}
+                  status: res.status
                 });
               } else {
                 alert(res.data);
                 this.setState({
-                  showLoadingScreen: false
+                  status: res.status
                 });
               }              
             }       
@@ -93,20 +89,19 @@ export default class WorkingList extends Component<{}> {
               alert(error);
 
               this.setState({
-                showLoadingScreen: false
+                status: 505
               });
           })
         ).catch((error) => {
 
-            alert("Server not responding.");
             this.setState({
-                showLoadingScreen: false
-              });
+              status: 408
+            });
         });
 
       } else {
         this.setState({
-          loadingComponent: { ...this.state.loadingComponent, internet: false} 
+          status: 150
         });
       }
     });
@@ -194,8 +189,7 @@ export default class WorkingList extends Component<{}> {
       {
         tasks: [],
         page: 1,
-        showLoadingScreen: true,
-        loadingComponent: Object.assign(this.state.loadingComponent, { internet: true, hasData: true })
+        status: 100
       },
       () => {
         this.getTasks();
@@ -236,7 +230,7 @@ export default class WorkingList extends Component<{}> {
 
                 this.setState({
                   tasks: this.state.tasks.filter((task,index) => task._id !== taskid),
-                  loadingComponent: Object.assign(this.state.loadingComponent, { internet: true, hasData: false })
+                  status: 404
                 },
                   () => alert(res.data)
                 );
@@ -271,8 +265,9 @@ export default class WorkingList extends Component<{}> {
   }
 
   render() {
-    if(this.state.tasks.length > 0)
-      return (
+    
+    return (
+      <LoadingView status={this.state.status}>
         <FlatList
           data={this.state.tasks}
           keyExtractor={item => item._id}
@@ -329,14 +324,11 @@ export default class WorkingList extends Component<{}> {
           }                     
           ListFooterComponent={this.renderFooter}
           onRefresh={this.handleRefresh}
-          refreshing={this.state.showLoadingScreen}
+          refreshing={this.state.status == 100 ? true: false}
           onEndReached={this.handleLoadMore}
           onEndReachedThreshold={0.25}
         />
-      );
-    else
-      return (
-        <LoadingComponent internet={this.state.loadingComponent.internet} hasData={this.state.loadingComponent.hasData} />
-      );
+      </LoadingView>
+    );
   }
 }

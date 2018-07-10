@@ -22,7 +22,7 @@ import {
 } from 'native-base';
 
 import { Actions } from 'react-native-router-flux';
-import { LoadingComponent } from '../../components';
+import { LoadingView } from '../../components';
 import { timeout } from '../../modules';
 import User from '../../helpers/User';
 import { baseurl } from '../../Globals';
@@ -33,13 +33,9 @@ export default class Profile extends Component<{}> {
     super(props);
     this.state = {
       userid: this.props.userid ? this.props.userid : User.get()._id,
-      user: {},
+      user: this.props.userid ? {} : User.get(),
       foreignUser: this.props.userid ? true : false,
-      showLoadingScreen: true,
-      loadingComponent: {
-        internet: true,
-        hasData: true
-      }
+      status: 100
     }
   }
 
@@ -67,152 +63,156 @@ export default class Profile extends Component<{}> {
               
                 this.setState({
                   user: res.data,
-                  showLoadingScreen: false
+                  status: 200
                 });
 
               } else {
+
                 if(res.status == 404) {
 
-                  this.setState({ 
-                    loadingComponent: { ...this.state.loadingComponent, hasData: false} 
+                  this.setState({
+                    status: res.status
                   });
                 } else {
                   alert(res.data);
+                  this.setState({
+                    status: res.status
+                  });
                 }
-              }       
+              } 
             })
             .catch((error) => {
-                alert(error);
+                this.setState({ 
+                  status: 500
+                });
             })
           ).catch((error) => {
 
-              alert("Server not responding.");
+              this.setState({ 
+                status: 408
+              });
           });
 
         } else {
-          this.setState({
-            loadingComponent: { ...this.state.loadingComponent, internet: false} 
+          this.setState({ 
+            status: 150
           });
         }
       });
     } else {
       this.setState({
-        user: User.get(),
-        showLoadingScreen: false
+        status: 200
       })
     }
   }
 
   render() {
 
-    if(this.state.showLoadingScreen == true)
-      return (
-        <LoadingComponent internet={this.state.loadingComponent.internet} hasData={this.state.loadingComponent.hasData} />
-      );
-    else
-      return (
-        <Container style={styles.container}>
-          <Header  style={{ backgroundColor: "#dc4239" }} androidStatusBarColor="#dc2015" iosBarStyle="light-content"        >
-            <Left>
-              <Button transparent onPress={() => Actions.drawerOpen()}>
-                <Icon name="md-menu" style={{ color: "#FFF", fontSize: 30,alignItems:  'center' }} />
+    return (
+      <Container style={styles.container}>
+        <Header  style={{ backgroundColor: "#dc4239" }} androidStatusBarColor="#dc2015" iosBarStyle="light-content"        >
+          <Left>
+            <Button transparent onPress={() => Actions.drawerOpen()}>
+              <Icon name="md-menu" style={{ color: "#FFF", fontSize: 30,alignItems:  'center' }} />
+            </Button>
+          </Left>
+          <Body>
+            <Title style={{ color: "#FFF" }}>{this.state.user.username}</Title>
+          </Body>
+          {(this.state.status == 200 && this.state.foreignUser == false) ? (
+            <Right>            
+              <Button transparent onPress={() => Actions.editprofile()}>
+                <Icon name="settings" style={{ color: "#FFF",fontSize: 30,alignItems:  'center' }} />
               </Button>
-            </Left>
-            <Body>
-              <Title style={{ color: "#FFF" }}>{this.state.user.username}</Title>
-            </Body>
-            {this.state.foreignUser == false ? (
-              <Right>            
-                <Button transparent onPress={() => Actions.editprofile()}>
-                  <Icon name="settings" style={{ color: "#FFF",fontSize: 30,alignItems:  'center' }} />
-                </Button>
-              </Right>
-            ): null}
-          </Header>
+            </Right>
+          ): null}
+        </Header>
+        <LoadingView status={this.state.status}>
           <Content>
-              <View style={styles.bar} >
+            <View style={styles.bar} >
 
-                  <View style={styles.barItem }>
-                    
-                    <Text style={styles.barTop}> Score</Text>
-                    <Text style={styles.barBottom}>{this.state.user.score}</Text>
+                <View style={styles.barItem }>
+                  
+                  <Text style={styles.barTop}> Score</Text>
+                  <Text style={styles.barBottom}>{this.state.user.score}</Text>
 
+                </View>
+                <View style={styles.barItem}>
+                  
+                  <Text style={styles.barTop}> Level</Text>
+                  <Text style={styles.barBottom}>{this.state.user.level}</Text>
+
+                </View>
+            </View>
+          
+            <Card>
+              <CardItem bordered>
+                <Body style={{alignItems: 'center',}}>
+                  <View style={styles.profilePicWrap} >
+                      <Image style={styles.profilePic}  source={{uri: baseurl + "/uploads/avatar/" + this.state.user.avatar}} />
                   </View>
-                  <View style={styles.barItem}>
-                    
-                    <Text style={styles.barTop}> Level</Text>
-                    <Text style={styles.barBottom}>{this.state.user.level}</Text>
-
-                  </View>
-              </View>
-            
-              <Card>
-                <CardItem bordered>
-                  <Body style={{alignItems: 'center',}}>
-                    <View style={styles.profilePicWrap} >
-                        <Image style={styles.profilePic}  source={{uri: baseurl + "/uploads/avatar/" + this.state.user.avatar}} />
-                    </View>
-                  </Body>
-                </CardItem>
+                </Body>
+              </CardItem>
+              <CardItem bordered>
+                <Left>
+                  <Icon
+                    name="ios-person"
+                    style={{ color: "#454545" }}
+                  />
+                  <Text>{this.state.user.name}</Text>
+                </Left>
+              </CardItem>
+              {this.state.user.title ? (
                 <CardItem bordered>
                   <Left>
                     <Icon
-                      name="ios-person"
+                      name="md-bowtie"
                       style={{ color: "#454545" }}
                     />
-                    <Text>{this.state.user.name}</Text>
+                    <Text>{this.state.user.title}</Text>
                   </Left>
                 </CardItem>
-                {this.state.user.title ? (
-                  <CardItem bordered>
-                    <Left>
-                      <Icon
-                        name="md-bowtie"
-                        style={{ color: "#454545" }}
-                      />
-                      <Text>{this.state.user.title}</Text>
-                    </Left>
-                  </CardItem>
-                ) : null}
-                <CardItem bordered>
-                  <Left>
-                    <Icon
-                      name="md-phone-portrait"
-                      style={{ color: "#454545" }}
-                    />
-                    <Text>{this.state.user.contact}</Text>
-                  </Left>
-                </CardItem>
-                <CardItem bordered>
-                  <Left>
-                    <Icon
-                      name='ios-list-box'
-                      style={{ color: "#454545" }}
-                    />
-                    <Text>{this.state.user.about} </Text>
-                  </Left>
-                </CardItem>  
-              </Card>
-            
-              <Card>
-                <CardItem style={styles.hr}>
-                  <Title style={styles.h1}> Skills</Title>
-                </CardItem>
-                <CardItem>
-                  <View style={{flexDirection: 'row',flexWrap: 'wrap'}}>
-                    {this.state.user.skills.length > 0 ? (
-                      this.state.user.skills.map((tag, i) => (
-                          <Button style={styles.tags}  dark key={i}><Text> {tag.name}</Text></Button>
-                        )
-                      )) : (
-                      <Text>No Skills Found</Text>
-                    )}
-                  </View>
-                </CardItem>
-              </Card>            
+              ) : null}
+              <CardItem bordered>
+                <Left>
+                  <Icon
+                    name="md-phone-portrait"
+                    style={{ color: "#454545" }}
+                  />
+                  <Text>{this.state.user.contact}</Text>
+                </Left>
+              </CardItem>
+              <CardItem bordered>
+                <Left>
+                  <Icon
+                    name='ios-list-box'
+                    style={{ color: "#454545" }}
+                  />
+                  <Text>{this.state.user.about} </Text>
+                </Left>
+              </CardItem>  
+            </Card>
+          
+            <Card>
+              <CardItem style={styles.hr}>
+                <Title style={styles.h1}> Skills</Title>
+              </CardItem>
+              <CardItem>
+                <View style={{flexDirection: 'row',flexWrap: 'wrap'}}>
+                  {this.state.user.skills && this.state.user.skills.length > 0 ? (
+                    this.state.user.skills.map((tag, i) => (
+                        <Button style={styles.tags}  dark key={i}><Text> {tag.name}</Text></Button>
+                      )
+                    )) : (
+                    <Text>No Skills Found</Text>
+                  )}
+                </View>
+              </CardItem>
+            </Card>         
           </Content>
-        </Container>
-      );
+        </LoadingView>   
+      </Container>
+    );
   }
 }
 
