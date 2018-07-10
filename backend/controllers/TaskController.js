@@ -97,7 +97,7 @@ exports.findallexceptuser = function(req, res) {
       {status: 0}
     ]
   })
-  .select('-proposals')
+  .select('-proposals._id -proposals.description -proposals.createdAt')
   .sort({createdAt: 'desc'})
   .skip(pageOptions.page*pageOptions.limit)
   .limit(pageOptions.limit)
@@ -150,7 +150,7 @@ exports.findbyuser = function(req, res) {
   }
   
   Task.find(whereClause)
-  .select('-proposals')
+  .select('-proposals._id -proposals.description -proposals.createdAt')
   .sort({updatedAt: 'desc'})
   .skip(pageOptions.page*pageOptions.limit)
   .limit(pageOptions.limit)

@@ -265,7 +265,12 @@ export default class GeneratedList extends Component<{}> {
               </Left>
               <Right>
                 <Button danger style={{padding: 8}}  onPress={() => Actions.proposals({task: item})}>
-                  <Text>View Applicants</Text>
+                  <Text>Applicants</Text> 
+                  <TouchableHighlight> 
+                    <Badge success> 
+                      <Text>{item.proposals.length}</Text> 
+                    </Badge> 
+                  </TouchableHighlight> 
                 </Button>
               </Right>
              </CardItem>

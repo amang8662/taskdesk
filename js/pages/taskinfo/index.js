@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
-  Image
+  Image,
+  Modal,
+  NetInfo
 } from 'react-native';
 import {
   Container,
@@ -17,11 +19,15 @@ import {
   Text,
   Card,
   CardItem,
+  Form, Item, Input,Label,
 } from 'native-base';
 
-import { Actions } from 'react-native-router-flux';
+import { InputText, TextInputError, InputTag, Toast } from '../../components';
+import { validate, timeout } from '../../modules';
 import User from '../../helpers/User';
+import { Spinner } from 'native-base';
 import { baseurl } from '../../Globals';
+import { Actions } from 'react-native-router-flux';
 
 
 export default class TaskInfo extends Component<{}> {
@@ -29,20 +35,138 @@ export default class TaskInfo extends Component<{}> {
   constructor(props) {
     super(props);
     this.state = {
-      tasks: {},
+      task: this.props.task,
+      description: '',
+      descriptionError: {
+        'isError': false,
+        'errortype': '',
+        'message':  ''
+      },
       canApply: this.props.canApply ? this.props.canApply : false,
-      showLoadingScreen: true,
-      loadingComponent: {
-        internet: true,
-        hasData: true
+      modalVisible: false,
+      isLoading: false
+    }
+    this.validateForm = this.validateForm.bind(this);
+  }
+
+  componentDidMount() {
+    if(this.state.canApply == true) {
+      const userid = User.get()._id;
+      let data = this.state.task.proposals.filter((proposal,index) => proposal.user == userid);
+      if(data.length > 0) {
+        // Person has Applied
+        this.setState({
+          canApply: false
+        })
       }
     }
   }
 
+  setModalVisible(visible) {
+    this.setState({modalVisible: visible});
+  }
+
+  validateForm() {
+
+    //Check Description
+    const descriptionError = validate("description",this.state.description,{required:true});
+    
+    this.setState({
+      descriptionError: Object.assign(this.state.descriptionError, descriptionError)
+    })
+
+    if(this.state.descriptionError.isError) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  apply = () => {
+    const {description} = this.state;
+
+    const isFormValid = this.validateForm();
+    
+    if(isFormValid) {
+      
+      NetInfo.isConnected.fetch().then((isConnected) => {
+
+        this.setState({
+          isLoading: true
+        });
+
+        if(isConnected) {
+
+          let userdata = User.get();
+
+          timeout(10000, 
+            fetch(baseurl + '/task/proposal/' + this.state.task._id, {
+                method : 'post',
+                headers : {
+                  'Accept' : 'application/json',
+                  'Content-type' : 'application/json'
+                },
+                'body' : JSON.stringify({
+                  userid : User.get()._id,
+                  description : description
+                })
+            })
+            .then((response) => response.json())
+            .then((res) => {
+              
+              this.setState({
+                isLoading: false
+              });
+
+              if(res.status == 200) {
+              
+                alert(res.data);
+
+                this.setState({
+                  modalVisible: false,
+                  canApply: false
+                });
+              } else {
+
+                if(res.status == 400) {
+                  console.log(res.data);
+                  alert("Please enter valid details");
+                }
+                else {
+                  alert('Sorry Some Error Occured');
+                }    
+              }       
+            })
+            .catch((error) => {
+                console.log(error);
+                alert('Some Error Occured');
+                this.setState({
+                  isLoading: false
+                });
+            })
+          ).catch((error) => {
+
+              this.setState({
+                isLoading: false
+              });
+
+              alert("Server not responding. Try again");
+          });
+
+        } else {
+          Toast.show({text: 'No Internet Connection!',
+            textColor: '#cccccc',
+            duration: 10000});
+        }
+      });
+    }
+  }
+
+
   render() {
     return (
       <Container style={styles.container}>
-        <Header  style={{ backgroundColor: "#dc4239" }} androidStatusBarColor="#dc2015" iosBarStyle="light-content"        >
+        <Header  style={{ backgroundColor: "#dc4239" }} androidStatusBarColor="#dc2015" iosBarStyle="light-content">
           <Left>
             <Button transparent onPress={() => Actions.pop()}>
               <Icon name="arrow-back" style={{ color: "#FFF", fontSize: 30,alignItems:  'center' }} />
@@ -54,7 +178,9 @@ export default class TaskInfo extends Component<{}> {
           {this.state.canApply == true ? (
             <Right>
               
-              <Button style={styles.tags} transparent >
+              <Button style={styles.tags} transparent onPress={() => {
+                  this.setModalVisible(true);
+                }}>
                 <Text style={{ color: "#FFF",fontSize: 16,alignItems:  'center' }}>
                   <Icon name="paper-plane" style={{ color: "#FFF",fontSize: 18,alignItems:  'center' }} />
                   Apply 
@@ -66,7 +192,7 @@ export default class TaskInfo extends Component<{}> {
         <Content >
           <Card>
             <CardItem style={styles.hr}>
-              <Title style={styles.h1}>{this.props.task.title}</Title>
+              <Title style={styles.h1}>{this.state.task.title}</Title>
             </CardItem>
             <CardItem bordered>
               <Left>
@@ -74,17 +200,17 @@ export default class TaskInfo extends Component<{}> {
                   name='ios-time'
                   style={{ color: "#ccc",margin: 5,alignSelf: 'center'}}
                 />
-                <Text note> {new Date(this.props.task.createdAt).toDateString()}</Text>
+                <Text note> {new Date(this.state.task.createdAt).toDateString()}</Text>
               </Left>
             </CardItem>
             <CardItem>
               <Text style={{textAlign:  'justify' }}> 
-                {this.props.task.description}
+                {this.state.task.description}
               </Text>
             </CardItem>
             <CardItem>
               <View style={{flexDirection: 'row',flexWrap: 'wrap'}}>
-               {this.props.task.skills.map((tag, i) => (
+               {this.state.task.skills.map((tag, i) => (
                  <Button style={styles.tags}  key={i}><Text> {tag.name}</Text></Button>
                ))}
               </View>
@@ -94,7 +220,7 @@ export default class TaskInfo extends Component<{}> {
           <Card>
               <View style={{ alignSelf:  'center',   padding: 20}}>
                 <Text style={styles.h1}>Reward</Text>
-                <Text style={{fontSize: 30,color: '#f44336'}}>Rs. {this.props.task.payment}</Text>
+                <Text style={{fontSize: 30,color: '#f44336'}}>Rs. {this.state.task.payment}</Text>
               </View>
             
           </Card>
@@ -105,16 +231,59 @@ export default class TaskInfo extends Component<{}> {
             <CardItem bordered>
               <Left style={{alignItems: 'center',}}>
                 <View style={styles.profilePicWrap} >
-                    <Image style={styles.profilePic}  source={{uri: baseurl + "/uploads/avatar/" + this.props.task.task_creater.avatar}} />
+                    <Image style={styles.profilePic}  source={{uri: baseurl + "/uploads/avatar/" + this.state.task.task_creater.avatar}} />
                 </View>
               </Left>
               <Body>
-                    <Text>{this.props.task.title}</Text>
-                    <Title style={styles.h1}>{this.props.task.task_creater.name} </Title>
-                    <Text note>{this.props.task.task_creater.level}</Text>
+                    <Text>{this.state.task.task_creater.title}</Text>
+                    <Title style={styles.h1}>{this.state.task.task_creater.name} </Title>
+                    <Text note>{this.state.task.task_creater.level}</Text>
               </Body>
             </CardItem>
           </Card>
+          <Modal
+          animationType="slide"
+          transparent={false}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            this.setModalVisible(false);
+          }}>
+            <Header style={{ backgroundColor: "#dc4239" }}  androidStatusBarColor="#dc2015" iosBarStyle="light-content">
+              <Left>
+                <Button transparent onPress={() => this.setModalVisible(false)}>
+                  <Icon name="arrow-back" style={{ color: "#FFF", fontSize: 30,alignItems:  'center' }} />
+                </Button>
+              </Left>
+              <Body>
+                <Title style={{ color: "#FFF" }}>Apply for Task</Title>
+              </Body>
+            </Header>
+            <Form>
+              <Item stackedLabel >
+                <Label>Description</Label>
+                <InputText
+                    multiline={true}
+                    numberOfLines={3}
+                    isError={this.state.descriptionError.isError} 
+                    value={this.state.description}
+                    onChangeText={description => this.setState({description})}
+                    inputRef={(input) => this.description = input}
+                    returnKeyType={'done'}
+                    onBlur={() => {
+                        descriptionError = validate("description",this.state.description,{required:true})
+                        this.setState({
+                          descriptionError: Object.assign(this.state.descriptionError, descriptionError)
+                        })
+                      }}
+                    />
+                <TextInputError isError={this.state.descriptionError.isError} message={this.state.descriptionError.message} /> 
+              </Item>
+              <Button block style={{ margin: 15, marginTop: 50,backgroundColor: '#369' }} onPress={this.apply}>
+                  <Label style={{color: '#fff'}} >Apply</Label>
+              </Button>
+              { this.state.isLoading == true ? <Spinner color='#d7d4f0' /> : null}
+            </Form>
+          </Modal>
         </Content>  
           
       </Container>
