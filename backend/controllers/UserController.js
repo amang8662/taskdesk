@@ -68,7 +68,7 @@ exports.updateavatar = function(req, res) {
                   status: 500,
                   data: "Error Updating User"
                 });
-              User.findOne(updatedUser._id).populate('skills').exec(function(err, result){
+              User.findOne(updatedUser._id).select('-password').populate('skills').exec(function(err, result){
 
                 return res.status(200).send({
                   status: 200,
@@ -86,6 +86,7 @@ exports.updateavatar = function(req, res) {
 exports.findbyid = function(req, res) {
   
   User.findById(req.params.userId)
+  .select('-password')
   .populate('skills')
   .exec(function (err, user) {
     if (err) {
@@ -162,6 +163,7 @@ exports.update = function(req, res) {
     }
 
     User.findByIdAndUpdate(req.params.userId, userdata, {new: true})
+    .select('-password')
     .populate('skills')
     .exec( function(err, user) {
 
