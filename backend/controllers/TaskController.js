@@ -465,9 +465,40 @@ exports.selectproposal = function(req, res) {
 };
 
 exports.getacquiredtasks = function(req, res) {
+
+  var pageOptions = paginationOptions(req.query.page, req.query.limit);
+
+  var whereClause = {};
+
+  if(req.query.taskstatus) {
+
+    if(Number(req.query.taskstatus) == 0) {
+      whereClause = {
+        $and: [
+            { 'proposals.user': req.params.userId },
+            { status: Number(req.query.taskstatus) }
+        ]    
+      }
+    } else {
+      
+      whereClause = {
+        $and: [
+            { task_taker: req.params.userId },
+            { status: Number(req.query.taskstatus) }
+        ]    
+      }
+    }
+  } else {
+    whereClause = {
+      task_taker: req.params.userId 
+    }
+  }
   
-  Task.find({'task_taker': req.params.userId})
+  Task.find(whereClause)
   .select('-proposals')
+  .sort({createdAt: 'desc'})
+  .skip(pageOptions.page*pageOptions.limit)
+  .limit(pageOptions.limit)
   .populate('skills')
   .exec(function (err, tasks) {
     if (err) {
@@ -485,7 +516,11 @@ exports.getacquiredtasks = function(req, res) {
       }
       res.status(200).send({
         status: 200,
-        data: tasks
+        data: {
+          page: pageOptions.page + 1,
+          limit: pageOptions.limit,
+          tasks: tasks
+        }
       });
     }
   });

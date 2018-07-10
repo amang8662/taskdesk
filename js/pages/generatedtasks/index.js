@@ -42,16 +42,6 @@ export default class GeneratedTasks extends Component<{}> {
 
   constructor(props) {
     super(props);
-    this.state = {
-      tasks: [],
-      page: 1,
-      showLoadingScreen: true,
-      loadingComponent: {
-        internet: true,
-        hasData: true
-      },
-      isLoading: false
-    }
   }
 
   render() {
