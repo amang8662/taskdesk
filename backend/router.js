@@ -32,7 +32,6 @@ router.put('/task/submit/:taskId', TaskController.submittask);
 router.put('/task/approve/:taskId', TaskController.approvetask);
 router.post('/task/proposal/:taskId', TaskController.savetaskproposal);
 router.get('/task/proposal/:taskId', TaskController.findproposalsbytask);
-router.get('/proposal/:proposalId', TaskController.findproposalsbyid);
 router.put('/task/proposal/:taskId', TaskController.selectproposal);
 
 router.post('/skill/add', SkillController.add);

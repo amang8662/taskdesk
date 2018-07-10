@@ -36,66 +36,8 @@ export default class ProposalInfo extends Component<{}> {
   constructor(props) {
     super(props);
     this.state = {
-      proposal: {},
-      showLoadingScreen: true,
-      loadingComponent: {
-        internet: true,
-        hasData: true
-      }
+      proposal: this.props.proposal
     }
-  }
-
-  componentDidMount() {
-
-    NetInfo.isConnected.fetch().then((isConnected) => {
-
-      if(isConnected) {
-
-        timeout(10000, 
-          fetch(baseurl + '/proposal/' + this.props.proposal._id, {
-              method : 'get',
-              headers : {
-                'Accept' : 'application/json',
-                'Content-type' : 'application/json'
-              }
-          })
-          .then((response) => response.json())
-          .then((res) => {
-            if(res.status == 200) {
-            
-              this.setState({
-                proposal: res.data,
-                showLoadingScreen: false
-              });
-
-            } else {
-              if(res.status == 404) {
-
-                this.setState({ 
-                  loadingComponent: { ...this.state.loadingComponent, hasData: false} 
-                });
-              } else {
-                alert(res.data);
-                this.setState({
-                  showLoadingScreen: false
-                });
-              }
-            }       
-          })
-          .catch((error) => {
-              alert(error);
-          })
-        ).catch((error) => {
-
-            alert("Server not responding.");
-        });
-
-      } else {
-        this.setState({
-          loadingComponent: { ...this.state.loadingComponent, internet: false} 
-        });
-      }
-    });
   }
 
   selectProposal = () => {
@@ -149,73 +91,68 @@ export default class ProposalInfo extends Component<{}> {
   }
 
   render() {
-    if(this.state.showLoadingScreen == true)
-      return (
-        <LoadingComponent internet={this.state.loadingComponent.internet} hasData={this.state.loadingComponent.hasData} />
-      );
-    else
-      return (
-        <Container style={styles.container}>
-          <Header  style={{ backgroundColor: "#dc4239" }} androidStatusBarColor="#dc2015" iosBarStyle="light-content"        >
-            <Left>
-              <Button transparent onPress={() => Actions.pop()}>
-                <Icon name="arrow-back" style={{ color: "#FFF", fontSize: 30,alignItems:  'center' }} />
-              </Button>
-            </Left>
-            <Body>
-              <Title style={{ color: "#FFF" }}>Proposal  Info...</Title>
-            </Body>
-            <Right>
-              
-              <Button style={styles.tags} transparent onPress={() => this.selectProposal()}>
-                <Text style={{ color: "#FFF",fontSize: 16,alignItems:  'center' }}>
-                  <Icon name="paper-plane" style={{ color: "#FFF",fontSize: 18,alignItems:  'center' }} />
-                  Apply 
-                </Text>
-              </Button>
-            </Right>  
-          </Header>
-          <Content >
-            <Card>
-              <CardItem style={styles.hr}>
-                <Title style={styles.h1}>{this.state.proposal.user.name}</Title>
-              </CardItem>
-              <CardItem bordered>
-                <Left>
-                  <Icon
-                    name='ios-time'
-                    style={{ color: "#ccc",margin: 5,alignSelf: 'center'}}
-                  />
-                  <Text note> {new Date(this.state.proposal.createdAt).toDateString()}</Text>
-                </Left>
-              </CardItem>
-              <CardItem>
-                <Text style={{textAlign:  'justify' }}> 
-                  {this.state.proposal.description}
-                </Text>
-              </CardItem>
-            </Card>
-            <Card style={{ elevation: 3}}>
-              <CardItem style={styles.hr}>
-                <Title style={styles.h1}> Submitted By :</Title>
-              </CardItem>
-              <CardItem bordered>
-                <Left style={{alignItems: 'center',}}>
-                  <View style={styles.profilePicWrap} >
-                      <Image style={styles.profilePic}  source={{uri: baseurl + "/uploads/avatar/" + this.state.proposal.user.avatar}} />
-                  </View>
-                </Left>
-                <Body>
-                      <Text>{this.state.proposal.title}</Text>
-                      <Title style={styles.h1}>{this.state.proposal.user.name} </Title>
-                      <Text note>{this.state.proposal.user.level}</Text>
-                </Body>
-              </CardItem>
-            </Card>
-          </Content>  
+    return (
+      <Container style={styles.container}>
+        <Header  style={{ backgroundColor: "#dc4239" }} androidStatusBarColor="#dc2015" iosBarStyle="light-content"        >
+          <Left>
+            <Button transparent onPress={() => Actions.pop()}>
+              <Icon name="arrow-back" style={{ color: "#FFF", fontSize: 30,alignItems:  'center' }} />
+            </Button>
+          </Left>
+          <Body>
+            <Title style={{ color: "#FFF" }}>Proposal  Info...</Title>
+          </Body>
+          <Right>
             
-        </Container>
-      );
+            <Button style={styles.tags} transparent onPress={() => this.selectProposal()}>
+              <Text style={{ color: "#FFF",fontSize: 16,alignItems:  'center' }}>
+                <Icon name="paper-plane" style={{ color: "#FFF",fontSize: 18,alignItems:  'center' }} />
+                Apply 
+              </Text>
+            </Button>
+          </Right>  
+        </Header>
+        <Content >
+          <Card>
+            <CardItem style={styles.hr}>
+              <Title style={styles.h1}>{this.state.proposal.user.name}</Title>
+            </CardItem>
+            <CardItem bordered>
+              <Left>
+                <Icon
+                  name='ios-time'
+                  style={{ color: "#ccc",margin: 5,alignSelf: 'center'}}
+                />
+                <Text note> {new Date(this.state.proposal.createdAt).toDateString()}</Text>
+              </Left>
+            </CardItem>
+            <CardItem>
+              <Text style={{textAlign:  'justify' }}> 
+                {this.state.proposal.description}
+              </Text>
+            </CardItem>
+          </Card>
+          <Card style={{ elevation: 3}}>
+            <CardItem style={styles.hr}>
+              <Title style={styles.h1}> Submitted By :</Title>
+            </CardItem>
+            <CardItem bordered>
+              <Left style={{alignItems: 'center',}}>
+                <View style={styles.profilePicWrap} >
+                    <Image style={styles.profilePic}  source={{uri: baseurl + "/uploads/avatar/" + this.state.proposal.user.avatar}} />
+                </View>
+              </Left>
+              <Body>
+                    <Text>{this.state.proposal.title}</Text>
+                    <Title style={styles.h1}>{this.state.proposal.user.name} </Title>
+                    <Text note>{this.state.proposal.user.level}</Text>
+              </Body>
+            </CardItem>
+          </Card>
+        </Content>  
+          
+      </Container>
+    );
   }
 }
 

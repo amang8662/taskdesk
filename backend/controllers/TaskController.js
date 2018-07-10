@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import Task from '../models/Task';
 import User from '../models/User';
-import Proposal from '../models/Proposal';
 
 // Pagination limit
 
@@ -93,6 +92,7 @@ exports.findallexceptuser = function(req, res) {
   var pageOptions = paginationOptions(req.query.page, req.query.limit);
   
   Task.find({'task_creater': { "$ne": req.params.userId}})
+  .select('-proposals')
   .sort({createdAt: 'desc'})
   .skip(pageOptions.page*pageOptions.limit)
   .limit(pageOptions.limit)
@@ -145,6 +145,7 @@ exports.findbyuser = function(req, res) {
   }
   
   Task.find(whereClause)
+  .select('-proposals')
   .sort({createdAt: 'desc'})
   .skip(pageOptions.page*pageOptions.limit)
   .limit(pageOptions.limit)
@@ -180,6 +181,7 @@ exports.findbyuser = function(req, res) {
 exports.findbyid = function(req, res) {
   
   Task.findById(req.params.taskId)
+  .select('-proposals')
   .populate('skills')
   .exec(function (err, task) {
     if (err) {
@@ -308,71 +310,58 @@ exports.savetaskproposal = function(req, res) {
       description: req.body.description
     };
    
-    Proposal.create(proposaldata, function (err, proposal) {
-      if(err) {
-        console.log(err);
-        if (err.name === 'ValidationError') {
+    Task.findOneAndUpdate({
+      _id: req.params.taskId,
+      'proposals.user': {
+        $ne: req.body.userid
+      }
+    },
+    {
+      $push: { proposals: proposaldata  }
+    })
+    .exec( function(err, task) {
 
-          var error_fields = err.errors;
-          for(var key in error_fields) {
-            error_fields[key] = true;
-          }
+      if(err) {
+        if(err.kind === 'ObjectId') {
+            return res.status(404).send({
+              status: 404,
+              data: "Task not found"
+            });                
+        } else if (err.name === 'ValidationError') {
+
           return res.status(500).send({
               status: 500,
               errortype: 'unique-error',
-              data: { 
-                fields: error_fields
-              }
+              data: "You have already applied for the Task"
           });
         } else {
           return res.status(500).send({
               status: 500,
-              data: "Error Adding Proposal"
+              data: "Error updating Task"
           });
         }
       } else {
-
-        Task.findByIdAndUpdate(req.params.taskId, {
-          $addToSet: { proposals: proposal._id  }
-        })
-        .exec( function(err, task) {
-
-          if(err) {
-            if(err.kind === 'ObjectId') {
-                return res.status(404).send({
-                  status: 404,
-                  data: "Task not found"
-                });                
-            } else {
-              return res.status(500).send({
-                  status: 500,
-                  data: "Error updating Task"
-              });
-            }
-          } else {
-            if(!task) {
-                return res.status(404).send({
-                    status: 404,
-                    data: "Task not found"
-                });            
-            }
-            res.status(200).send({
-              status: 200,
-              data: "Proposal Sent Successfully"
-            });
-          }
+        if(!task) {
+            return res.status(404).send({
+                status: 404,
+                data: "Task not found"
+            });            
+        }
+        res.status(200).send({
+          status: 200,
+          data: "Proposal Sent Successfully"
         });
       }
-    });      
+    });     
   }
 };
 
 exports.findproposalsbytask = function(req, res) {
   
   Task.findById(req.params.taskId, "task_taker proposals")
-  .populate({
-    path: 'proposals',
-    populate: { path: 'user', select: 'name title level' }
+  .populate({ 
+    path: 'proposals.user', 
+    select: '_id name title avatar level'
   })
   .exec(function (err, task) {
     if (err) {
@@ -405,39 +394,6 @@ exports.findproposalsbytask = function(req, res) {
           data: task.proposals
         });
       }
-    }
-  });
-};
-
-exports.findproposalsbyid = function(req, res) {
-  
-  Proposal.findById(req.params.proposalId)
-  .populate('user')
-  .exec(function (err, proposal) {
-    if (err) {
-      if(err.kind === 'ObjectId') {
-       
-          return res.status(404).send({
-              status: 404,
-              data: "Proposal not found"
-          });                
-      }
-      return res.status(500).send({
-          status: 500,
-          data: "Error retrieving proposal"
-      });
-
-    } else {
-      if(!proposal) {
-          return res.status(404).send({
-              status: 404,
-              data: "Proposal not found"
-          });            
-      }
-      res.status(200).send({
-        status: 200,
-        data: proposal
-      });
     }
   });
 };
@@ -511,6 +467,7 @@ exports.selectproposal = function(req, res) {
 exports.getacquiredtasks = function(req, res) {
   
   Task.find({'task_taker': req.params.userId})
+  .select('-proposals')
   .populate('skills')
   .exec(function (err, tasks) {
     if (err) {

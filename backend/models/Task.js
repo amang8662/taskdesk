@@ -1,6 +1,24 @@
 import mongoose, { Schema } from 'mongoose';
 var uniqueValidator = require('mongoose-unique-validator');
 
+// Define proposal schema
+var proposalSchema = new Schema({
+  user: { 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+    unique: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  createdAt : {
+    type : Date,
+    default : Date.now
+  }
+});
+
 // Define task schema
 var taskSchema = new Schema({
   task_creater: { 
@@ -35,12 +53,7 @@ var taskSchema = new Schema({
       ref: 'Skill'
     }
   ],
-  proposals: [
-    { 
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Proposal'
-    }
-  ],
+  proposals: [proposalSchema],
 }, {timestamps: true});
 taskSchema.plugin(uniqueValidator);
 
