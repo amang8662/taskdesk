@@ -82,7 +82,7 @@ export default class Login extends Component<{}> {
                 method : 'post',
                 headers : {
                   'Accept' : 'application/json',
-                  'Content-type' : 'application/x-www-form-urlencoded'
+                  'Content-type' : 'application/json'
                 },
                 'body' : JSON.stringify({
                   username : userName.toLowerCase(),
