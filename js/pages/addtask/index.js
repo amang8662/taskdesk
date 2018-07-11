@@ -3,7 +3,6 @@ import {
   StyleSheet,
   AsyncStorage,
   NetInfo,
-  ToastAndroid,
   Text,
 } from 'react-native';
 import {
@@ -19,7 +18,7 @@ import {
   Form, Item, Input,Label,
 } from 'native-base';
 
-import { InputText, TextInputError, InputTag } from '../../components';
+import { InputText, TextInputError, InputTag, Toast } from '../../components';
 import { validate, timeout } from '../../modules';
 import User from '../../helpers/User';
 import { Spinner } from 'native-base';
@@ -62,16 +61,7 @@ export default class AddTask extends Component<{}> {
       isLoading: false,
       clearTags: false
     };
-    this.handleFirstConnectivityChange = this.handleFirstConnectivityChange.bind(this);
     this.validateForm = this.validateForm.bind(this);
-  }
-
-  handleFirstConnectivityChange(isConnected) {
-    if(isConnected) {
-      ToastAndroid.show('Connection Established', ToastAndroid.SHORT);
-    } else {
-      ToastAndroid.show('No Internet Connection!', ToastAndroid.SHORT);
-    }
   }
 
   validateForm() {
@@ -158,7 +148,7 @@ export default class AddTask extends Component<{}> {
                 isLoading: false
               });
 
-              if(res.status == true) {
+              if(res.status == 200) {
               
                 alert(res.message);
 
@@ -169,9 +159,9 @@ export default class AddTask extends Component<{}> {
                   tags: [],
                   clearTags: true
                 });
-              } else if(res.status == false) {
+              } else {
 
-                if(res.errortype == 'validation') {
+                if(res.status == 400) {
                   console.log(res.message);
                   alert("Please enter valid details");
                 } 
@@ -180,14 +170,14 @@ export default class AddTask extends Component<{}> {
                 //     alert("Data must be unique");
                 //   }
                 // }
-                else if(res.errortype == 'db-error') {
+                else if(res.status == 500) {
                   
-                  alert('Sorry Some Error Occured');
+                  alert(res.message);
                 }    
               }       
             })
             .catch((error) => {
-                alert(error);
+                console.log(error);
             })
           ).catch((error) => {
 
@@ -199,20 +189,17 @@ export default class AddTask extends Component<{}> {
           });
 
         } else {
-          ToastAndroid.show('No Internet Connection!', ToastAndroid.SHORT);
+          Toast.show({text: 'No Internet Connection!',
+            textColor: '#cccccc',
+            duration: 10000
+          });
         }
       });
-
-      NetInfo.isConnected.addEventListener(
-        'connectionChange',
-        this.handleFirstConnectivityChange
-      );
     }
   }
 
   render() {
     return (
-
 
         <Container style={{backgroundColor: '#fff'}}>
      

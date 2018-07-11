@@ -7,14 +7,12 @@ import {
   AsyncStorage,
   NetInfo,
   ScrollView,
-  ToastAndroid
 } from 'react-native';
 
 
-import { Logo, InputText, TextInputError } from '../../components';
+import { Logo, InputText, TextInputError, Toast } from '../../components';
 import { validate, timeout } from '../../modules';
 import User from '../../helpers/User';
-import queryString from 'query-string';
 import { Spinner } from 'native-base';
 import { baseurl } from '../../Globals';
 
@@ -39,16 +37,7 @@ export default class Login extends Component<{}> {
       },
       isLoading: false
     };
-    this.handleFirstConnectivityChange = this.handleFirstConnectivityChange.bind(this);
     this.validateForm = this.validateForm.bind(this);
-  }
-
-  handleFirstConnectivityChange(isConnected) {
-    if(isConnected) {
-      ToastAndroid.show('Connection Established', ToastAndroid.SHORT);
-    } else {
-      ToastAndroid.show('No Internet Connection!', ToastAndroid.SHORT);
-    }
   }
 
   validateForm() {
@@ -95,7 +84,7 @@ export default class Login extends Component<{}> {
                   'Accept' : 'application/json',
                   'Content-type' : 'application/x-www-form-urlencoded'
                 },
-                'body' : queryString.stringify({
+                'body' : JSON.stringify({
                   username : userName.toLowerCase(),
                   password : password
                 })
@@ -107,7 +96,7 @@ export default class Login extends Component<{}> {
                 isLoading: false
               });
 
-              if(res.status == true) {
+              if(res.status == 200) {
                 
                 try {
 
@@ -118,19 +107,22 @@ export default class Login extends Component<{}> {
 
                   alert("Some error Occured. Try Again");
                 } 
-              } else if(res.status == false) {
+              } else {
 
-                if(res.errortype == 'no-user-error') {
-                  alert("Username/Email is not registered");
-                } else if(res.errortype == 'password-error') {
-                  alert("Invalid Credentials");
+                if(res.status == 404) {
+                  alert(res.message);
+                } else if(res.status == 401) {
+                  alert(res.message);
                 } else { 
                   alert('Some error Occured. Try Again');
                 }
               }       
             })
             .catch((error) => {
-                alert(error);
+                console.log(error);
+                this.setState({
+                  isLoading: false
+                });
             })
           ).catch((error) => {
 
@@ -142,14 +134,12 @@ export default class Login extends Component<{}> {
           });
 
         } else {
-          ToastAndroid.show('No Internet Connection!', ToastAndroid.SHORT);
+          Toast.show({text: 'No Internet Connection!',
+            textColor: '#cccccc',
+            duration: 10000
+          });
         }
       });
-
-      NetInfo.isConnected.addEventListener(
-        'connectionChange',
-        this.handleFirstConnectivityChange
-      );
     }
   }
 

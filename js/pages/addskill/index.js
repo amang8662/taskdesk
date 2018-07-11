@@ -7,10 +7,9 @@ import {
   AsyncStorage,
   NetInfo,
   ScrollView,
-  ToastAndroid
 } from 'react-native';
 
-import { InputText, TextInputError } from '../../components';
+import { InputText, TextInputError, Toast } from '../../components';
 import { validate, timeout } from '../../modules';
 import { Spinner } from 'native-base';
 import { baseurl } from '../../Globals';
@@ -31,16 +30,7 @@ export default class AddSkill extends Component<{}> {
       },
       isLoading: false
     };
-    this.handleFirstConnectivityChange = this.handleFirstConnectivityChange.bind(this);
     this.validateForm = this.validateForm.bind(this);
-  }
-
-  handleFirstConnectivityChange(isConnected) {
-    if(isConnected) {
-      ToastAndroid.show('Connection Established', ToastAndroid.SHORT);
-    } else {
-      ToastAndroid.show('No Internet Connection!', ToastAndroid.SHORT);
-    }
   }
 
   validateForm() {
@@ -92,27 +82,29 @@ export default class AddSkill extends Component<{}> {
                 isLoading: false
               });
 
-              if(res.status == true) {
+              if(res.status == 200) {
               
                 alert(res.message);
-              } else if(res.status == false) {
-
-                if(res.errortype == 'validation') {
-                  console.log(res.message);
-                  alert("Please enter valid details");
-                } 
-                else if(res.errortype == 'unique-error') {
+              } else if(res.status == 400) {
+                alert("Please enter valid details");
+              } else if(res.status == 500) {
+                if(res.errortype == 'unique-error') {
 
                   alert("Name must be unique");
                 }
-                else if(res.errortype == 'db-error') {
+                else {
                   
                   alert('Sorry Some Error Occured');
-                }    
-              }       
+                }
+              } else {
+                alert('Sorry Some Error Occured');
+              }  
             })
             .catch((error) => {
-                alert(error);
+                console.log(error);
+                this.setState({
+                  isLoading: false
+                });
             })
           ).catch((error) => {
 
@@ -124,14 +116,12 @@ export default class AddSkill extends Component<{}> {
           });
 
         } else {
-          ToastAndroid.show('No Internet Connection!', ToastAndroid.SHORT);
+          Toast.show({text: 'No Internet Connection!',
+            textColor: '#cccccc',
+            duration: 10000
+          });
         }
       });
-
-      NetInfo.isConnected.addEventListener(
-        'connectionChange',
-        this.handleFirstConnectivityChange
-      );
     }
   }
 

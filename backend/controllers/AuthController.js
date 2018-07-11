@@ -22,28 +22,25 @@ exports.register = function(req, res) {
   // check the validation object for errors
   var errors = req.validationErrors();
 
-  var resdata = {};
-
   if (errors) {
 
-    resdata =  { 
-      status: false,
+    return res.status(400).send({ 
+      status: 400,
       errortype: 'validation',
-      message:  errors 
-    };
+      data:  errors
+    });
 
-    res.json(resdata);
   } else {
 
     bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
       if(err) {
-        var hashdata = { 
-          status: false,
+
+        return res.status(500).send({ 
+          status: 500,
           errortype: 'hash-error',
           message: err
-        };
+        });
 
-        res.json(hashdata);
       } else {
         var userdata = {
           name: req.body.name,
@@ -57,34 +54,32 @@ exports.register = function(req, res) {
 
           var data = {};
           if(error) {
-            console.log(error);
             if (error.name === 'ValidationError') {
 
               var error_fields = error.errors;
               for(var key in error_fields) {
                 error_fields[key] = true;
               }
-              data =  { 
-                status: false,
+              return res.status(500).send({ 
+                status: 500,
                 errortype: 'unique-error',
                 fields: error_fields
-              };
+              });
             } else {
 
-              data =  { 
-                status: false,
-                errortype: 'db-error'
-              };
+              return res.status(500).send({ 
+                status: 500,
+                errortype: 'db-error',
+                message: "Error Saving Task"
+              });
             }
           } else {
 
-            data =  {
-              status: true,
+            return res.status(200).send({
+              status: 200,
               message:  "User Registered Successfully.." 
-            };
+            });
           }
-
-          res.json(data);
         });
       }
     });
@@ -100,54 +95,49 @@ exports.login = function(req, res) {
   // check the validation object for errors
   var errors = req.validationErrors();
 
-  var resdata = {};
-
   if (errors) {
 
-    resdata =  { 
-      status: false,
+    return res.status(400).send({ 
+      status: 400,
       errortype: 'validation',
-      message:  errors 
-    };
-
-    res.json(resdata);
+      data:  errors
+    });
   } else {
 
     User.findOne({$or:[ {'username': req.body.username}, {'contact': req.body.username} ]})
     .populate('skills')
     .exec(function (err, user) {
       if (err) {
-        console.log(err);
-        resdata = {
-          status: false,
+        return res.status(500).send({
+          status: 500,
           errortype: 'db-error',
-          data: ''
-        };
-        res.json(resdata);
-      } else if (!user) {
-        resdata = {
-          status: false,
-          errortype: 'no-user-error',
-          data: ''
-        };
-        res.json(resdata);
+          message: "Error Logging in"
+        });
       } else {
-        bcrypt.compare(req.body.password, user.password, function (err, result) {
-          var data = {};
-          if (result === true) {
-            data = {
-              status: true,
-              data: JSON.stringify(user)
-            };
-          } else {
-            data = {
-              status: false,
-              errortype: 'password-error',
-              data: ''
-            };
-          }
-          res.json(data);
-        })
+
+        if (!user) {
+          return res.status(404).send({
+            status: 404,
+            message: "Username/Email is not registered"
+          });
+          
+        } else {
+          bcrypt.compare(req.body.password, user.password, function (err, result) {
+            
+            if (result === true) {
+              return res.status(200).send({
+                status: 200,
+                data: JSON.stringify(user),
+                message: "User Logged In Successfully"
+              });
+            } else {
+              return res.status(401).send({
+                status: 401,
+                message: "Invalid Credentials"
+              });
+            }
+          })
+        }
       }
     });
   }

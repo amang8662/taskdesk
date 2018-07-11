@@ -5,15 +5,13 @@ import {
   View,
   TouchableOpacity,
   NetInfo,
-  ScrollView,
-  ToastAndroid
+  ScrollView
 } from 'react-native';
 
 
-import { Logo, InputText, TextInputError } from '../../components';
+import { Logo, InputText, TextInputError, Toast } from '../../components';
 import { validate, timeout } from '../../modules';
 
-import queryString from 'query-string';
 import { Spinner } from 'native-base';
 import { baseurl } from '../../Globals';
 
@@ -50,23 +48,7 @@ export default class Signup extends Component<{}> {
       },
       isLoading: false
     };
-    this.handleFirstConnectivityChange = this.handleFirstConnectivityChange.bind(this);
     this.validateForm = this.validateForm.bind(this);
-  }
-
-  handleFirstConnectivityChange(isConnected) {
-    if(isConnected) {
-      ToastAndroid.show('Connection Established', ToastAndroid.SHORT);
-      // alert('Connection Established');
-    } else {
-      ToastAndroid.show('No Internet Connection!', ToastAndroid.SHORT);
-      // alert('No Internet Connection!');
-    }
-
-    // NetInfo.isConnected.removeEventListener(
-    //   'connectionChange',
-    //   this.handleFirstConnectivityChange
-    // );
   }
 
   validateForm() {
@@ -125,9 +107,9 @@ export default class Signup extends Component<{}> {
                 method : 'post',
                 headers : {
                   'Accept' : 'application/json',
-                  'Content-type' : 'application/x-www-form-urlencoded'
+                  'Content-type' : 'application/json'
                 },
-                'body' : queryString.stringify({
+                'body' : JSON.stringify({
                   name : name,
                   username : userName.toLowerCase(),
                   contact : contact,
@@ -141,12 +123,14 @@ export default class Signup extends Component<{}> {
                 isLoading: false
               });
 
-              if(res.status == true) {
+              if(res.status == 200) {
                 alert(res.message);
-              } else if(res.status == false) {
-                if(res.errortype == 'validation') {
-                  alert("Please enter valid details");
-                } else if(res.errortype == 'unique-error') {
+              } else if(res.status == 400) {
+
+                alert("Please enter valid details");
+              } else if(res.status == 500) {
+
+                if(res.errortype == 'unique-error') {
 
                   if(res.fields.username && res.fields.contact) {
                     alert("Username and Contact are already taken.");
@@ -155,14 +139,16 @@ export default class Signup extends Component<{}> {
                   } else {
                     alert("Contact is already taken.");
                   }
-                } else if(res.errortype == 'db-error') {
-                  
+                } else {
                   alert('Sorry Some Error Occured');
                 }
-              }       
+              }     
             })
             .catch((error) => {
-                alert(error);
+                console.log(error);
+                this.setState({
+                  isLoading: false
+                });
             })
           ).catch((error) => {
 
@@ -174,15 +160,12 @@ export default class Signup extends Component<{}> {
           });
 
         } else {
-          ToastAndroid.show('No Internet Connection!', ToastAndroid.SHORT);
-          // alert('No Internet Connection!');
+          Toast.show({text: 'No Internet Connection!',
+            textColor: '#cccccc',
+            duration: 10000
+          });
         }
       });
-
-      NetInfo.isConnected.addEventListener(
-        'connectionChange',
-        this.handleFirstConnectivityChange
-      );
     }
   }
 

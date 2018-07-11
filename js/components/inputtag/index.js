@@ -8,21 +8,20 @@ import {
   StyleSheet,
   FlatList,
   NetInfo,
-  ToastAndroid
 } from "react-native";
 import {
   Button,
   Icon,
 } from 'native-base';
 
+import { Toast } from '../../components';
 import { validate, timeout } from '../../modules';
 import { baseurl } from '../../Globals';
 import { InputText } from './../index';
 import Tag from "./Tag";
 import _ from "lodash";
 export default class InputTag extends Component<{}> {
-  state = {};
-
+  
   constructor(props) {
     super(props);
 
@@ -76,25 +75,25 @@ export default class InputTag extends Component<{}> {
             .then((response) => response.json())
             .then((res) => {
 
-              if(res.status == true) {
+              if(res.status == 200) {
               
                 this.setState({
                   tagList: res.data
                 });
 
-              } else if(res.status == false) {
+              } else {
 
-                if(res.errortype == 'validation') {
+                if(res.status == 400) {
 
                   console.log(res.data);
-                } else if(res.errortype == 'db-error') {
+                } else if(res.status == 500) {
                   
                   alert('Sorry Some Error Occured');
                 }    
               }       
             })
             .catch((error) => {
-                alert(error);
+                console.log(error);
             })
           ).catch((error) => {
 
@@ -102,7 +101,10 @@ export default class InputTag extends Component<{}> {
           });
 
         } else {
-          ToastAndroid.show('No Internet Connection!', ToastAndroid.SHORT);
+          Toast.show({text: 'No Internet Connection!',
+            textColor: '#cccccc',
+            duration: 10000
+          });
         }
       });
     }

@@ -8,17 +8,13 @@ exports.add = function(req, res) {
   // check the validation object for errors
   var errors = req.validationErrors();
 
-  var resdata = {};
-
   if (errors) {
 
-    resdata =  { 
-      status: false,
+    return res.status(400).send({ 
+      status: 400,
       errortype: 'validation',
-      message:  errors 
-    };
-
-    res.json(resdata);
+      data:  errors
+    });
   } else {
 
     var skilldata = {
@@ -28,37 +24,33 @@ exports.add = function(req, res) {
     var skill = new Skill(skilldata);
     skill.save(function (error) {
 
-      var data = {};
       if(error) {
-        console.log(error);
         if (error.name === 'ValidationError') {
 
           var error_fields = error.errors;
           for(var key in error_fields) {
             error_fields[key] = true;
           }
-          data =  { 
-            status: false,
+         return res.status(500).send({ 
+            status: 500,
             errortype: 'unique-error',
             fields: error_fields
-          };
+          });
         } else {
 
-          data =  { 
-            status: false,
-            errortype: 'db-error'
-          };
+          return res.status(500).send({ 
+            status: 500,
+            errortype: 'db-error',
+            message: "Error Saving Skill"
+          });
         }
       } else {
 
-        data =  {
-          status: true,
+        return res.status(200).send({
+          status: 200,
           message:  "Skill Added Successfully.." 
-        };
-      }
-
-      res.json(data);
-        
+        });
+      }        
     });
     
   }
@@ -71,17 +63,13 @@ exports.getByName = function(req, res) {
   // check the validation object for errors
   var errors = req.validationErrors();
 
-  var resdata = {};
-
   if (errors) {
 
-    resdata =  { 
-      status: false,
+    return res.status(400).send({ 
+      status: 400,
       errortype: 'validation',
-      data:  errors 
-    };
-
-    res.json(resdata);
+      data:  errors
+    });
   } else {
 
     Skill.find({name: { $regex: '.*' + req.body.name + '.*', $options: 'i' }})
@@ -89,27 +77,24 @@ exports.getByName = function(req, res) {
     .exec(function (err, skills) {
       if (err) {
 
-        console.log(err);
-        resdata = {
-          status: false,
+        return res.status(500).send({ 
+          status: 500,
           errortype: 'db-error',
-          data: ''
-        };
+          message: "Error retrieving Skills"
+        });
       } else if (!skills || skills.length == 0) {
-        resdata = {
-          status: false,
-          errortype: 'no-skills-error',
-          data: ''
-        };
-        
+        return res.status(404).send({
+          status: 404,
+          message: "No skills Found"
+        });
+
       } else {
         
-        resdata = {
-          status: true,
+        return res.status(200).send({
+          status: 200,
           data: skills
-        };
+        });
       }
-      res.json(resdata);
     });
     
   }

@@ -28,13 +28,12 @@ exports.add = function(req, res) {
 
   if (errors) {
 
-    resdata =  { 
-      status: false,
+    return res.status(400).send({
+      status: 400,
       errortype: 'validation',
-      message:  errors 
-    };
+      message:  errors
+    });
 
-    res.json(resdata);
   } else {
 
     var rewardscore = req.body.user.level * 2;
@@ -60,24 +59,26 @@ exports.add = function(req, res) {
           for(var key in error_fields) {
             error_fields[key] = true;
           }
-          data =  { 
-            status: false,
+
+          return res.status(500).send({
+            status: 500,
             errortype: 'unique-error',
             fields: error_fields
-          };
+          });
         } else {
 
-          data =  { 
-            status: false,
-            errortype: 'db-error'
-          };
+          return res.status(500).send({ 
+            status: 500,
+            errortype: 'db-error',
+            message: err.message || "Error adding task"
+          });
         }
       } else {
 
-        data =  {
-          status: true,
-          message:  "Task Added Successfully.." 
-        };
+        return res.status(200).send({ 
+          status: 200,
+          message: "Task Added Successfully.."
+        });
       }
 
       res.json(data);
