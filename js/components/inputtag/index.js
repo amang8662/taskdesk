@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { 
   View,
-  Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
@@ -12,6 +11,7 @@ import {
 import {
   Button,
   Icon,
+  Text
 } from 'native-base';
 
 import { Toast } from '../../components';
@@ -75,7 +75,7 @@ export default class InputTag extends Component<{}> {
             .then((response) => response.json())
             .then((res) => {
 
-              if(res.status == 200) {
+              if(res.status == 200 || res.status == 404) {
               
                 this.setState({
                   tagList: res.data
@@ -88,7 +88,7 @@ export default class InputTag extends Component<{}> {
                   console.log(res.data);
                 } else if(res.status == 500) {
                   
-                  alert('Sorry Some Error Occured');
+                  alert(res.message);
                 }    
               }       
             })
@@ -212,8 +212,8 @@ const styles = StyleSheet.create({
       backgroundColor: '#999',
     },
     tagListItemText: {
-      fontSize: 22,
+      fontSize: 18,
       color: '#fff',
-      padding: 20  
+      padding: 20 
     },
 });

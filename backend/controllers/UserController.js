@@ -36,12 +36,12 @@ exports.updateavatar = function(req, res) {
       if(err.kind === 'ObjectId') {
           return res.status(404).send({
             status: 404,
-            data: "User not found"
+            message: "User not found"
           });                
       } else {
         return res.status(500).send({
             status: 500,
-            data: "Error Updating User"
+            message: "Error Updating User"
         });
       }
     } else {
@@ -49,7 +49,7 @@ exports.updateavatar = function(req, res) {
       if(!user) {
           return res.status(404).send({
               status: 404,
-              data: "User not found"
+              message: "User not found"
           });            
       } else {
 
@@ -57,7 +57,7 @@ exports.updateavatar = function(req, res) {
           if (err) {
             return res.status(500).send({
                 status: 500,
-                data: err.message || "File Upload Failed"
+                message: err.message || "File Upload Failed"
             });
           } else {
 
@@ -66,13 +66,14 @@ exports.updateavatar = function(req, res) {
               if (err) 
                 return res.status(500).send({
                   status: 500,
-                  data: "Error Updating User"
+                  message: "Error Updating User"
                 });
               User.findOne(updatedUser._id).select('-password').populate('skills').exec(function(err, result){
 
                 return res.status(200).send({
                   status: 200,
-                  data: JSON.stringify(result)
+                  data: JSON.stringify(result),
+                  message: "Updated User Successfully"
                 });
               });
             });            
@@ -94,19 +95,19 @@ exports.findbyid = function(req, res) {
        
           return res.status(404).send({
               status: 404,
-              data: "User not found"
+              message: "User not found"
           });                
       }
       return res.status(500).send({
           status: 500,
-          data: "Error retrieving user"
+          message: "Error retrieving user"
       });
 
     } else {
       if(!user) {
           return res.status(404).send({
               status: 404,
-              data: "User not found"
+              message: "User not found"
           });            
       }
       res.status(200).send({
@@ -139,7 +140,8 @@ exports.update = function(req, res) {
     return res.status(400).send({ 
       status: 400,
       errortype: 'validation',
-      data:  errors
+      data:  errors,
+      message: "Please Enter Valid Details"
     });
 
   } else {
@@ -171,7 +173,7 @@ exports.update = function(req, res) {
         if(err.kind === 'ObjectId') {
             return res.status(404).send({
               status: 404,
-              data: "User not found"
+              message: "User not found"
             });                
         } else if (err.name === 'ValidationError') {
 
@@ -189,19 +191,20 @@ exports.update = function(req, res) {
         } else {
           return res.status(500).send({
               status: 500,
-              data: "Error updating User"
+              message: "Error updating User"
           });
         }
       } else {
         if(!user) {
             return res.status(404).send({
                 status: 404,
-                data: "User not found"
+                message: "User not found"
             });            
         }
         res.status(200).send({
           status: 200,
-          data: JSON.stringify(user)
+          data: JSON.stringify(user),
+          message: "User Updated Successfully"
         });
       }
     });    

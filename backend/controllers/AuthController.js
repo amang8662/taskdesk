@@ -27,7 +27,8 @@ exports.register = function(req, res) {
     return res.status(400).send({ 
       status: 400,
       errortype: 'validation',
-      data:  errors
+      data:  errors,
+      message: "Please Enter Valid Details"
     });
 
   } else {
@@ -52,7 +53,6 @@ exports.register = function(req, res) {
         var user = new User(userdata);
         user.save(function (error) {
 
-          var data = {};
           if(error) {
             if (error.name === 'ValidationError') {
 
@@ -63,14 +63,16 @@ exports.register = function(req, res) {
               return res.status(500).send({ 
                 status: 500,
                 errortype: 'unique-error',
-                fields: error_fields
+                data: {
+                  fields: error_fields
+                }
               });
             } else {
 
               return res.status(500).send({ 
                 status: 500,
                 errortype: 'db-error',
-                message: "Error Saving Task"
+                message: "Error registering User"
               });
             }
           } else {
@@ -100,7 +102,8 @@ exports.login = function(req, res) {
     return res.status(400).send({ 
       status: 400,
       errortype: 'validation',
-      data:  errors
+      data:  errors,
+      message: "Please Enter Valid Details"
     });
   } else {
 

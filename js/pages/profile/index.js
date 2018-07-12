@@ -74,7 +74,7 @@ export default class Profile extends Component<{}> {
                     status: res.status
                   });
                 } else {
-                  alert(res.data);
+                  alert(res.message);
                   this.setState({
                     status: res.status
                   });

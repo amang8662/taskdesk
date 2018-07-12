@@ -24,14 +24,13 @@ exports.add = function(req, res) {
   // check the validation object for errors
   var errors = req.validationErrors();
 
-  var resdata = {};
-
   if (errors) {
 
     return res.status(400).send({
       status: 400,
       errortype: 'validation',
-      message:  errors
+      data:  errors,
+      message: "Please Enter Valid Details"
     });
 
   } else {
@@ -50,7 +49,6 @@ exports.add = function(req, res) {
     var task = new Task(taskdata);
     task.save(function (error) {
 
-      var data = {};
       if(error) {
         console.log(error);
         if (error.name === 'ValidationError') {
@@ -63,14 +61,17 @@ exports.add = function(req, res) {
           return res.status(500).send({
             status: 500,
             errortype: 'unique-error',
-            fields: error_fields
+            data: { 
+              fields: error_fields
+            },
+            message: "Fields must be unique"
           });
         } else {
 
           return res.status(500).send({ 
             status: 500,
             errortype: 'db-error',
-            message: err.message || "Error adding task"
+            message: err.message || "Error adding Task"
           });
         }
       } else {
@@ -79,10 +80,7 @@ exports.add = function(req, res) {
           status: 200,
           message: "Task Added Successfully.."
         });
-      }
-
-      res.json(data);
-        
+      }        
     });
     
   }
@@ -108,14 +106,14 @@ exports.findallexceptuser = function(req, res) {
     if (err) {
       return res.status(500).send({
           status: 500,
-          data: err.message || "Error retrieving tasks"
+          message: err.message || "Error retrieving tasks"
       });
 
     } else {
       if(!tasks || tasks.length <= 0) {
           return res.status(404).send({
               status: 404,
-              data: "No Tasks found"
+              message: "No Tasks found"
           });            
       }
       res.status(200).send({
@@ -155,19 +153,20 @@ exports.findbyuser = function(req, res) {
   .sort({updatedAt: 'desc'})
   .skip(pageOptions.page*pageOptions.limit)
   .limit(pageOptions.limit)
+  .populate('task_creater')
   .populate('skills')
   .exec(function (err, tasks) {
     if (err) {
       return res.status(500).send({
           status: 500,
-          data: err.message || "Error retrieving tasks"
+          message: err.message || "Error retrieving tasks"
       });
 
     } else {
       if(!tasks || tasks.length <= 0) {
           return res.status(404).send({
               status: 404,
-              data: "No Tasks found"
+              message: "No Tasks found"
           });            
       } 
       else {
@@ -195,19 +194,19 @@ exports.findbyid = function(req, res) {
        
           return res.status(404).send({
               status: 404,
-              data: "Task not found with id " + req.params.taskId
+              message: "Task not found"
           });                
       }
       return res.status(500).send({
           status: 500,
-          data: "Error retrieving task with id " + req.params.taskId
+          message: "Error retrieving task"
       });
 
     } else {
       if(!task) {
           return res.status(404).send({
               status: 404,
-              data: "Task not found with id " + req.params.taskId
+              message: "Task not found"
           });            
       }
       res.status(200).send({
@@ -230,14 +229,13 @@ exports.update = function(req, res) {
   // check the validation object for errors
   var errors = req.validationErrors();
 
-  var resdata = {};
-
   if (errors) {
 
     return res.status(400).send({ 
       status: 400,
       errortype: 'validation',
-      data:  errors
+      data:  errors,
+      message: "Please Enter Valid Details"
     });
 
   } else {
@@ -254,7 +252,7 @@ exports.update = function(req, res) {
         if(err.kind === 'ObjectId') {
             return res.status(404).send({
               status: 404,
-              data: "Task not found with id " + req.params.taskId
+              message: "Task not found"
             });                
         } else if (err.name === 'ValidationError') {
 
@@ -272,19 +270,19 @@ exports.update = function(req, res) {
         } else {
           return res.status(500).send({
               status: 500,
-              data: "Error updating Task with id " + req.params.taskId
+              message: "Error updating Task"
           });
         }
       } else {
         if(!task) {
             return res.status(404).send({
                 status: 404,
-                data: "Task not found with id " + req.params.taskId
+                message: "Task not found"
             });            
         }
         res.status(200).send({
           status: 200,
-          data: "Task Updated Successfully"
+          message: "Task Updated Successfully"
         });
       }
     });    
@@ -299,14 +297,13 @@ exports.savetaskproposal = function(req, res) {
   // check the validation object for errors
   var errors = req.validationErrors();
 
-  var resdata = {};
-
   if (errors) {
 
     return res.status(400).send({ 
       status: 400,
       errortype: 'validation',
-      data:  errors
+      data:  errors,
+      message: "Please Enter Valid Details"
     });
 
   } else {
@@ -323,7 +320,7 @@ exports.savetaskproposal = function(req, res) {
       }
     },
     {
-      $push: { proposals: proposaldata  }
+      $push: { proposals: proposaldata }
     })
     .exec( function(err, task) {
 
@@ -331,31 +328,31 @@ exports.savetaskproposal = function(req, res) {
         if(err.kind === 'ObjectId') {
             return res.status(404).send({
               status: 404,
-              data: "Task not found"
+              message: "Task not found"
             });                
         } else if (err.name === 'ValidationError') {
 
           return res.status(500).send({
               status: 500,
               errortype: 'unique-error',
-              data: "You have already applied for the Task"
+              message: "You have already applied for the Task"
           });
         } else {
           return res.status(500).send({
               status: 500,
-              data: "Error updating Task"
+              message: "Error updating Task"
           });
         }
       } else {
         if(!task) {
             return res.status(404).send({
                 status: 404,
-                data: "Task not found"
+                message: "Task not found"
             });            
         }
         res.status(200).send({
           status: 200,
-          data: "Proposal Sent Successfully"
+          message: "Proposal Sent Successfully"
         });
       }
     });     
@@ -375,24 +372,24 @@ exports.findproposalsbytask = function(req, res) {
        
           return res.status(404).send({
               status: 404,
-              data: "Task not found"
+              message: "Task not found"
           });                
       }
       return res.status(500).send({
           status: 500,
-          data: "Error retrieving task"
+          message: "Error retrieving task"
       });
 
     } else {
       if(!task) {
           return res.status(404).send({
               status: 404,
-              data: "Task not found"
+              message: "Task not found"
           });            
       } else if(task.proposals.length == 0) {
         return res.status(404).send({
             status: 404,
-            data: "Proposals not found"
+            message: "Proposals not found"
         });            
       } else {   
         res.status(200).send({
@@ -411,14 +408,13 @@ exports.selectproposal = function(req, res) {
   // check the validation object for errors
   var errors = req.validationErrors();
 
-  var resdata = {};
-
   if (errors) {
 
     return res.status(400).send({ 
       status: 400,
       errortype: 'validation',
-      data:  errors
+      data:  errors,
+      message: "Please Enter Valid Details"
     });
 
   } else {
@@ -439,24 +435,24 @@ exports.selectproposal = function(req, res) {
         if(err.kind === 'ObjectId') {
             return res.status(404).send({
               status: 404,
-              data: "Task not found"
+              message: "Task not found"
             });                
         } else {
           return res.status(500).send({
               status: 500,
-              data: "Error updating Task"
+              message: "Error selecting Proposal"
           });
         }
       } else {
         if(!task) {
             return res.status(404).send({
                 status: 404,
-                data: "Task not found"
+                message: "Task not found"
             });            
         }
         res.status(200).send({
           status: 200,
-          data: "Proposal Selected Successfully"
+          message: "Proposal Selected Successfully"
         });
       }
     });    
@@ -498,19 +494,20 @@ exports.getacquiredtasks = function(req, res) {
   .sort({createdAt: 'desc'})
   .skip(pageOptions.page*pageOptions.limit)
   .limit(pageOptions.limit)
+  .populate('task_creater')
   .populate('skills')
   .exec(function (err, tasks) {
     if (err) {
       return res.status(500).send({
           status: 500,
-          data: err.message || "Error retrieving tasks"
+          message: err.message || "Error retrieving tasks"
       });
 
     } else {
       if(!tasks || tasks.length <= 0) {
           return res.status(404).send({
               status: 404,
-              data: "No Tasks found"
+              message: "No Tasks found"
           });            
       }
       res.status(200).send({
@@ -536,37 +533,24 @@ exports.submittask = function(req, res) {
       if(err.kind === 'ObjectId') {
           return res.status(404).send({
             status: 404,
-            data: "Task not found"
+            message: "Task not found"
           });                
-      } else if (err.name === 'ValidationError') {
-
-        var error_fields = err.errors;
-        for(var key in error_fields) {
-          error_fields[key] = true;
-        }
-        return res.status(500).send({
-            status: 500,
-            errortype: 'unique-error',
-            data: { 
-              fields: error_fields
-            }
-        });
       } else {
         return res.status(500).send({
             status: 500,
-            data: "Error updating Task"
+            message: "Error submitting Task"
         });
       }
     } else {
       if(!task) {
           return res.status(404).send({
               status: 404,
-              data: "Task not found"
+              message: "Task not found"
           });            
       }
       res.status(200).send({
         status: 200,
-        data: "Task Submitted Successfully"
+        message: "Task Submitted Successfully"
       });
     }
   });    
@@ -581,13 +565,13 @@ exports.approvetask = function(req, res) {
 
       return res.status(500).send({
           status: 500,
-          data: "Error Approving Task"
+          message: "Error Approving Task"
       });
     } else {
       if(!task) {
           return res.status(404).send({
               status: 404,
-              data: "Task not found"
+              message: "Task not found"
           });            
       } else {
 
@@ -597,13 +581,13 @@ exports.approvetask = function(req, res) {
           if(err) {
             return res.status(500).send({
                 status: 500,
-                data: "Error Approving Task"
+                message: "Error Approving Task"
             });
           } else {
             if(!user) {
                 return res.status(404).send({
                     status: 404,
-                    data: "User not found"
+                    message: "User not found"
                 });            
             } else {
 
@@ -621,12 +605,12 @@ exports.approvetask = function(req, res) {
                   .exec()
                   return res.status(500).send({
                       status: 500,
-                      data: "Error Approving Task"
+                      message: "Error Approving Task"
                   });
                 } else {
                   res.status(200).send({
                     status: 200,
-                    data: "Task Approved Successfully"
+                    message: "Task Approved Successfully"
                   });
                 }
               })

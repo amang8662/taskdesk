@@ -114,7 +114,7 @@ export default class Login extends Component<{}> {
                 } else if(res.status == 401) {
                   alert(res.message);
                 } else { 
-                  alert('Some error Occured. Try Again');
+                  alert(res.message);
                 }
               }       
             })

@@ -178,6 +178,10 @@ export default class AddTask extends Component<{}> {
             })
             .catch((error) => {
                 console.log(error);
+                
+                this.setState({
+                  isLoading: false
+                });
             })
           ).catch((error) => {
 
@@ -302,7 +306,3 @@ export default class AddTask extends Component<{}> {
     );
   }
 }
-const styles = StyleSheet.create({
-
-
-});

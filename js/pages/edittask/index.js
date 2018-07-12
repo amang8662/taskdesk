@@ -158,17 +158,13 @@ export default class EditTask extends Component<{}> {
 
               if(res.status == 200) {
               
-                alert(res.data);
+                alert(res.message);
+              } else if(res.status == 400){
+                console.log(res.data);    
               } else {
-
-                if(res.errortype == 'validation') {
-                  console.log(res.data);
-                }
-                else if(res.errortype == 'db-error') {
-                  
-                  alert('Sorry Some Error Occured');
-                }    
-              }       
+                
+                alert(res.message);
+              }     
             })
             .catch((error) => {
 

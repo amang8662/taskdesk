@@ -132,17 +132,19 @@ export default class Signup extends Component<{}> {
 
                 if(res.errortype == 'unique-error') {
 
-                  if(res.fields.username && res.fields.contact) {
+                  if(res.data.fields.username && res.data.fields.contact) {
                     alert("Username and Contact are already taken.");
-                  } else if(res.fields.username){
+                  } else if(res.data.fields.username){
                     alert("Username is already taken.");
                   } else {
                     alert("Contact is already taken.");
                   }
                 } else {
-                  alert('Sorry Some Error Occured');
+                  alert(res.message);
                 }
-              }     
+              }  else {
+                alert(res.message);
+              }    
             })
             .catch((error) => {
                 console.log(error);

@@ -6,7 +6,6 @@ import {
   TouchableHighlight,
   Image,
   NetInfo,
-  ToastAndroid,
   AsyncStorage
 } from 'react-native';
 import {
@@ -149,9 +148,9 @@ export default class EditProfile extends Component<{}> {
                 if(res.errortype == 'validation') {
                   console.log(res.data);
                 }
-                else if(res.errortype == 'db-error') {
+                else {
                   
-                  alert('Sorry Some Error Occured');
+                  alert(res.message);
                 }    
               }       
             })
@@ -250,30 +249,31 @@ export default class EditProfile extends Component<{}> {
 
                   AsyncStorage.setItem('user' , res.data);
                   User.set(res.data);
-                  alert("User Updated successfully");
+                  alert(res.message);
 
                 } catch(error) {
 
                   alert("Some error Occured. Try Again");
                 }
+              } else if(res.status == 400) {
+
+                alert("Please enter valid details");
               } else if(res.status == 500) {
-                if(res.errortype == 'validation') {
+                
+                if(res.errortype == 'unique-error') {
 
-                  alert("Please enter valid details");
-                } else if(res.errortype == 'unique-error') {
-
-                  if(res.fields.username && res.fields.contact) {
+                  if(res.data.fields.username && res.data.fields.contact) {
                     alert("Username and contact are already taken.");
-                  } else if(res.fields.username){
+                  } else if(res.data.fields.username){
                     alert("Username is already taken.");
                   } else {
                     alert("contact is already taken.");
                   }
                 } else { 
-                  alert(res.data);
+                  alert(res.message);
                 }
-              } else if(res.status == 404) {
-                alert(res.status)
+              } else {
+                alert(res.message)
               }     
             })
             .catch((error) => {
@@ -282,7 +282,7 @@ export default class EditProfile extends Component<{}> {
                   isLoading: false
                 });
 
-                alert(error);
+                console.log(error);
             })
           ).catch((error) => {
 

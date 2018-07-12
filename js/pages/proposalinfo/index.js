@@ -5,7 +5,6 @@ import {
   TouchableHighlight,
   FlatList,
   NetInfo,
-  ToastAndroid,
   Image
 } from 'react-native';
 import {
@@ -24,7 +23,7 @@ import {
   Badge,
 } from 'native-base';
 import { Actions } from 'react-native-router-flux';
-import { LoadingComponent } from '../../components';
+import { LoadingComponent, Toast } from '../../components';
 import Tag from "../../components/inputtag/Tag";
 import { validate, timeout } from '../../modules';
 import User from '../../helpers/User';
@@ -63,13 +62,13 @@ export default class ProposalInfo extends Component<{}> {
           .then((res) => {
             if(res.status == 200) {
             
-              alert(res.data)
+              alert(res.message)
               Actions.generatedtasks();
 
             } else {
               if(res.status == 404) {
 
-                alert(res.data)
+                alert(res.message)
               } else {
                 alert("Error Selecting Proposal");
               }
@@ -85,7 +84,10 @@ export default class ProposalInfo extends Component<{}> {
         });
 
       } else {
-        ToastAndroid.show('No Internet Connection!', ToastAndroid.SHORT);
+        Toast.show({text: 'No Internet Connection!',
+          textColor: '#cccccc',
+          duration: 10000
+        });
       }
     });    
   }

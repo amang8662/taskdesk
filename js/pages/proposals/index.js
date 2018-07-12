@@ -5,7 +5,6 @@ import {
   TouchableHighlight,
   FlatList,
   NetInfo,
-  ToastAndroid
 } from 'react-native';
 import {
   Container,
@@ -69,7 +68,7 @@ export default class Proposals extends Component<{}> {
                   status: res.status
                 });
               } else {
-                alert(res.data);
+                alert(res.message);
                 this.setState({
                   status: res.status
                 });

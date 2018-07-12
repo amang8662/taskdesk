@@ -4,7 +4,6 @@ import {
   TouchableHighlight,
   FlatList,
   NetInfo,
-  ToastAndroid
 } from 'react-native';
 import {
   Title,
@@ -78,7 +77,7 @@ export default class WorkingList extends Component<{}> {
                   status: res.status
                 });
               } else {
-                alert(res.data);
+                alert(res.message);
                 this.setState({
                   status: res.status
                 });
@@ -86,8 +85,7 @@ export default class WorkingList extends Component<{}> {
             }       
           })
           .catch((error) => {
-              alert(error);
-
+              
               this.setState({
                 status: 505
               });
@@ -144,7 +142,7 @@ export default class WorkingList extends Component<{}> {
                   isLoading: false
                 });
               } else {
-                alert(res.data);
+                alert(res.message);
                 this.setState({
                   isLoading: false
                 });
@@ -152,7 +150,7 @@ export default class WorkingList extends Component<{}> {
             }       
           })
           .catch((error) => {
-              alert(error);
+              console.log(error);
 
               this.setState({
                 isLoading: false
@@ -232,19 +230,19 @@ export default class WorkingList extends Component<{}> {
                   tasks: this.state.tasks.filter((task,index) => task._id !== taskid),
                   status: 404
                 },
-                  () => alert(res.data)
+                  () => alert(res.message)
                 );
               } else {
 
                 this.setState({
                   tasks: this.state.tasks.filter((task,index) => task._id !== taskid)
                 },
-                  () => alert(res.data)
+                  () => alert(res.message)
                 );
               }
 
             } else {
-              alert(res.data)         
+              alert(res.message)         
             }       
           })
           .catch((error) => {

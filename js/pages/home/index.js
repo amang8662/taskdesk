@@ -5,7 +5,6 @@ import {
   TouchableHighlight,
   FlatList,
   NetInfo,
-  ToastAndroid
 } from 'react-native';
 import {
   Container,
@@ -75,7 +74,7 @@ export default class Home extends Component<{}> {
                   status: res.status
                 });
               } else {
-                alert(res.data);
+                alert(res.message);
                 this.setState({
                   status: res.status
                 });
@@ -138,7 +137,7 @@ export default class Home extends Component<{}> {
                   isLoading: false
                 });
               } else {
-                alert(res.data);
+                alert(res.message);
                 this.setState({
                   isLoading: false
                 });
@@ -146,7 +145,7 @@ export default class Home extends Component<{}> {
             }       
           })
           .catch((error) => {
-              alert(error);
+              console.log(error);
 
               this.setState({
                 isLoading: false

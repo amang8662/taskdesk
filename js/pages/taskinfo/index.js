@@ -120,7 +120,7 @@ export default class TaskInfo extends Component<{}> {
 
               if(res.status == 200) {
               
-                alert(res.data);
+                alert(res.message);
 
                 this.setState({
                   modalVisible: false,
@@ -130,10 +130,10 @@ export default class TaskInfo extends Component<{}> {
 
                 if(res.status == 400) {
                   console.log(res.data);
-                  alert("Please enter valid details");
+                  alert(res.message);
                 }
                 else {
-                  alert('Sorry Some Error Occured');
+                  alert(res.message);
                 }    
               }       
             })
