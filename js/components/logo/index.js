@@ -27,10 +27,11 @@ const styles = StyleSheet.create({
   logo :{
     padding: 16,
     marginTop: 10,
-    backgroundColor:'#000',
+    backgroundColor:'#ea4c54',
     borderRadius: 22,
     borderColor: '#f44336',
-    borderWidth: 3    
+    borderWidth: 3,
+    elevation: 12,    
   },
   logoText : {
   	marginVertical: 15,

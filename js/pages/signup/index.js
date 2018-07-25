@@ -3,11 +3,21 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
+  AsyncStorage,
   NetInfo,
-  ScrollView
 } from 'react-native';
-
+import {
+  Container,
+  Header,
+  Title,
+  Content,
+  Button,
+  Icon,
+  Body,
+  Left,
+  Right,
+  Form, Item, Input,Label,
+} from 'native-base';
 
 import { Logo, InputText, TextInputError, Toast } from '../../components';
 import { validate, timeout } from '../../modules';
@@ -182,9 +192,12 @@ export default class Signup extends Component<{}> {
     var contactError = {};
     var passwordError = {};
     return(
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+      <Container style={styles.container}>
+        <Content>
         <Logo/>
-        <View style={styles.formContainer}>
+        <Form style={{marginLeft:-10,marginRight: 2,}}>
+          <Item stackedLabel>
+          <Label >Fullname</Label>
           <InputText
               isError={this.state.nameError.isError} 
               placeholder="Full Name"
@@ -201,6 +214,10 @@ export default class Signup extends Component<{}> {
                 }}
               />
           <TextInputError styles={errorStyle} isError={this.state.nameError.isError} message={this.state.nameError.message} />
+        </Item>
+        <Item stackedLabel >
+            <Label >Username</Label>
+
           <InputText
               isError={this.state.userNameError.isError} 
               placeholder="Username"
@@ -218,6 +235,10 @@ export default class Signup extends Component<{}> {
                 }}
               />
           <TextInputError styles={errorStyle} isError={this.state.userNameError.isError} message={this.state.userNameError.message} />
+        </Item>
+        <Item stackedLabel >
+            <Label >Contact</Label>
+
           <InputText
               isError={this.state.contactError.isError} 
               placeholder="contact"
@@ -237,6 +258,9 @@ export default class Signup extends Component<{}> {
                 }}
               />
           <TextInputError styles={errorStyle} isError={this.state.contactError.isError} message={this.state.contactError.message} />
+        </Item>
+        <Item stackedLabel >
+            <Label >Password</Label>
           <InputText
               isError={this.state.passwordError.isError} 
               placeholder="Password"
@@ -254,40 +278,42 @@ export default class Signup extends Component<{}> {
                 }}
               />
           <TextInputError styles={errorStyle} isError={this.state.passwordError.isError} message={this.state.passwordError.message} />  
-          <TouchableOpacity style={styles.button} onPress={this.register}>
-            <Text style={styles.buttonText}>Sign Up</Text>
-          </TouchableOpacity>
-          { this.state.isLoading == true ? <Spinner color='#d7d4f0' /> : null}    
-        </View>
+        </Item>
+        </Form>
         <View style={styles.signupTextCont}>
-          <Text style={styles.signupText}>Already have an account?</Text>
-          <TouchableOpacity onPress={this.goBack}><Text style={styles.signupButton}> Sign in</Text></TouchableOpacity>
+          <Button block style={styles.button} onPress={this.register}>
+            <Text style={styles.buttonText}>Sign Up</Text>
+          </Button>
+          { this.state.isLoading == true ? <Spinner color='#d7d4f0' /> : null}    
+    
+          <Text style={styles.signupText}>Already have an account?
+            <Text onPress={this.goBack}><Text style={styles.signupButton}> Sign in!</Text></Text>
+          </Text>
         </View>
-      </ScrollView> 
+        </Content>
+      </Container>
       )
   }
 }
 
 const styles = StyleSheet.create({
   container : {
-    backgroundColor:'#080808',
+    backgroundColor:'#fafafa',
     flexGrow: 1,
     paddingTop: 30
   },
   signupTextCont : {
-    flexGrow: 1,
-    alignItems:'flex-end',
-    justifyContent :'center',
-    paddingVertical:16,
-    flexDirection:'row'
+    alignSelf: 'stretch',
+    margin: 15,
   },
   signupText: {
-    color:'rgba(255,255,255,0.6)',
-    fontSize:16
+    color:'#666',
+    fontSize:16,
+    textAlign: 'center'
   },
   signupButton: {
-    color:'#ffffff',
-    fontSize:16,
+    color:'#369',
+    fontSize:20,
     fontWeight:'500'
   },
   formContainer : {
@@ -296,49 +322,30 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
 
-  inputBox: {
-    width:300,
-    backgroundColor:'#222',
-    borderBottomColor: '#eee',
-    borderWidth: 2,
-    paddingHorizontal:16,
-    fontSize:16,
-    color:'#ffffff',
-    marginVertical: 10
-  },
+  
   button: {
-    width:300,
-    backgroundColor:'#65ad19',
+    width:null,
+    alignItems: 'stretch',
+    backgroundColor:'#00b386',
     borderRadius: 0,
     marginVertical: 10,
     paddingVertical: 13
   },
   buttonText: {
-    fontSize:16,
+    fontSize:20,
     fontWeight:'500',
     color:'#ffffff',
     textAlign:'center'
   },
-  inputBoxError: {
-    width:300,
-    borderWidth: 3,
-    paddingHorizontal:16,
-    fontSize:16,
-    marginVertical: 10,
-    borderStyle: 'solid',
-    color: '#eee',
-    backgroundColor: '#222',
-    borderBottomColor : '#d83c3c'
-  }
 });
 
 const errorStyle = StyleSheet.create({
-  container : {
-    justifyContent:'flex-start',
-    alignItems: 'flex-start',    
-    paddingHorizontal:16,
+  container : { 
+    padding:16,
+    alignSelf:  'flex-end'
   },
   errorText : {
-    color: '#fff'
+    color: '#dc4239',
+    fontSize: 12
   }
 });

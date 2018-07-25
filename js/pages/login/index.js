@@ -3,11 +3,22 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableHighlight,
   AsyncStorage,
   NetInfo,
-  ScrollView,
 } from 'react-native';
+import {
+  Container,
+  Header,
+  Title,
+  Content,
+  Button,
+  Icon,
+  Body,
+  Left,
+  Right,
+  Form, Item, Input,Label,
+} from 'native-base';
+
 
 
 import { Logo, InputText, TextInputError, Toast } from '../../components';
@@ -149,100 +160,88 @@ export default class Login extends Component<{}> {
 
   render() {
     return(
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-        <View style={styles.formContainer}>
-          <Logo/>
-          <InputText
-              isError={this.state.userNameError.isError}
-              placeholder="Username/Contact"
-              keyboardType="email-address"
-              value={this.state.userName}
-              onChangeText={userName => this.setState({userName})}
-              returnKeyType={'next'}
-              blurOnSubmit={false}
-              onSubmitEditing={() => {this.password.focus()}}
-              onBlur={() => {
-                  userNameError = validate("username/Contact",this.state.userName,{required:true})
-                  this.setState({
-                    userNameError: Object.assign(this.state.userNameError, userNameError)
-                  })
-                }}
-              />
-          <TextInputError styles={errorStyle} isError={this.state.userNameError.isError} message={this.state.userNameError.message} />
-          <InputText
-              isError={this.state.passwordError.isError} 
-              placeholder="Password"
-              secureTextEntry={true}
-              value={this.state.password}
-              onChangeText={password => this.setState({password})}
-              inputRef={(input) => this.password = input}
-              returnKeyType={'done'}
-              onBlur={() => {
-                  passwordError = validate("password",this.state.password,{required:true})
-                  this.setState({
-                    passwordError: Object.assign(this.state.passwordError, passwordError)
-                  })
-                }}
-              />
-          <TextInputError styles={errorStyle} isError={this.state.passwordError.isError} message={this.state.passwordError.message} /> 
-          <TouchableHighlight style={styles.button} onPress={this.login}>
-            <Text style={styles.buttonText}>Sign In</Text>
-          </TouchableHighlight>
-          { this.state.isLoading == true ? <Spinner color='#d7d4f0' /> : null}
-        </View>
-        <View style={styles.signupTextCont}>
-          <Text style={styles.signupText}>Don't have an account yet?</Text>
-          <TouchableHighlight onPress={this.signup}><Text style={styles.signupButton}> Signup</Text></TouchableHighlight>
-        </View>
-      </ScrollView>
+      <Container style={styles.container}>
+        <Content>
+        <Logo/>
+        <Form style={{marginLeft:-10,marginRight: 2,}}>
+          <Item stackedLabel>
+            <Label >Username</Label>
+              <InputText
+                  isError={this.state.userNameError.isError}
+                  placeholder="Username/Contact"
+                  keyboardType="email-address"
+                  value={this.state.userName}
+                  onChangeText={userName => this.setState({userName})}
+                  returnKeyType={'next'}
+                  blurOnSubmit={false}
+                  onSubmitEditing={() => {this.password.focus()}}
+                  onBlur={() => {
+                      userNameError = validate("username/Contact",this.state.userName,{required:true})
+                      this.setState({
+                        userNameError: Object.assign(this.state.userNameError, userNameError)
+                      })
+                    }}
+                  />
+              <TextInputError styles={errorStyle} isError={this.state.userNameError.isError} message={this.state.userNameError.message} />
+          </Item>
+          <Item stackedLabel >
+            <Label>Password</Label>
+              <InputText
+                  isError={this.state.passwordError.isError} 
+                  placeholder="Password"
+                  secureTextEntry={true}
+                  value={this.state.password}
+                  onChangeText={password => this.setState({password})}
+                  inputRef={(input) => this.password = input}
+                  returnKeyType={'done'}
+                  onBlur={() => {
+                      passwordError = validate("password",this.state.password,{required:true})
+                      this.setState({
+                        passwordError: Object.assign(this.state.passwordError, passwordError)
+                      })
+                    }}
+                  />
+              <TextInputError styles={errorStyle} isError={this.state.passwordError.isError} message={this.state.passwordError.message} /> 
+          </Item>
+        </Form>
+          <View style={{margin: 15,}} >
+            <Button block  style={styles.button} onPress={this.login}>
+              <Text style={styles.buttonText}>Sign In</Text>
+            </Button>
+            { this.state.isLoading == true ? <Spinner color='#d7d4f0' /> : null}
+          
+            <Text style={styles.signupText}>Don't have an account yet?
+              <Text onPress={this.signup} style={styles.signUpText}>  SignUp!</Text>
+            </Text>
+          </View>
+        </Content>
+      </Container>
       )
   }
 }
-
+ 
 const styles = StyleSheet.create({
   container : {
-    backgroundColor:'#000',
-    flexGrow: 1,
-    paddingTop: 30
+    backgroundColor:'#fff',
+    paddingTop: 50,
   },
-  signupTextCont : {
-    flexGrow: 1,
-    alignItems:'flex-end',
-    justifyContent :'center',
-    paddingVertical:16,
-    flexDirection:'row'
-  },
+  
   signupText: {
-    color:'rgba(255,255,255,0.6)',
-    fontSize:16
+    color:'#222',
+    fontSize:16,
+    textAlign: 'center'
   },
   signupButton: {
     color:'#ffffff',
     fontSize:16,
     fontWeight:'500'
   },
-  formContainer : {
-    flexGrow: 1,
-    justifyContent:'center',
-    alignItems: 'center'
-  },
-
-  inputBox: {
-    width:300,
-    borderBottomColor: '#eee',
-    borderWidth: 2,
-    paddingHorizontal:16,
-    fontSize:16,
-    backgroundColor: '#222',
-    color:'#ffffff',
-    marginVertical: 10
-  },
   button: {
-    width:300,
+    width:null,
     backgroundColor:'#369',
     borderRadius: 0,
     marginVertical: 10,
-    paddingVertical: 15
+    paddingVertical: 15,
   },
   buttonText: {
     fontSize:18,
@@ -250,27 +249,20 @@ const styles = StyleSheet.create({
     color:'#ffffff',
     textAlign:'center'
   },
-  inputBoxError: {
-    width:300,
-    borderWidth: 3,
-    paddingHorizontal:16,
-    color: '#ffffff',
-    fontSize:16,
-    marginVertical: 10,
-    borderStyle: 'solid',
-    backgroundColor: '#222',
-    borderBottomColor : '#d83c3c'
+  signUpText :{
+    color: '#00B386',
+    fontSize:18,
+    fontWeight:'500',
   }
 });
 
 const errorStyle = StyleSheet.create({
-  container : {
-    justifyContent:'flex-start',
-    alignItems: 'flex-start',    
-    paddingHorizontal:16,
+  container : { 
+    padding:16,
+    alignSelf:  'flex-end'
   },
   errorText : {
-    color: '#bbb',
-    fontSize: 14
+    color: '#dc4239',
+    fontSize: 12
   }
 });

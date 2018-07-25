@@ -25,7 +25,10 @@ const styles = StyleSheet.create({
   inputBox: {
     width:null,
     alignSelf: 'stretch',
-    color: '#222'
+    color: '#222',
+    borderBottomWidth: 1,
+    borderStyle: 'solid',
+    borderBottomColor : '#ccc'
   },
   inputBoxError: {
     width:null,
