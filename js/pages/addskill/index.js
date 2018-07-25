@@ -6,9 +6,20 @@ import {
   TouchableHighlight,
   AsyncStorage,
   NetInfo,
-  ScrollView,
 } from 'react-native';
-
+import {
+  Container,
+  Header,
+  Title,
+  Content,
+  Button,
+  Icon,
+  Body,
+  Left,
+  Right,
+  Form, Item, Input,Label,
+} from 'native-base';
+import { Actions } from 'react-native-router-flux';
 import { InputText, TextInputError, Toast } from '../../components';
 import { validate, timeout } from '../../modules';
 import { Spinner } from 'native-base';
@@ -127,8 +138,25 @@ export default class AddSkill extends Component<{}> {
 
   render() {
     return (
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-        <View style={styles.formContainer}>
+      <Container >
+         <Header  style={{ backgroundColor: "#dc4239" }} androidStatusBarColor="#dc2015" iosBarStyle="light-content"        >
+          <Left>
+            <Button transparent onPress={() => Actions.drawerOpen()}>
+              <Icon name="md-menu" style={{ color: "#FFF", fontSize: 30,alignItems:  'center' }} />
+            </Button>
+          </Left>
+          <Body>
+            <Title style={{ color: "#FFF" }}>Add Skills</Title>
+          </Body>
+          {(this.state.status == 200 && this.state.foreignUser == false) ? (
+            <Right>            
+              <Button transparent onPress={() => Actions.editprofile()}>
+                <Icon name="settings" style={{ color: "#FFF",fontSize: 30,alignItems:  'center' }} />
+              </Button>
+            </Right>
+          ): null}
+        </Header>
+        <Content padder>
           <Text style={styles.text}>Skill Name</Text>
           <InputText
               isError={this.state.nameError.isError}
@@ -144,39 +172,28 @@ export default class AddSkill extends Component<{}> {
                 }}
               />
           <TextInputError styles={errorStyle} isError={this.state.nameError.isError} message={this.state.nameError.message} />
-          <TouchableHighlight style={styles.button} onPress={this.addSkill}>
-            <Text style={styles.buttonText}>Add</Text>
-          </TouchableHighlight>
+          <Button block style={styles.button} onPress={this.addSkill}>
+            <Text style={styles.buttonText}>Add Skill</Text>
+          </Button>
           { this.state.isLoading == true ? <Spinner color='#d7d4f0' /> : null}
-        </View>
-      </ScrollView>
+       </Content>
+      </Container>
+        
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container : {
-    backgroundColor:'#000',
-    flexGrow: 1,
-    paddingTop: 30,
-    paddingBottom: 30
-  },
-  formContainer : {
-    flexGrow: 1,
-    justifyContent:'center',
-    alignItems: 'center'
-  },
+  
   text: {
-    fontSize: 20,
-    color: '#00ffff',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start' 
+    fontSize: 24,
+    color: '#156165',
+    alignItems: 'center',
+    justifyContent: 'center' 
   },
   button: {
-    width:300,
     backgroundColor:'#369',
-    borderRadius: 0,
-    marginVertical: 10,
+    margin: 10,
     paddingVertical: 15
   },
   buttonText: {
@@ -188,13 +205,12 @@ const styles = StyleSheet.create({
 });
 
 const errorStyle = StyleSheet.create({
-  container : {
-    justifyContent:'flex-start',
-    alignItems: 'flex-start',    
-    paddingHorizontal:16,
+   container : { 
+    padding:16,
+    alignSelf:  'flex-end'
   },
   errorText : {
-    color: '#000',
-    fontSize: 14
+    color: '#dc4239',
+    fontSize: 12
   }
 });

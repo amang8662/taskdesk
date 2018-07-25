@@ -33,8 +33,8 @@ export default class Routes extends Component<{}> {
 				<Scene key="root" >
 					<Scene key="loadingscreen" component={LoadingScreen} title="LoadingScreen" initial  hideNavBar/>
 				    <Stack key="unauthenticated" hideNavBar type="reset">
-				    	<Scene key="login" component={Login} title="Login" initial />
-				    	<Scene key="signup" component={Signup} title="Register"/>
+				    	<Scene key="login" component={Login} hideNavBar title="Login" initial />
+				    	<Scene key="signup" component={Signup} hideNavBar title="Register"/>
 				    </Stack>
 				    <Scene key="authenticated" hideNavBar type="reset">
     			    	<Scene key="drawer" drawer contentComponent={SideMenu} drawerPosition="left" drawerWidth={240}  initial hideDrawerButton={true}>
@@ -61,7 +61,7 @@ export default class Routes extends Component<{}> {
 
     			    		<Scene key="acquiredtasks" component={AcquiredTasks} hideNavBar title="Acquired Tasks"/>
     			    		<Scene key="aboutus" component={AboutUs} title="About Us"/>
-    			    		<Scene key="addskill" component={AddSkill} title="Add Skill"/>
+    			    		<Scene key="addskill" component={AddSkill} hideNavBar title="Add Skill"/>
     			    	</Scene>
 					</Scene>
 				</Scene>
