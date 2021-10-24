@@ -1,4 +1,4 @@
-taskdesk
+**TaskDesk**
 
 For development on backend:
 
